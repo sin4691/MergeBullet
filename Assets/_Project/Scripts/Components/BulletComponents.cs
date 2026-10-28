@@ -3,9 +3,10 @@ using Unity.Mathematics;
 
 namespace MergeBullet.Components
 {
-    /// <summary>총알 태그 겸 충돌 반지름. 레벨 등 합성 데이터는 합성 기능을 만들 때 추가한다.</summary>
+    /// <summary>총알 레벨과 충돌 반지름. 반지름은 레벨로부터 계산된 값을 캐시해 둔 것.</summary>
     public struct Bullet : IComponentData
     {
+        public int Level;
         public float Radius;
     }
 

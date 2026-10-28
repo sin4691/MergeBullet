@@ -154,6 +154,13 @@ MonoBehaviour:
   BulletRadius: 0.12
   BulletSpeed: 5
   Seed: 12345
+  MaxLevel: 4
+  RadiusGrowthPerLevel: 0.5
+  LevelColors:
+  - {r: 1, g: 0.85, b: 0.2, a: 1}
+  - {r: 1, g: 0.5, b: 0.1, a: 1}
+  - {r: 1, g: 0.15, b: 0.2, a: 1}
+  - {r: 0.75, g: 0.3, b: 1, a: 1}
 --- !u!4 &304486843
 Transform:
   m_ObjectHideFlags: 0
