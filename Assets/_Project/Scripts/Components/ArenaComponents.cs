@@ -15,7 +15,6 @@ namespace MergeBullet.Components
         public Entity Prefab;
         public int Count;
         public float Speed;
-        public float Radius;
         public uint Seed;
     }
 }

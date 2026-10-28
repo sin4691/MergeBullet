@@ -1,5 +1,6 @@
 using MergeBullet.Components;
 using Unity.Entities;
+using Unity.Rendering;
 using UnityEngine;
 
 namespace MergeBullet.Authoring
@@ -13,8 +14,10 @@ namespace MergeBullet.Authoring
             {
                 // Dynamic: 런타임에 LocalTransform을 매 프레임 바꾸므로
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
-                AddComponent(entity, new Bullet());
+                AddComponent(entity, new Bullet { Level = 1 });
                 AddComponent(entity, new BulletVelocity());
+                // 머티리얼을 레벨마다 따로 만들지 않고 엔티티별로 _BaseColor만 덮어쓴다 (배칭 유지)
+                AddComponent(entity, new URPMaterialPropertyBaseColor { Value = 1f });
             }
         }
     }

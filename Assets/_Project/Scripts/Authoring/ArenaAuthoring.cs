@@ -1,12 +1,13 @@
 using MergeBullet.Components;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace MergeBullet.Authoring
 {
     /// <summary>
-    /// SubScene 안의 Arena 오브젝트에 붙인다. 아레나 크기와 초기 총알 스폰 설정을
-    /// ArenaBounds / BulletSpawner 싱글톤으로 베이킹한다.
+    /// SubScene 안의 Arena 오브젝트에 붙인다. 아레나 크기, 초기 총알 스폰, 레벨 규칙을
+    /// ArenaBounds / BulletSpawner / BulletLevelSettings 싱글톤으로 베이킹한다.
     /// </summary>
     public class ArenaAuthoring : MonoBehaviour
     {
@@ -17,12 +18,33 @@ namespace MergeBullet.Authoring
         public float BulletSpeed = 5f;
         public uint Seed = 12345;
 
+        [Header("Merge")]
+        [Range(2, 4)] public int MaxLevel = 4;
+        [Min(0f)] public float RadiusGrowthPerLevel = 0.5f;
+        public Color[] LevelColors =
+        {
+            new Color(1f, 0.85f, 0.2f), // 1 노랑
+            new Color(1f, 0.5f, 0.1f),  // 2 주황
+            new Color(1f, 0.15f, 0.2f), // 3 빨강
+            new Color(0.75f, 0.3f, 1f), // 4 보라
+        };
+
         class Baker : Baker<ArenaAuthoring>
         {
             public override void Bake(ArenaAuthoring authoring)
             {
                 Entity entity = GetEntity(TransformUsageFlags.None);
                 AddComponent(entity, new ArenaBounds { HalfSize = authoring.ArenaSize * 0.5f });
+                AddComponent(entity, new BulletLevelSettings
+                {
+                    MaxLevel = authoring.MaxLevel,
+                    BaseRadius = authoring.BulletRadius,
+                    RadiusGrowth = authoring.RadiusGrowthPerLevel,
+                    Level1Color = LevelColor(authoring, 0),
+                    Level2Color = LevelColor(authoring, 1),
+                    Level3Color = LevelColor(authoring, 2),
+                    Level4Color = LevelColor(authoring, 3),
+                });
 
                 if (authoring.BulletPrefab == null) return;
                 AddComponent(entity, new BulletSpawner
@@ -30,9 +52,16 @@ namespace MergeBullet.Authoring
                     Prefab = GetEntity(authoring.BulletPrefab, TransformUsageFlags.Dynamic),
                     Count = authoring.BulletCount,
                     Speed = authoring.BulletSpeed,
-                    Radius = authoring.BulletRadius,
                     Seed = authoring.Seed,
                 });
+            }
+
+            // 머티리얼 프로퍼티 오버라이드는 셰이더에 그대로 들어가므로 선형 색공간 값으로 넘긴다
+            static float4 LevelColor(ArenaAuthoring authoring, int index)
+            {
+                Color c = index < authoring.LevelColors.Length ? authoring.LevelColors[index] : Color.white;
+                Color linear = c.linear;
+                return new float4(linear.r, linear.g, linear.b, linear.a);
             }
         }
     }
