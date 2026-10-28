@@ -161,6 +161,9 @@ MonoBehaviour:
   - {r: 1, g: 0.5, b: 0.1, a: 1}
   - {r: 1, g: 0.15, b: 0.2, a: 1}
   - {r: 0.75, g: 0.3, b: 1, a: 1}
+  MaxLevelEffectPrefab: {fileID: 5969894263373315911, guid: ca64700ba9c1c1d4a92f65b7dc771c08, type: 3}
+  EffectRadius: 1.2
+  EffectDuration: 0.4
 --- !u!4 &304486843
 Transform:
   m_ObjectHideFlags: 0

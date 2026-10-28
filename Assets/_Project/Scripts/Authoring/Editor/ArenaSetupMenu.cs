@@ -67,6 +67,53 @@ namespace MergeBullet.Editor
             Debug.Log("Arena SubScene 생성 완료. Play를 눌러 확인하세요.");
         }
 
+        [MenuItem("MergeBullet/Create Max Level Effect")]
+        static void CreateMaxLevelEffect()
+        {
+            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath) == null)
+            {
+                Debug.LogError("먼저 MergeBullet/Create Arena SubScene 을 실행하세요.");
+                return;
+            }
+
+            EnsureFolder(MaterialsDir);
+            EnsureFolder(PrefabsDir);
+
+            // 폭발 프리팹: 구 + ExplosionAuthoring
+            Material material = CreateMaterial("Explosion", new Color(1f, 0.95f, 0.8f));
+            GameObject go = CreatePrimitiveWithoutCollider(PrimitiveType.Sphere, "Explosion", material);
+            go.AddComponent<ExplosionAuthoring>();
+            GameObject prefab = PrefabUtility.SaveAsPrefabAsset(go, PrefabsDir + "/Explosion.prefab");
+            Object.DestroyImmediate(go);
+
+            // SubScene의 ArenaAuthoring에 연결. SubScene이 이미 열려 있으면 그대로 쓰고 닫지 않는다
+            Scene subScene = SceneManager.GetSceneByPath(SubScenePath);
+            bool wasLoaded = subScene.isLoaded;
+            if (!wasLoaded) subScene = EditorSceneManager.OpenScene(SubScenePath, OpenSceneMode.Additive);
+
+            ArenaAuthoring authoring = null;
+            foreach (GameObject root in subScene.GetRootGameObjects())
+            {
+                authoring = root.GetComponentInChildren<ArenaAuthoring>();
+                if (authoring != null) break;
+            }
+
+            if (authoring == null)
+            {
+                Debug.LogError($"{SubScenePath} 에서 ArenaAuthoring을 찾지 못했습니다.");
+            }
+            else
+            {
+                Undo.RecordObject(authoring, "Assign Max Level Effect");
+                authoring.MaxLevelEffectPrefab = prefab;
+                EditorUtility.SetDirty(authoring);
+                EditorSceneManager.SaveScene(subScene);
+                Debug.Log("Max Level Effect 생성 완료. Play를 눌러 확인하세요.");
+            }
+
+            if (!wasLoaded) EditorSceneManager.CloseScene(subScene, true);
+        }
+
         static GameObject CreateBulletPrefab(Material material)
         {
             GameObject go = CreatePrimitiveWithoutCollider(PrimitiveType.Sphere, "Bullet", material);
