@@ -1,0 +1,76 @@
+name: Build Windows
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# 같은 브랜치에 연속 push 시 이전 빌드는 취소하고 최신 커밋만 빌드
+concurrency:
+  group: build-windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build StandaloneWindows64
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      # Unity 에디터 Docker 이미지가 커서 기본 러너 디스크가 부족할 수 있음
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          tool-cache: false
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      # LFS 객체 목록의 해시를 키로 .git/lfs를 캐시 -> LFS 대역폭 절약
+      - name: Create LFS file list
+        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+
+      - name: Restore LFS cache
+        uses: actions/cache@v4
+        with:
+          path: .git/lfs
+          key: lfs-${{ hashFiles('.lfs-assets-id') }}
+
+      - name: Git LFS pull
+        run: |
+          git lfs pull
+          git add .
+          git reset --hard
+
+      # 에셋 임포트 결과(Library)를 캐시 -> 두 번째 빌드부터 임포트 시간 대폭 단축
+      - name: Cache Library
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-StandaloneWindows64-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-StandaloneWindows64-
+            Library-
+
+      - name: Build
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: StandaloneWindows64
+          unityVersion: auto
+          buildName: MergeBullet
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: MergeBullet-StandaloneWindows64-${{ github.sha }}
+          path: build/StandaloneWindows64
+          retention-days: 14
