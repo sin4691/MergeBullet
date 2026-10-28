@@ -25,7 +25,11 @@ namespace MergeBullet.Systems
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            _bulletQuery = SystemAPI.QueryBuilder().WithAll<Bullet, BulletVelocity, LocalTransform>().Build();
+            // 방치 소멸 예정(BulletExpired 켜짐)인 총알은 합성하지 않는다
+            _bulletQuery = SystemAPI.QueryBuilder()
+                .WithAll<Bullet, BulletVelocity, LocalTransform>()
+                .WithDisabled<BulletExpired>()
+                .Build();
             state.RequireForUpdate(_bulletQuery);
             state.RequireForUpdate<BulletLevelSettings>();
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
@@ -35,7 +39,9 @@ namespace MergeBullet.Systems
         public void OnUpdate(ref SystemState state)
         {
             BulletLevelSettings settings = SystemAPI.GetSingleton<BulletLevelSettings>();
-            int count = _bulletQuery.CalculateEntityCount();
+            // 정확한 개수(CalculateEntityCount)는 enableable 필터 때문에 BulletIdleSystem 잡이 끝나길
+            // 메인 스레드에서 기다려야 한다. 대신 필터 전 개수로 넉넉히 잡고, 남는 칸은 Level 0인 빈 슬롯으로 둔다.
+            int count = _bulletQuery.CalculateEntityCountWithoutFiltering();
 
             // 가장 큰 총알 지름 = 셀 크기 → 겹칠 수 있는 상대는 항상 주변 9칸 안에 있다
             float cellSize = 2f * BulletLevelUtility.RadiusOf(settings.MaxLevel, settings);
@@ -131,6 +137,7 @@ namespace MergeBullet.Systems
         {
             Partners[i] = -1;
             Bullet self = Bullets[i];
+            if (self.Level == 0) return; // 빈 슬롯 (필터에 걸려 수집되지 않은 칸)
             if (self.Level >= MaxLevel) return; // 최대 레벨은 더 합성하지 않는다
 
             float2 position = Positions[i];

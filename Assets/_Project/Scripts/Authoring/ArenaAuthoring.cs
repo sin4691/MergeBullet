@@ -6,8 +6,8 @@ using UnityEngine;
 namespace MergeBullet.Authoring
 {
     /// <summary>
-    /// SubScene 안의 Arena 오브젝트에 붙인다. 아레나 크기, 초기 총알 스폰, 레벨 규칙, 최대 레벨 효과를
-    /// ArenaBounds / BulletSpawner / BulletLevelSettings / MaxLevelEffect 싱글톤으로 베이킹한다.
+    /// SubScene 안의 Arena 오브젝트에 붙인다. 아레나 크기, 초기 총알 스폰, 레벨 규칙, 최대 레벨 효과, 방치 소멸 규칙을
+    /// ArenaBounds / BulletSpawner / BulletLevelSettings / MaxLevelEffect / BulletIdleSettings 싱글톤으로 베이킹한다.
     /// </summary>
     public class ArenaAuthoring : MonoBehaviour
     {
@@ -34,6 +34,10 @@ namespace MergeBullet.Authoring
         [Min(0.01f)] public float EffectRadius = 1.2f;
         [Min(0.01f)] public float EffectDuration = 0.4f;
 
+        [Header("Idle Despawn")]
+        [Min(0.1f)] public float IdleLifetime = 8f;
+        [Min(0f)] public float IdleWarningTime = 1.5f;
+
         class Baker : Baker<ArenaAuthoring>
         {
             public override void Bake(ArenaAuthoring authoring)
@@ -49,6 +53,12 @@ namespace MergeBullet.Authoring
                     Level2Color = LevelColor(authoring, 1),
                     Level3Color = LevelColor(authoring, 2),
                     Level4Color = LevelColor(authoring, 3),
+                });
+
+                AddComponent(entity, new BulletIdleSettings
+                {
+                    Lifetime = authoring.IdleLifetime,
+                    WarningTime = authoring.IdleWarningTime,
                 });
 
                 if (authoring.MaxLevelEffectPrefab != null)
