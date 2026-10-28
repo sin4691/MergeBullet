@@ -1,0 +1,19 @@
+{
+    "name": "MergeBullet.Editor",
+    "rootNamespace": "MergeBullet.Editor",
+    "references": [
+        "MergeBullet.Runtime",
+        "Unity.Scenes"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
