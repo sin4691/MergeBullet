@@ -16,6 +16,9 @@ namespace MergeBullet.Authoring
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
                 AddComponent(entity, new Bullet { Level = 1 });
                 AddComponent(entity, new BulletVelocity());
+                AddComponent(entity, new BulletIdle { LastLevel = 1 });
+                AddComponent(entity, new BulletExpired());
+                SetComponentEnabled<BulletExpired>(entity, false);
                 // 머티리얼을 레벨마다 따로 만들지 않고 엔티티별로 _BaseColor만 덮어쓴다 (배칭 유지)
                 AddComponent(entity, new URPMaterialPropertyBaseColor { Value = 1f });
             }
