@@ -29,6 +29,9 @@ namespace MergeBullet.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            // 벤치마크 중에는 적 수를 고정해야 해서 죽이지 않는다 (피해·충돌 계산은 그대로 일어난다)
+            if (SystemAPI.HasSingleton<BenchmarkSettings>()) return;
+
             new EnemyDeathJob
             {
                 DestroyEcb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()

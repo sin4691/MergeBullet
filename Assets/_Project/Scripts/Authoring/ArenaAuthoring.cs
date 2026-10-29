@@ -46,6 +46,14 @@ namespace MergeBullet.Authoring
         [Min(0.05f)] public float EnemySpawnInterval = 1f;
         [Min(0)] public int MaxEnemies = 30;
 
+        [Header("Benchmark (측정할 때만 켠다)")]
+        public bool BenchmarkMode;
+        // 레벨 1 총알 1000개 ≈ 아레나 면적의 31%. 5000개는 면적의 157%라 겹쳐서 바로 합성돼 유지가 안 된다
+        [Min(0)] public int BenchmarkBullets = 1000;
+        [Min(0)] public int BenchmarkEnemies = 300;
+        [Min(0f)] public float BenchmarkWarmupSeconds = 8f;
+        [Min(1f)] public float BenchmarkSampleSeconds = 10f;
+
         [Header("Progression")]
         [Min(1)] public int FirstLevelUpXp = 5;
         [Min(0)] public int LevelUpXpGrowth = 3;
@@ -92,8 +100,9 @@ namespace MergeBullet.Authoring
                     AddComponent(entity, new EnemySpawner
                     {
                         Prefab = GetEntity(authoring.EnemyPrefab, TransformUsageFlags.Dynamic),
-                        Interval = authoring.EnemySpawnInterval,
-                        MaxAlive = authoring.MaxEnemies,
+                        // 벤치마크면 적을 빠르게 최대 수까지 채운다 (워밍업 안에 다 차도록)
+                        Interval = authoring.BenchmarkMode ? 0.02f : authoring.EnemySpawnInterval,
+                        MaxAlive = authoring.BenchmarkMode ? authoring.BenchmarkEnemies : authoring.MaxEnemies,
                         Cooldown = authoring.EnemySpawnInterval,
                         // 총알 스폰과 다른 난수열을 쓰도록 시드를 비튼다
                         Random = Unity.Mathematics.Random.CreateFromIndex(authoring.Seed + 1),
@@ -112,6 +121,19 @@ namespace MergeBullet.Authoring
                 }
 
                 if (authoring.BulletPrefab == null) return;
+
+                if (authoring.BenchmarkMode)
+                {
+                    AddComponent(entity, new BenchmarkSettings
+                    {
+                        BulletPrefab = GetEntity(authoring.BulletPrefab, TransformUsageFlags.Dynamic),
+                        TargetBullets = authoring.BenchmarkBullets,
+                        BulletSpeed = authoring.BulletSpeed,
+                        WarmupSeconds = authoring.BenchmarkWarmupSeconds,
+                        SampleSeconds = authoring.BenchmarkSampleSeconds,
+                        Random = Unity.Mathematics.Random.CreateFromIndex(authoring.Seed + 3),
+                    });
+                }
                 AddComponent(entity, new BulletSpawner
                 {
                     Prefab = GetEntity(authoring.BulletPrefab, TransformUsageFlags.Dynamic),
