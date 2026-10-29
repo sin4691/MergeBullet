@@ -105,7 +105,7 @@ namespace MergeBullet.UI
             ShowStats(stats);
 
             if (_progressQuery.TryGetSingleton(out PlayerProgress progress))
-                ShowLevel(progress, stats.Kills);
+                ShowLevel(progress);
 
             _offerQuery.TryGetSingleton(out LevelUpOffer offer);
             ShowLevelUp(offer, progress.Level);
@@ -161,10 +161,10 @@ namespace MergeBullet.UI
             _hpText.text = $"HP {value} / {max}";
         }
 
-        void ShowLevel(PlayerProgress progress, int kills)
+        void ShowLevel(PlayerProgress progress)
         {
-            int span = progress.NextLevelKills - progress.PrevLevelKills;
-            float ratio = span > 0 ? Mathf.Clamp01((float)(kills - progress.PrevLevelKills) / span) : 0f;
+            int span = progress.NextLevelXp - progress.PrevLevelXp;
+            float ratio = span > 0 ? Mathf.Clamp01((float)(progress.Experience - progress.PrevLevelXp) / span) : 0f;
             _xpFill.style.width = Length.Percent(ratio * 100f);
 
             if (progress.Level == _shownLevel) return;
@@ -226,6 +226,8 @@ namespace MergeBullet.UI
                     return ("Vitality", $"Max HP +{UpgradeTuning.MaxHealthBonus:0} and heal {UpgradeTuning.MaxHealthBonus:0}");
                 case UpgradeType.ExplosionRadius:
                     return ("Big Boom", $"Explosion radius +{Percent(UpgradeTuning.ExplosionRadiusBonus)}");
+                case UpgradeType.Magnet:
+                    return ("Magnet", $"Gem pickup range +{Percent(UpgradeTuning.MagnetRadiusBonus)}");
                 default:
                     return (type.ToString(), "");
             }

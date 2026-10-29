@@ -47,8 +47,8 @@ namespace MergeBullet.Authoring
         [Min(0)] public int MaxEnemies = 30;
 
         [Header("Progression")]
-        [Min(1)] public int FirstLevelUpKills = 5;
-        [Min(0)] public int LevelUpKillsGrowth = 3;
+        [Min(1)] public int FirstLevelUpXp = 5;
+        [Min(0)] public int LevelUpXpGrowth = 3;
 
         class Baker : Baker<ArenaAuthoring>
         {
@@ -61,9 +61,9 @@ namespace MergeBullet.Authoring
                 AddComponent(entity, new PlayerProgress
                 {
                     Level = 1,
-                    NextLevelKills = authoring.FirstLevelUpKills,
-                    FirstStep = authoring.FirstLevelUpKills,
-                    StepGrowth = authoring.LevelUpKillsGrowth,
+                    NextLevelXp = authoring.FirstLevelUpXp,
+                    FirstStep = authoring.FirstLevelUpXp,
+                    StepGrowth = authoring.LevelUpXpGrowth,
                     // 총알·적 스폰과 다른 난수열을 쓰도록 시드를 비튼다
                     Random = Unity.Mathematics.Random.CreateFromIndex(authoring.Seed + 2),
                 });

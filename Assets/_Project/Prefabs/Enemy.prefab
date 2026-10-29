@@ -105,3 +105,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Authoring.EnemyAuthoring
   MoveSpeed: 2
   Radius: 0.35
+  MaxHealth: 3
+  ContactDamage: 1
+  HitFlashDuration: 0.12
+  XpGemPrefab: {fileID: 1943350708540551345, guid: c2887015638d4024db05a133ac292085, type: 3}
+  XpValue: 1

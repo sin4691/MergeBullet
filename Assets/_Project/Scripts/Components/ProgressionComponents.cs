@@ -11,21 +11,24 @@ namespace MergeBullet.Components
         BulletSpeed,
         MaxHealth,
         ExplosionRadius,
+        Magnet,
     }
 
     /// <summary>
-    /// 플레이어 레벨 진행 싱글톤. 경험치는 처치 수 그대로 쓰고, NextLevelKills에 도달하면 레벨업한다.
+    /// 플레이어 레벨 진행 싱글톤. 경험치 젬을 주워 Experience가 NextLevelXp에 도달하면 레벨업한다.
     /// </summary>
     public struct PlayerProgress : IComponentData
     {
         public int Level;
-        /// <summary>현재 레벨이 시작된 처치 수 (경험치 바의 0% 지점).</summary>
-        public int PrevLevelKills;
-        /// <summary>다음 레벨업 처치 수 (경험치 바의 100% 지점).</summary>
-        public int NextLevelKills;
-        /// <summary>레벨 1→2에 필요한 처치 수.</summary>
+        /// <summary>이번 판에 모은 경험치 합계.</summary>
+        public int Experience;
+        /// <summary>현재 레벨이 시작된 경험치 (경험치 바의 0% 지점).</summary>
+        public int PrevLevelXp;
+        /// <summary>다음 레벨업 경험치 (경험치 바의 100% 지점).</summary>
+        public int NextLevelXp;
+        /// <summary>레벨 1→2에 필요한 경험치.</summary>
         public int FirstStep;
-        /// <summary>레벨이 오를 때마다 필요 처치 수가 이만큼 늘어난다.</summary>
+        /// <summary>레벨이 오를 때마다 필요 경험치가 이만큼 늘어난다.</summary>
         public int StepGrowth;
         /// <summary>선택지 뽑기용 난수 상태.</summary>
         public Unity.Mathematics.Random Random;
@@ -58,5 +61,6 @@ namespace MergeBullet.Components
         public float BulletSpeed;
         public float BulletDamage;
         public float ExplosionRadius;
+        public float MagnetRadius;
     }
 }
