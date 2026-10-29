@@ -64,7 +64,8 @@ namespace MergeBullet.Systems
                 offer.ValueRW = new LevelUpOffer { Selected = -1 };
                 return;
             }
-            if (game.IsGameOver) return;
+            // 벤치마크 중에는 레벨업 선택으로 게임이 멈추면 안 된다
+            if (game.IsGameOver || SystemAPI.HasSingleton<BenchmarkSettings>()) return;
 
             if (offer.ValueRO.Active)
             {

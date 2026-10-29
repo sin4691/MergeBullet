@@ -27,6 +27,9 @@ namespace MergeBullet.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            // 벤치마크 중에는 플레이어가 죽지 않아야 같은 부하로 끝까지 잴 수 있다
+            if (SystemAPI.HasSingleton<BenchmarkSettings>()) return;
+
             Entity player = SystemAPI.GetSingletonEntity<PlayerHealth>();
             var strongestHit = new NativeReference<float>(0f, Allocator.TempJob);
 
