@@ -86,29 +86,74 @@ namespace MergeBullet.Editor
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(go, PrefabsDir + "/Explosion.prefab");
             Object.DestroyImmediate(go);
 
-            // SubScene의 ArenaAuthoring에 연결. SubScene이 이미 열려 있으면 그대로 쓰고 닫지 않는다
+            EditArenaSubScene((subScene, arena) =>
+            {
+                Undo.RecordObject(arena, "Assign Max Level Effect");
+                arena.MaxLevelEffectPrefab = prefab;
+                EditorUtility.SetDirty(arena);
+            });
+            Debug.Log("Max Level Effect 생성 완료. Play를 눌러 확인하세요.");
+        }
+
+        [MenuItem("MergeBullet/Create Player")]
+        static void CreatePlayer()
+        {
+            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath) == null)
+            {
+                Debug.LogError("먼저 MergeBullet/Create Arena SubScene 을 실행하세요.");
+                return;
+            }
+
+            Material material = CreateMaterial("Player", new Color(0.3f, 0.75f, 1f));
+            var bulletPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabsDir + "/Bullet.prefab");
+
+            EditArenaSubScene((subScene, arena) =>
+            {
+                foreach (GameObject root in subScene.GetRootGameObjects())
+                {
+                    if (root.GetComponentInChildren<PlayerAuthoring>() == null) continue;
+                    Debug.LogWarning("SubScene에 이미 Player가 있습니다.");
+                    return;
+                }
+
+                GameObject player = CreatePrimitiveWithoutCollider(PrimitiveType.Cube, "Player", material);
+                SceneManager.MoveGameObjectToScene(player, subScene);
+                var authoring = player.AddComponent<PlayerAuthoring>();
+                authoring.BulletPrefab = bulletPrefab;
+                player.transform.localScale = Vector3.one * (authoring.Radius * 2f);
+                Undo.RegisterCreatedObjectUndo(player, "Create Player");
+
+                // 이제 총알은 플레이어가 쏘므로 시작 시 뿌리는 총알은 끈다 (스트레스 테스트할 때만 올려서 쓴다)
+                Undo.RecordObject(arena, "Disable Initial Bullets");
+                arena.BulletCount = 0;
+                EditorUtility.SetDirty(arena);
+            });
+            Debug.Log("Player 생성 완료. Play 후 WASD로 움직여 보세요.");
+        }
+
+        /// <summary>
+        /// 아레나 SubScene을 (닫혀 있으면 잠깐 열어서) 수정하고 저장한다.
+        /// 이미 열려 있으면 그대로 쓰고 닫지 않는다.
+        /// </summary>
+        static void EditArenaSubScene(System.Action<Scene, ArenaAuthoring> edit)
+        {
             Scene subScene = SceneManager.GetSceneByPath(SubScenePath);
             bool wasLoaded = subScene.isLoaded;
             if (!wasLoaded) subScene = EditorSceneManager.OpenScene(SubScenePath, OpenSceneMode.Additive);
 
-            ArenaAuthoring authoring = null;
+            ArenaAuthoring arena = null;
             foreach (GameObject root in subScene.GetRootGameObjects())
             {
-                authoring = root.GetComponentInChildren<ArenaAuthoring>();
-                if (authoring != null) break;
+                arena = root.GetComponentInChildren<ArenaAuthoring>();
+                if (arena != null) break;
             }
 
-            if (authoring == null)
-            {
+            if (arena == null)
                 Debug.LogError($"{SubScenePath} 에서 ArenaAuthoring을 찾지 못했습니다.");
-            }
             else
             {
-                Undo.RecordObject(authoring, "Assign Max Level Effect");
-                authoring.MaxLevelEffectPrefab = prefab;
-                EditorUtility.SetDirty(authoring);
+                edit(subScene, arena);
                 EditorSceneManager.SaveScene(subScene);
-                Debug.Log("Max Level Effect 생성 완료. Play를 눌러 확인하세요.");
             }
 
             if (!wasLoaded) EditorSceneManager.CloseScene(subScene, true);

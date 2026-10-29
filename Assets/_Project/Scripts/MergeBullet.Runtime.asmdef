@@ -8,7 +8,8 @@
         "Unity.Transforms",
         "Unity.Mathematics",
         "Unity.Burst",
-        "Unity.Collections"
+        "Unity.Collections",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
