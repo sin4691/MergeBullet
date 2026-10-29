@@ -7,7 +7,9 @@ using Unity.Transforms;
 
 namespace MergeBullet.Systems
 {
-    /// <summary>모든 적이 플레이어를 향해 직선으로 다가온다. 몸이 닿는 거리에서 멈춘다. 워커 스레드에서 병렬 실행.</summary>
+    /// <summary>
+    /// 모든 적이 플레이어를 바라보며 직선으로 다가온다. 몸이 닿는 거리에서 멈춘다. 워커 스레드에서 병렬 실행.
+    /// </summary>
     [UpdateAfter(typeof(PlayerMoveSystem))]
     [BurstCompile]
     public partial struct EnemyChaseSystem : ISystem
@@ -44,6 +46,11 @@ namespace MergeBullet.Systems
         {
             float2 toPlayer = PlayerPositions[PlayerEntity].Value - transform.Position.xy;
             float distance = math.length(toPlayer);
+            if (distance < 1e-4f) return;
+
+            // 닿아서 멈춘 상태에서도 계속 플레이어를 바라본다
+            transform.Rotation = quaternion.RotateZ(math.atan2(toPlayer.y, toPlayer.x));
+
             float gap = distance - (enemy.Radius + Players[PlayerEntity].Radius);
             if (gap <= 0f) return;
 
