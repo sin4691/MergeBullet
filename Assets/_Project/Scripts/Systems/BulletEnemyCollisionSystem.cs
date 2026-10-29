@@ -72,6 +72,7 @@ namespace MergeBullet.Systems
                 Enemies = enemies,
                 Hits = hits,
                 Health = SystemAPI.GetComponentLookup<EnemyHealth>(),
+                Flashes = SystemAPI.GetComponentLookup<HitFlash>(),
             }.Schedule(bounce);
 
             enemies.Dispose(damage);
@@ -170,6 +171,7 @@ namespace MergeBullet.Systems
         [ReadOnly] public NativeArray<Entity> Enemies;
         public NativeQueue<EnemyHit> Hits;
         public ComponentLookup<EnemyHealth> Health;
+        public ComponentLookup<HitFlash> Flashes;
 
         public void Execute()
         {
@@ -177,6 +179,10 @@ namespace MergeBullet.Systems
             {
                 RefRW<EnemyHealth> health = Health.GetRefRW(Enemies[hit.EnemyIndex]);
                 health.ValueRW.Value -= hit.Damage;
+
+                // 맞을 때마다 번쩍임을 처음부터 다시 시작한다
+                RefRW<HitFlash> flash = Flashes.GetRefRW(Enemies[hit.EnemyIndex]);
+                flash.ValueRW.Timer = flash.ValueRO.Duration;
             }
         }
     }

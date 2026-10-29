@@ -77,7 +77,7 @@ namespace MergeBullet.Systems
     {
         [ReadOnly] public NativeArray<Blast> Blasts;
 
-        void Execute(ref EnemyHealth health, in LocalTransform transform, in Enemy enemy)
+        void Execute(ref EnemyHealth health, ref HitFlash flash, in LocalTransform transform, in Enemy enemy)
         {
             float2 position = transform.Position.xy;
             for (int i = 0; i < Blasts.Length; i++)
@@ -85,7 +85,10 @@ namespace MergeBullet.Systems
                 // 적 몸의 일부라도 폭발 반경에 들어오면 맞은 것으로 본다
                 float reach = Blasts[i].Radius + enemy.Radius;
                 if (math.distancesq(position, Blasts[i].Position) < reach * reach)
+                {
                     health.Value -= Blasts[i].Damage;
+                    flash.Timer = flash.Duration;
+                }
             }
         }
     }

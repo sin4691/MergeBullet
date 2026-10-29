@@ -1,6 +1,7 @@
 using MergeBullet.Components;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Rendering;
 using UnityEngine;
 
 namespace MergeBullet.Authoring
@@ -33,6 +34,14 @@ namespace MergeBullet.Authoring
                 AddComponent(entity, new PlayerMoveInput());
                 AddComponent(entity, new PlayerPosition { Value = ((float3)authoring.transform.position).xy });
                 AddComponent(entity, new FacingDirection { Value = new float2(1f, 0f) });
+
+                // 무적 시간 깜빡임: 원래 색을 기억해 두고 엔티티별 색 오버라이드로 하얀색과 번갈아 칠한다
+                var renderer = GetComponent<MeshRenderer>();
+                Material material = renderer != null ? renderer.sharedMaterial : null;
+                DependsOn(material);
+                float4 baseColor = AuthoringColor.LinearBaseColor(material);
+                AddComponent(entity, new BaseColor { Value = baseColor });
+                AddComponent(entity, new URPMaterialPropertyBaseColor { Value = baseColor });
 
                 if (authoring.BulletPrefab == null) return;
                 AddComponent(entity, new AutoFire
