@@ -15,11 +15,12 @@ namespace MergeBullet.Systems
         public const float BulletSpeedBonus = 0.15f;       // 원래 총알 속도의 +15%
         public const float MaxHealthBonus = 2f;            // 최대 체력 +2, 같은 양 회복
         public const float ExplosionRadiusBonus = 0.20f;   // 원래 폭발 반경의 +20%
+        public const float MagnetRadiusBonus = 0.30f;      // 원래 젬 자석 범위의 +30%
     }
 
     /// <summary>
     /// 레벨업과 업그레이드를 관리한다.
-    /// - 처치 수가 다음 레벨 기준에 닿으면 업그레이드 3개를 뽑아 LevelUpOffer를 연다 (GameFlowSystem이 게임을 멈춤)
+    /// - 경험치가 다음 레벨 기준에 닿으면 업그레이드 3개를 뽑아 LevelUpOffer를 연다 (GameFlowSystem이 게임을 멈춤)
     /// - HUD가 선택지를 고르면 해당 능력치에 적용하고 닫는다
     /// - 재시작하면 능력치를 BaseStats로 되돌리고 레벨을 1로 초기화한다
     /// 프레임 맨 앞(이전 프레임 잡이 끝난 뒤)에 돌아서, 싱글톤을 메인 스레드에서 직접 읽고 써도 기다림이 거의 없다.
@@ -36,7 +37,6 @@ namespace MergeBullet.Systems
             state.RequireForUpdate<LevelUpOffer>();
             state.RequireForUpdate<BaseStats>();
             state.RequireForUpdate<GameState>();
-            state.RequireForUpdate<GameStats>();
             state.RequireForUpdate<Player>();
             state.RequireForUpdate<PlayerHealth>();
             state.RequireForUpdate<AutoFire>();
@@ -58,8 +58,9 @@ namespace MergeBullet.Systems
             {
                 RestoreBaseStats(ref state, baseStats.ValueRO);
                 progress.ValueRW.Level = 1;
-                progress.ValueRW.PrevLevelKills = 0;
-                progress.ValueRW.NextLevelKills = progress.ValueRO.FirstStep;
+                progress.ValueRW.Experience = 0;
+                progress.ValueRW.PrevLevelXp = 0;
+                progress.ValueRW.NextLevelXp = progress.ValueRO.FirstStep;
                 offer.ValueRW = new LevelUpOffer { Selected = -1 };
                 return;
             }
@@ -73,12 +74,12 @@ namespace MergeBullet.Systems
             }
 
             // 한 번에 여러 레벨을 넘었으면 방금 고른 직후 다음 선택지를 바로 연다 (한 번에 하나씩)
-            if (SystemAPI.GetSingleton<GameStats>().Kills < progress.ValueRO.NextLevelKills) return;
+            if (progress.ValueRO.Experience < progress.ValueRO.NextLevelXp) return;
 
             PlayerProgress p = progress.ValueRO;
             p.Level++;
-            p.PrevLevelKills = p.NextLevelKills;
-            p.NextLevelKills += p.FirstStep + p.StepGrowth * (p.Level - 1);
+            p.PrevLevelXp = p.NextLevelXp;
+            p.NextLevelXp += p.FirstStep + p.StepGrowth * (p.Level - 1);
             offer.ValueRW = RollOffer(ref p.Random, SystemAPI.HasSingleton<MaxLevelEffect>());
             progress.ValueRW = p;
         }
@@ -103,6 +104,7 @@ namespace MergeBullet.Systems
                 UpgradeType.MoveSpeed,
                 UpgradeType.BulletSpeed,
                 UpgradeType.MaxHealth,
+                UpgradeType.Magnet,
             };
             if (hasExplosion) pool.Add(UpgradeType.ExplosionRadius);
 
@@ -131,6 +133,7 @@ namespace MergeBullet.Systems
             stats.BulletSpeed = weapon.BulletSpeed;
             stats.BulletDamage = SystemAPI.GetSingleton<BulletLevelSettings>().BaseDamage;
             stats.ExplosionRadius = SystemAPI.TryGetSingleton(out MaxLevelEffect effect) ? effect.Radius : 0f;
+            stats.MagnetRadius = SystemAPI.TryGetSingleton(out GemCollector collector) ? collector.MagnetRadius : 0f;
             stats.Captured = true;
         }
 
@@ -145,6 +148,8 @@ namespace MergeBullet.Systems
             SystemAPI.GetSingletonRW<BulletLevelSettings>().ValueRW.BaseDamage = stats.BulletDamage;
             if (SystemAPI.HasSingleton<MaxLevelEffect>())
                 SystemAPI.GetSingletonRW<MaxLevelEffect>().ValueRW.Radius = stats.ExplosionRadius;
+            if (SystemAPI.HasSingleton<GemCollector>())
+                SystemAPI.GetSingletonRW<GemCollector>().ValueRW.MagnetRadius = stats.MagnetRadius;
         }
 
         void ApplyUpgrade(ref SystemState state, UpgradeType type, in BaseStats stats)
@@ -174,6 +179,11 @@ namespace MergeBullet.Systems
                     if (SystemAPI.HasSingleton<MaxLevelEffect>())
                         SystemAPI.GetSingletonRW<MaxLevelEffect>().ValueRW.Radius +=
                             stats.ExplosionRadius * UpgradeTuning.ExplosionRadiusBonus;
+                    break;
+                case UpgradeType.Magnet:
+                    if (SystemAPI.HasSingleton<GemCollector>())
+                        SystemAPI.GetSingletonRW<GemCollector>().ValueRW.MagnetRadius +=
+                            stats.MagnetRadius * UpgradeTuning.MagnetRadiusBonus;
                     break;
             }
         }

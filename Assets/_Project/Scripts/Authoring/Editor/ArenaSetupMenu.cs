@@ -165,6 +165,41 @@ namespace MergeBullet.Editor
             Debug.Log("Enemy 생성 완료. Play를 눌러 확인하세요.");
         }
 
+        // 젬 프리팹을 만들고 적 프리팹의 드롭으로 연결한다 (드롭은 적마다 다를 수 있어서 적 프리팹이 갖는다)
+        [MenuItem("MergeBullet/Create XP Gem")]
+        static void CreateXpGem()
+        {
+            const string enemyPrefabPath = PrefabsDir + "/Enemy.prefab";
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(enemyPrefabPath) == null)
+            {
+                Debug.LogError("먼저 MergeBullet/Create Enemy 를 실행하세요.");
+                return;
+            }
+
+            EnsureFolder(MaterialsDir);
+            EnsureFolder(PrefabsDir);
+
+            Material material = CreateMaterial("XpGem", new Color(0.3f, 1f, 0.75f));
+            GameObject go = CreatePrimitiveWithoutCollider(PrimitiveType.Cube, "XpGem", material);
+            go.transform.localScale = Vector3.one * 0.22f;
+            go.AddComponent<XpGemAuthoring>();
+            GameObject gemPrefab = PrefabUtility.SaveAsPrefabAsset(go, PrefabsDir + "/XpGem.prefab");
+            Object.DestroyImmediate(go);
+
+            // 프리팹 에셋은 내용을 잠깐 열어서 고친 뒤 다시 저장한다
+            GameObject enemy = PrefabUtility.LoadPrefabContents(enemyPrefabPath);
+            try
+            {
+                enemy.GetComponent<EnemyAuthoring>().XpGemPrefab = gemPrefab;
+                PrefabUtility.SaveAsPrefabAsset(enemy, enemyPrefabPath);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(enemy);
+            }
+            Debug.Log("XP Gem 생성 완료. Play를 눌러 확인하세요.");
+        }
+
         // HUD는 MonoBehaviour로 남아 있어야 하므로 SubScene이 아니라 메인 씬에 둔다.
         // 이미 GameHud가 있으면(예전 IMGUI 버전) 새로 만들지 않고 UIDocument만 설정한다.
         [MenuItem("MergeBullet/Create HUD")]

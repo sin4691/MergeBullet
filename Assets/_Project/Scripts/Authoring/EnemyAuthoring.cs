@@ -15,6 +15,10 @@ namespace MergeBullet.Authoring
         [Min(0f)] public float ContactDamage = 1f;
         [Min(0.01f)] public float HitFlashDuration = 0.12f;
 
+        [Header("Drop")]
+        public GameObject XpGemPrefab;
+        [Min(1)] public int XpValue = 1;
+
         class Baker : Baker<EnemyAuthoring>
         {
             public override void Bake(EnemyAuthoring authoring)
@@ -36,6 +40,15 @@ namespace MergeBullet.Authoring
                 AddComponent(entity, new BaseColor { Value = baseColor });
                 AddComponent(entity, new URPMaterialPropertyBaseColor { Value = baseColor });
                 AddComponent(entity, new HitFlash { Duration = authoring.HitFlashDuration });
+
+                if (authoring.XpGemPrefab != null)
+                {
+                    AddComponent(entity, new XpDrop
+                    {
+                        GemPrefab = GetEntity(authoring.XpGemPrefab, TransformUsageFlags.Dynamic),
+                        Value = authoring.XpValue,
+                    });
+                }
             }
         }
     }

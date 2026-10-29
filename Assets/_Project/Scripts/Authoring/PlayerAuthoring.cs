@@ -14,6 +14,11 @@ namespace MergeBullet.Authoring
         [Min(1f)] public float MaxHealth = 10f;
         [Min(0f)] public float InvulnerableDuration = 0.8f;
 
+        [Header("Gem Pickup")]
+        [Min(0f)] public float MagnetRadius = 2.5f;
+        [Min(0.01f)] public float PickupRadius = 0.5f;
+        [Min(0f)] public float GemPullSpeed = 12f;
+
         [Header("Auto Fire")]
         public GameObject BulletPrefab;
         [Min(0.01f)] public float FireInterval = 0.25f;
@@ -34,6 +39,12 @@ namespace MergeBullet.Authoring
                 AddComponent(entity, new PlayerMoveInput());
                 AddComponent(entity, new PlayerPosition { Value = ((float3)authoring.transform.position).xy });
                 AddComponent(entity, new FacingDirection { Value = new float2(1f, 0f) });
+                AddComponent(entity, new GemCollector
+                {
+                    MagnetRadius = authoring.MagnetRadius,
+                    PickupRadius = authoring.PickupRadius,
+                    PullSpeed = authoring.GemPullSpeed,
+                });
 
                 // 무적 시간 깜빡임: 원래 색을 기억해 두고 엔티티별 색 오버라이드로 하얀색과 번갈아 칠한다
                 var renderer = GetComponent<MeshRenderer>();
