@@ -1,6 +1,8 @@
 using MergeBullet.Components;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
@@ -9,9 +11,10 @@ namespace MergeBullet.Systems
 {
     /// <summary>
     /// 쿨다운마다 레벨 1 총알을 플레이어 몸 바깥에서 발사한다.
-    /// 발사 방향은 지금은 바라보는 방향이고, 적이 생기면 가장 가까운 적 조준으로 바뀐다.
+    /// 가장 가까운 적을 조준하고, 적이 없으면 바라보는 방향으로 쏜다.
+    /// 1) 가장 가까운 적 찾기 → 2) 발사, 두 잡을 이어서 예약하고 메인 스레드는 기다리지 않는다.
     /// </summary>
-    [UpdateAfter(typeof(PlayerMoveSystem))]
+    [UpdateAfter(typeof(EnemyChaseSystem))]
     [BurstCompile]
     public partial struct AutoFireSystem : ISystem
     {
@@ -26,13 +29,55 @@ namespace MergeBullet.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            new AutoFireJob
+            var nearest = new NativeReference<NearestTarget>(
+                new NearestTarget { DistanceSq = float.MaxValue }, Allocator.TempJob);
+
+            JobHandle find = new FindNearestEnemyJob
+            {
+                PlayerEntity = SystemAPI.GetSingletonEntity<AutoFire>(),
+                PlayerPositions = SystemAPI.GetComponentLookup<PlayerPosition>(true),
+                Nearest = nearest,
+            }.Schedule(state.Dependency);
+
+            JobHandle fire = new AutoFireJob
             {
                 DeltaTime = SystemAPI.Time.DeltaTime,
                 Levels = SystemAPI.GetSingleton<BulletLevelSettings>(),
+                Target = nearest,
                 Ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
                     .CreateCommandBuffer(state.WorldUnmanaged),
-            }.Schedule();
+            }.Schedule(find);
+
+            nearest.Dispose(fire);
+            state.Dependency = fire;
+        }
+    }
+
+    struct NearestTarget
+    {
+        public float2 Position;
+        public float DistanceSq;
+        public bool Found;
+    }
+
+    /// <summary>
+    /// 적 전체를 한 번 훑어 가장 가까운 적을 찾는다 (단일 스레드).
+    /// 적 수가 수백 단위라 전수 비교로 충분하다. 수천으로 늘면 공간 해시로 바꾼다.
+    /// </summary>
+    [BurstCompile]
+    partial struct FindNearestEnemyJob : IJobEntity
+    {
+        public Entity PlayerEntity;
+        [ReadOnly] public ComponentLookup<PlayerPosition> PlayerPositions;
+        public NativeReference<NearestTarget> Nearest;
+
+        void Execute(in LocalTransform transform, in Enemy enemy)
+        {
+            float2 position = transform.Position.xy;
+            float distanceSq = math.distancesq(position, PlayerPositions[PlayerEntity].Value);
+            if (distanceSq >= Nearest.Value.DistanceSq) return;
+
+            Nearest.Value = new NearestTarget { Position = position, DistanceSq = distanceSq, Found = true };
         }
     }
 
@@ -41,6 +86,7 @@ namespace MergeBullet.Systems
     {
         public float DeltaTime;
         public BulletLevelSettings Levels;
+        [ReadOnly] public NativeReference<NearestTarget> Target;
         public EntityCommandBuffer Ecb;
 
         void Execute(ref AutoFire weapon, in LocalTransform transform, in FacingDirection facing, in Player player)
@@ -51,11 +97,16 @@ namespace MergeBullet.Systems
             // 프레임이 길어져도 발사 간격이 밀리지 않도록 남은 시간을 이어 붙인다 (한 프레임에 최대 1발)
             weapon.Cooldown = math.max(weapon.Cooldown + weapon.Interval, 0f);
 
+            float2 origin = transform.Position.xy;
+            NearestTarget target = Target.Value;
+            float2 direction = target.Found
+                ? math.normalizesafe(target.Position - origin, facing.Value)
+                : facing.Value;
+
             const int level = 1;
             float radius = BulletLevelUtility.RadiusOf(level, Levels);
-            float2 direction = facing.Value;
             // 플레이어 몸 바깥에서 생성해야 바로 겹쳐 보이지 않는다
-            float2 position = transform.Position.xy + direction * (player.Radius + radius);
+            float2 position = origin + direction * (player.Radius + radius);
 
             Entity bullet = Ecb.Instantiate(weapon.BulletPrefab);
             Ecb.SetComponent(bullet, LocalTransform.FromPositionRotationScale(

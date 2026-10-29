@@ -166,6 +166,9 @@ MonoBehaviour:
   EffectDuration: 0.4
   IdleLifetime: 8
   IdleWarningTime: 1.5
+  EnemyPrefab: {fileID: 9211892432071304558, guid: ff33f4f6bf4318b4089b4640fc73857c, type: 3}
+  EnemySpawnInterval: 1
+  MaxEnemies: 30
 --- !u!4 &304486843
 Transform:
   m_ObjectHideFlags: 0

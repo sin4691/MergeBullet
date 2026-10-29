@@ -131,6 +131,34 @@ namespace MergeBullet.Editor
             Debug.Log("Player 생성 완료. Play 후 WASD로 움직여 보세요.");
         }
 
+        [MenuItem("MergeBullet/Create Enemy")]
+        static void CreateEnemy()
+        {
+            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath) == null)
+            {
+                Debug.LogError("먼저 MergeBullet/Create Arena SubScene 을 실행하세요.");
+                return;
+            }
+
+            EnsureFolder(MaterialsDir);
+            EnsureFolder(PrefabsDir);
+
+            // 적 프리팹: 정육면체 + EnemyAuthoring (스폰 시 45도 돌려 마름모로 보인다)
+            Material material = CreateMaterial("Enemy", new Color(0.85f, 0.2f, 0.35f));
+            GameObject go = CreatePrimitiveWithoutCollider(PrimitiveType.Cube, "Enemy", material);
+            go.AddComponent<EnemyAuthoring>();
+            GameObject prefab = PrefabUtility.SaveAsPrefabAsset(go, PrefabsDir + "/Enemy.prefab");
+            Object.DestroyImmediate(go);
+
+            EditArenaSubScene((subScene, arena) =>
+            {
+                Undo.RecordObject(arena, "Assign Enemy Prefab");
+                arena.EnemyPrefab = prefab;
+                EditorUtility.SetDirty(arena);
+            });
+            Debug.Log("Enemy 생성 완료. Play를 눌러 확인하세요.");
+        }
+
         /// <summary>
         /// 아레나 SubScene을 (닫혀 있으면 잠깐 열어서) 수정하고 저장한다.
         /// 이미 열려 있으면 그대로 쓰고 닫지 않는다.

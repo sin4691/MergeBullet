@@ -34,11 +34,13 @@ namespace MergeBullet.Systems
         public float DeltaTime;
         public float2 ArenaHalfSize;
 
-        void Execute(ref LocalTransform transform, ref FacingDirection facing, in Player player, in PlayerMoveInput input)
+        void Execute(ref LocalTransform transform, ref PlayerPosition playerPosition, ref FacingDirection facing,
+            in Player player, in PlayerMoveInput input)
         {
             float2 limit = ArenaHalfSize - player.Radius;
-            float2 position = transform.Position.xy + input.Move * player.MoveSpeed * DeltaTime;
-            transform.Position = new float3(math.clamp(position, -limit, limit), transform.Position.z);
+            float2 position = math.clamp(transform.Position.xy + input.Move * player.MoveSpeed * DeltaTime, -limit, limit);
+            transform.Position = new float3(position, transform.Position.z);
+            playerPosition.Value = position;
 
             if (math.lengthsq(input.Move) > 0.01f)
                 facing.Value = math.normalize(input.Move);
