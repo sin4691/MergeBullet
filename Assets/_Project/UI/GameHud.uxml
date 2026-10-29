@@ -2,21 +2,50 @@
     <Style src="GameHud.uss" />
     <ui:VisualElement name="hud" class="hud" picking-mode="Ignore">
         <ui:VisualElement class="top-bar" picking-mode="Ignore">
-            <ui:VisualElement name="hp-bar" class="hp-bar" picking-mode="Ignore">
-                <ui:VisualElement name="hp-fill" class="hp-fill" picking-mode="Ignore" />
-                <ui:Label name="hp-text" class="hp-text" text="HP 10 / 10" picking-mode="Ignore" />
+            <ui:VisualElement class="player-info" picking-mode="Ignore">
+                <ui:VisualElement name="hp-bar" class="hp-bar" picking-mode="Ignore">
+                    <ui:VisualElement name="hp-fill" class="hp-fill" picking-mode="Ignore" />
+                    <ui:Label name="hp-text" class="hp-text" text="HP 10 / 10" picking-mode="Ignore" />
+                </ui:VisualElement>
+                <ui:VisualElement class="level-row" picking-mode="Ignore">
+                    <ui:Label name="level-text" class="level-text" text="LV 1" picking-mode="Ignore" />
+                    <ui:VisualElement name="xp-bar" class="xp-bar" picking-mode="Ignore">
+                        <ui:VisualElement name="xp-fill" class="xp-fill" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement class="stats" picking-mode="Ignore">
                 <ui:Label name="time-text" class="stat" text="00:00" picking-mode="Ignore" />
                 <ui:Label name="kill-text" class="stat" text="KILLS 0" picking-mode="Ignore" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="game-over" class="game-over">
-            <ui:VisualElement class="game-over-box">
-                <ui:Label class="game-over-title" text="GAME OVER" />
-                <ui:Label name="final-text" class="final-text" text="" />
-                <ui:Button name="restart-button" class="restart-button" text="Restart (R)" />
+
+        <ui:VisualElement name="level-up" class="overlay">
+            <ui:Label class="overlay-title" text="LEVEL UP!" />
+            <ui:Label class="overlay-hint" text="Choose an upgrade  (1 / 2 / 3)" />
+            <ui:VisualElement class="choice-row">
+                <ui:Button name="choice-0" class="choice">
+                    <ui:Label name="choice-0-key" class="choice-key" text="1" picking-mode="Ignore" />
+                    <ui:Label name="choice-0-title" class="choice-title" picking-mode="Ignore" />
+                    <ui:Label name="choice-0-desc" class="choice-desc" picking-mode="Ignore" />
+                </ui:Button>
+                <ui:Button name="choice-1" class="choice">
+                    <ui:Label name="choice-1-key" class="choice-key" text="2" picking-mode="Ignore" />
+                    <ui:Label name="choice-1-title" class="choice-title" picking-mode="Ignore" />
+                    <ui:Label name="choice-1-desc" class="choice-desc" picking-mode="Ignore" />
+                </ui:Button>
+                <ui:Button name="choice-2" class="choice">
+                    <ui:Label name="choice-2-key" class="choice-key" text="3" picking-mode="Ignore" />
+                    <ui:Label name="choice-2-title" class="choice-title" picking-mode="Ignore" />
+                    <ui:Label name="choice-2-desc" class="choice-desc" picking-mode="Ignore" />
+                </ui:Button>
             </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="game-over" class="overlay">
+            <ui:Label class="overlay-title game-over-title" text="GAME OVER" />
+            <ui:Label name="final-text" class="final-text" text="" />
+            <ui:Button name="restart-button" class="restart-button" text="Restart (R)" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

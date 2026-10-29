@@ -11,12 +11,17 @@
 .top-bar {
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     padding: 24px 36px;
 }
 
-.hp-bar {
+/* ---------- 체력 · 레벨 ---------- */
+
+.player-info {
     width: 420px;
+}
+
+.hp-bar {
     height: 36px;
     background-color: rgba(0, 0, 0, 0.6);
     border-radius: 8px;
@@ -47,6 +52,41 @@
     color: rgb(255, 255, 255);
 }
 
+.level-row {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.level-text {
+    width: 72px;
+    margin: 0;
+    padding: 0;
+    font-size: 22px;
+    -unity-font-style: bold;
+    color: rgb(255, 214, 77);
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgba(0, 0, 0, 0.8);
+}
+
+.xp-bar {
+    flex-grow: 1;
+    height: 12px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* 너비(%)는 GameHud.cs가 경험치 비율에 맞춰 바꾼다 */
+.xp-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background-color: rgb(255, 214, 77);
+}
+
 .stats {
     flex-direction: row;
 }
@@ -60,8 +100,10 @@
     -unity-text-outline-color: rgba(0, 0, 0, 0.8);
 }
 
-/* 게임 오버일 때만 GameHud.cs가 display: flex로 켠다 */
-.game-over {
+/* ---------- 전체 화면 오버레이 (레벨업, 게임 오버) ---------- */
+
+/* 필요할 때만 GameHud.cs가 display: flex로 켠다 */
+.overlay {
     display: none;
     position: absolute;
     left: 0;
@@ -73,13 +115,60 @@
     background-color: rgba(0, 0, 0, 0.6);
 }
 
-.game-over-box {
+.overlay-title {
+    font-size: 80px;
+    -unity-font-style: bold;
+    color: rgb(255, 214, 77);
+}
+
+.overlay-hint {
+    margin: 4px 0 36px 0;
+    font-size: 26px;
+    color: rgb(220, 220, 220);
+}
+
+.choice-row {
+    flex-direction: row;
+}
+
+.choice {
+    width: 360px;
+    height: 240px;
+    margin: 0 18px;
+    padding: 20px;
     align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    border-width: 3px;
+    border-color: rgb(255, 214, 77);
+    background-color: rgb(40, 44, 58);
+}
+
+.choice:hover {
+    background-color: rgb(62, 68, 90);
+}
+
+.choice-key {
+    font-size: 22px;
+    color: rgb(160, 160, 170);
+}
+
+.choice-title {
+    margin: 8px 0;
+    font-size: 36px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+}
+
+.choice-desc {
+    font-size: 24px;
+    white-space: normal;
+    -unity-text-align: middle-center;
+    color: rgb(210, 210, 220);
 }
 
 .game-over-title {
     font-size: 96px;
-    -unity-font-style: bold;
     color: rgb(255, 255, 255);
 }
 

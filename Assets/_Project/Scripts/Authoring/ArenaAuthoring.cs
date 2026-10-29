@@ -8,7 +8,7 @@ namespace MergeBullet.Authoring
     /// <summary>
     /// SubScene 안의 Arena 오브젝트에 붙인다. 아레나 크기, 초기 총알 스폰, 레벨 규칙, 최대 레벨 효과, 방치 소멸 규칙,
     /// 적 스폰, 게임 상태를 ArenaBounds / BulletSpawner / BulletLevelSettings / MaxLevelEffect / BulletIdleSettings /
-    /// EnemySpawner / GameState / GameStats 싱글톤으로 베이킹한다.
+    /// EnemySpawner / GameState / GameStats / 레벨 진행(PlayerProgress, LevelUpOffer, BaseStats) 싱글톤으로 베이킹한다.
     /// </summary>
     public class ArenaAuthoring : MonoBehaviour
     {
@@ -46,6 +46,10 @@ namespace MergeBullet.Authoring
         [Min(0.05f)] public float EnemySpawnInterval = 1f;
         [Min(0)] public int MaxEnemies = 30;
 
+        [Header("Progression")]
+        [Min(1)] public int FirstLevelUpKills = 5;
+        [Min(0)] public int LevelUpKillsGrowth = 3;
+
         class Baker : Baker<ArenaAuthoring>
         {
             public override void Bake(ArenaAuthoring authoring)
@@ -54,6 +58,17 @@ namespace MergeBullet.Authoring
                 AddComponent(entity, new ArenaBounds { HalfSize = authoring.ArenaSize * 0.5f });
                 AddComponent(entity, new GameState());
                 AddComponent(entity, new GameStats());
+                AddComponent(entity, new PlayerProgress
+                {
+                    Level = 1,
+                    NextLevelKills = authoring.FirstLevelUpKills,
+                    FirstStep = authoring.FirstLevelUpKills,
+                    StepGrowth = authoring.LevelUpKillsGrowth,
+                    // 총알·적 스폰과 다른 난수열을 쓰도록 시드를 비튼다
+                    Random = Unity.Mathematics.Random.CreateFromIndex(authoring.Seed + 2),
+                });
+                AddComponent(entity, new LevelUpOffer { Selected = -1 });
+                AddComponent(entity, new BaseStats());
                 AddComponent(entity, new BulletLevelSettings
                 {
                     MaxLevel = authoring.MaxLevel,
