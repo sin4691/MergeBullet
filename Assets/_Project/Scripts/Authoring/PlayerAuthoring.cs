@@ -10,6 +10,8 @@ namespace MergeBullet.Authoring
     {
         [Min(0f)] public float MoveSpeed = 6f;
         [Min(0.01f)] public float Radius = 0.3f;
+        [Min(1f)] public float MaxHealth = 10f;
+        [Min(0f)] public float InvulnerableDuration = 0.8f;
 
         [Header("Auto Fire")]
         public GameObject BulletPrefab;
@@ -22,6 +24,12 @@ namespace MergeBullet.Authoring
             {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
                 AddComponent(entity, new Player { MoveSpeed = authoring.MoveSpeed, Radius = authoring.Radius });
+                AddComponent(entity, new PlayerHealth
+                {
+                    Value = authoring.MaxHealth,
+                    Max = authoring.MaxHealth,
+                    InvulnerableDuration = authoring.InvulnerableDuration,
+                });
                 AddComponent(entity, new PlayerMoveInput());
                 AddComponent(entity, new PlayerPosition { Value = ((float3)authoring.transform.position).xy });
                 AddComponent(entity, new FacingDirection { Value = new float2(1f, 0f) });

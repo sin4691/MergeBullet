@@ -13,7 +13,7 @@ Unity 6 + Entities(ECS)로 만드는 1인 개발 로그라이크 서바이버. P
 - 게임 로직은 ECS(ISystem + IJobEntity, Burst). MonoBehaviour는 Authoring/UI만
 - 컴포넌트는 struct, 데이터만. 로직은 시스템에
 - Unity Physics 사용 안 함. 튕김·충돌은 직접 계산, 합성 검사는 공간 해시
-- 코드는 Assets/_Project/ 아래 Scripts/{Components,Authoring,Systems}
+- 코드는 Assets/_Project/ 아래 Scripts/{Components,Authoring,Systems,UI}
 
 ## 작업 방식
 

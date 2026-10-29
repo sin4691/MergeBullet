@@ -9,6 +9,7 @@ namespace MergeBullet.Systems
     /// <summary>
     /// 최대 레벨에 도달한 총알을 특수효과로 바꾼다: 그 자리에 효과 엔티티를 만들고 총알은 제거한다.
     /// 합성 결과는 프레임 끝에 반영되므로, 최대 레벨 총알은 한 프레임 보인 뒤 다음 프레임에 터진다.
+    /// 폭발 생성·총알 제거는 그다음 프레임 시작에 재생된다.
     /// </summary>
     [UpdateAfter(typeof(BulletMergeSystem))]
     [BurstCompile]
@@ -19,17 +20,19 @@ namespace MergeBullet.Systems
         {
             state.RequireForUpdate<MaxLevelEffect>();
             state.RequireForUpdate<BulletLevelSettings>();
-            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
+            state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            // 생성은 다음 프레임 시작(BeginSimulation)에 재생한다. 프레임 끝(EndSimulation)에 만들면 이번 프레임의
+            // 위치 계산(TransformSystemGroup)이 이미 끝난 뒤라, 새 엔티티가 한 프레임 동안 프리팹 위치(원점)에 그려진다.
             new TriggerMaxLevelEffectJob
             {
                 MaxLevel = SystemAPI.GetSingleton<BulletLevelSettings>().MaxLevel,
                 Effect = SystemAPI.GetSingleton<MaxLevelEffect>(),
-                Ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
+                Ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
                     .CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter(),
             }.ScheduleParallel();
         }

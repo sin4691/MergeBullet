@@ -23,7 +23,7 @@ namespace MergeBullet.Systems
         {
             state.RequireForUpdate<AutoFire>();
             state.RequireForUpdate<BulletLevelSettings>();
-            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
+            state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         }
 
         [BurstCompile]
@@ -39,12 +39,14 @@ namespace MergeBullet.Systems
                 Nearest = nearest,
             }.Schedule(state.Dependency);
 
+            // 생성은 다음 프레임 시작(BeginSimulation)에 재생한다. 프레임 끝(EndSimulation)에 만들면 이번 프레임의
+            // 위치 계산(TransformSystemGroup)이 이미 끝난 뒤라, 새 엔티티가 한 프레임 동안 프리팹 위치(원점)에 그려진다.
             JobHandle fire = new AutoFireJob
             {
                 DeltaTime = SystemAPI.Time.DeltaTime,
                 Levels = SystemAPI.GetSingleton<BulletLevelSettings>(),
                 Target = nearest,
-                Ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
+                Ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
                     .CreateCommandBuffer(state.WorldUnmanaged),
             }.Schedule(find);
 
