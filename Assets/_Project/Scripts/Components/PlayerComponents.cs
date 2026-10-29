@@ -17,6 +17,15 @@ namespace MergeBullet.Components
         public float2 Move;
     }
 
+    /// <summary>
+    /// 플레이어 위치 사본. 적 추적·조준 잡이 LocalTransform 대신 이걸 읽으면, 같은 잡에서 적의 LocalTransform을
+    /// 쓰면서도 읽기/쓰기 충돌 없이 플레이어 위치를 볼 수 있다.
+    /// </summary>
+    public struct PlayerPosition : IComponentData
+    {
+        public float2 Value;
+    }
+
     /// <summary>마지막으로 움직인 방향. 조준할 적이 없을 때 발사 방향으로 쓴다.</summary>
     public struct FacingDirection : IComponentData
     {

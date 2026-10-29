@@ -23,6 +23,7 @@ namespace MergeBullet.Authoring
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
                 AddComponent(entity, new Player { MoveSpeed = authoring.MoveSpeed, Radius = authoring.Radius });
                 AddComponent(entity, new PlayerMoveInput());
+                AddComponent(entity, new PlayerPosition { Value = ((float3)authoring.transform.position).xy });
                 AddComponent(entity, new FacingDirection { Value = new float2(1f, 0f) });
 
                 if (authoring.BulletPrefab == null) return;

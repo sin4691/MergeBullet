@@ -6,8 +6,9 @@ using UnityEngine;
 namespace MergeBullet.Authoring
 {
     /// <summary>
-    /// SubScene 안의 Arena 오브젝트에 붙인다. 아레나 크기, 초기 총알 스폰, 레벨 규칙, 최대 레벨 효과, 방치 소멸 규칙을
-    /// ArenaBounds / BulletSpawner / BulletLevelSettings / MaxLevelEffect / BulletIdleSettings 싱글톤으로 베이킹한다.
+    /// SubScene 안의 Arena 오브젝트에 붙인다. 아레나 크기, 초기 총알 스폰, 레벨 규칙, 최대 레벨 효과, 방치 소멸 규칙,
+    /// 적 스폰을 ArenaBounds / BulletSpawner / BulletLevelSettings / MaxLevelEffect / BulletIdleSettings / EnemySpawner
+    /// 싱글톤으로 베이킹한다.
     /// </summary>
     public class ArenaAuthoring : MonoBehaviour
     {
@@ -38,6 +39,11 @@ namespace MergeBullet.Authoring
         [Min(0.1f)] public float IdleLifetime = 8f;
         [Min(0f)] public float IdleWarningTime = 1.5f;
 
+        [Header("Enemies")]
+        public GameObject EnemyPrefab;
+        [Min(0.05f)] public float EnemySpawnInterval = 1f;
+        [Min(0)] public int MaxEnemies = 30;
+
         class Baker : Baker<ArenaAuthoring>
         {
             public override void Bake(ArenaAuthoring authoring)
@@ -60,6 +66,19 @@ namespace MergeBullet.Authoring
                     Lifetime = authoring.IdleLifetime,
                     WarningTime = authoring.IdleWarningTime,
                 });
+
+                if (authoring.EnemyPrefab != null)
+                {
+                    AddComponent(entity, new EnemySpawner
+                    {
+                        Prefab = GetEntity(authoring.EnemyPrefab, TransformUsageFlags.Dynamic),
+                        Interval = authoring.EnemySpawnInterval,
+                        MaxAlive = authoring.MaxEnemies,
+                        Cooldown = authoring.EnemySpawnInterval,
+                        // 총알 스폰과 다른 난수열을 쓰도록 시드를 비튼다
+                        Random = Unity.Mathematics.Random.CreateFromIndex(authoring.Seed + 1),
+                    });
+                }
 
                 if (authoring.MaxLevelEffectPrefab != null)
                 {
