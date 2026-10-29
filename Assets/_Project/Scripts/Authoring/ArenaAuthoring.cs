@@ -7,8 +7,8 @@ namespace MergeBullet.Authoring
 {
     /// <summary>
     /// SubScene 안의 Arena 오브젝트에 붙인다. 아레나 크기, 초기 총알 스폰, 레벨 규칙, 최대 레벨 효과, 방치 소멸 규칙,
-    /// 적 스폰을 ArenaBounds / BulletSpawner / BulletLevelSettings / MaxLevelEffect / BulletIdleSettings / EnemySpawner
-    /// 싱글톤으로 베이킹한다.
+    /// 적 스폰, 게임 상태를 ArenaBounds / BulletSpawner / BulletLevelSettings / MaxLevelEffect / BulletIdleSettings /
+    /// EnemySpawner / GameState 싱글톤으로 베이킹한다.
     /// </summary>
     public class ArenaAuthoring : MonoBehaviour
     {
@@ -52,6 +52,7 @@ namespace MergeBullet.Authoring
             {
                 Entity entity = GetEntity(TransformUsageFlags.None);
                 AddComponent(entity, new ArenaBounds { HalfSize = authoring.ArenaSize * 0.5f });
+                AddComponent(entity, new GameState());
                 AddComponent(entity, new BulletLevelSettings
                 {
                     MaxLevel = authoring.MaxLevel,

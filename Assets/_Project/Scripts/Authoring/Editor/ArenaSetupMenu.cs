@@ -1,4 +1,5 @@
 using MergeBullet.Authoring;
+using MergeBullet.UI;
 using Unity.Scenes;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -157,6 +158,27 @@ namespace MergeBullet.Editor
                 EditorUtility.SetDirty(arena);
             });
             Debug.Log("Enemy 생성 완료. Play를 눌러 확인하세요.");
+        }
+
+        // HUD는 MonoBehaviour로 남아 있어야 하므로 SubScene이 아니라 메인 씬에 둔다
+        [MenuItem("MergeBullet/Create HUD")]
+        static void CreateHud()
+        {
+            Scene mainScene = SceneManager.GetActiveScene();
+            if (Object.FindAnyObjectByType<GameHud>() != null)
+            {
+                Debug.LogWarning("씬에 이미 GameHud가 있습니다.");
+                return;
+            }
+
+            var hud = new GameObject("GameHud");
+            SceneManager.MoveGameObjectToScene(hud, mainScene);
+            hud.AddComponent<GameHud>();
+            Undo.RegisterCreatedObjectUndo(hud, "Create HUD");
+
+            EditorSceneManager.MarkSceneDirty(mainScene);
+            EditorSceneManager.SaveScene(mainScene);
+            Debug.Log("HUD 생성 완료. Play를 눌러 확인하세요.");
         }
 
         /// <summary>

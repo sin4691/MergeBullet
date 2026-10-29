@@ -10,6 +10,18 @@ namespace MergeBullet.Components
         public float Radius;
     }
 
+    /// <summary>
+    /// 플레이어 체력. 적에게 닿으면 한 번 피해를 받고, InvulnerableDuration 동안은 다시 맞지 않는다(무적 시간).
+    /// </summary>
+    public struct PlayerHealth : IComponentData
+    {
+        public float Value;
+        public float Max;
+        public float InvulnerableDuration;
+        /// <summary>남은 무적 시간. 0보다 크면 피해를 받지 않는다.</summary>
+        public float InvulnerableTimer;
+    }
+
     /// <summary>이번 프레임 입력. PlayerInputSystem이 채우고 이동·발사 시스템이 읽는다.</summary>
     public struct PlayerMoveInput : IComponentData
     {

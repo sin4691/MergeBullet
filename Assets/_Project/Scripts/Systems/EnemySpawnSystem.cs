@@ -21,7 +21,7 @@ namespace MergeBullet.Systems
             _enemyQuery = SystemAPI.QueryBuilder().WithAll<Enemy>().Build();
             state.RequireForUpdate<EnemySpawner>();
             state.RequireForUpdate<ArenaBounds>();
-            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
+            state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         }
 
         [BurstCompile]
@@ -39,10 +39,12 @@ namespace MergeBullet.Systems
             float2 limit = SystemAPI.GetSingleton<ArenaBounds>().HalfSize - radius;
             float2 position = RandomPointOnEdge(ref spawner.ValueRW.Random, limit);
 
-            // 정육면체를 45도 돌린 마름모 모양. 대각선 절반이 반지름이 되도록 한 변을 radius * √2로
-            EntityCommandBuffer ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
+            // 생성은 다음 프레임 시작(BeginSimulation)에 재생한다. 프레임 끝(EndSimulation)에 만들면 이번 프레임의
+            // 위치 계산(TransformSystemGroup)이 이미 끝난 뒤라, 새 엔티티가 한 프레임 동안 프리팹 위치(원점)에 그려진다.
+            EntityCommandBuffer ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
             Entity enemy = ecb.Instantiate(prefab);
+            // 정육면체를 45도 돌린 마름모 모양. 대각선 절반이 반지름이 되도록 한 변을 radius * √2로
             ecb.SetComponent(enemy, LocalTransform.FromPositionRotationScale(
                 new float3(position, 0f), quaternion.RotateZ(math.PI * 0.25f), radius * math.SQRT2));
         }

@@ -2,11 +2,13 @@ using Unity.Entities;
 
 namespace MergeBullet.Components
 {
-    /// <summary>적 태그 겸 이동 속도·몸통 반지름.</summary>
+    /// <summary>적 태그 겸 이동 속도·몸통 반지름·접촉 피해.</summary>
     public struct Enemy : IComponentData
     {
         public float MoveSpeed;
         public float Radius;
+        /// <summary>플레이어에 닿았을 때 한 번에 주는 피해. 이후 플레이어 무적 시간 동안은 다시 맞지 않는다.</summary>
+        public float ContactDamage;
     }
 
     /// <summary>
