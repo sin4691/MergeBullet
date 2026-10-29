@@ -13,6 +13,10 @@ namespace MergeBullet.Systems
     [BurstCompile]
     public partial struct EnemySpawnSystem : ISystem
     {
+        // 마름모 옆폭을 줄여(로컬 Y) 앞뒤로 긴 모양 → 어느 쪽을 향하는지 보인다.
+        // 앞뒤 길이는 그대로 2 * 반지름이라 진행 방향으로는 충돌 원과 크기가 맞는다
+        const float BodyWidth = 0.55f;
+
         EntityQuery _enemyQuery;
 
         [BurstCompile]
@@ -44,9 +48,18 @@ namespace MergeBullet.Systems
             EntityCommandBuffer ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
             Entity enemy = ecb.Instantiate(prefab);
-            // 정육면체를 45도 돌린 마름모 모양. 대각선 절반이 반지름이 되도록 한 변을 radius * √2로
+
+            // 모양(PostTransformMatrix): 정육면체를 45도 돌려 마름모로 만든 뒤 옆폭(로컬 Y)을 줄인다.
+            // 방향(LocalTransform.Rotation)은 이와 분리돼서, 추적 시스템은 회전값만 바꾸면 된다.
+            ecb.AddComponent(enemy, new PostTransformMatrix
+            {
+                Value = math.mul(float4x4.Scale(1f, BodyWidth, 1f), float4x4.RotateZ(math.PI * 0.25f)),
+            });
+
+            // 대각선 절반이 반지름이 되도록 한 변을 radius * √2로. 첫 프레임은 아레나 중앙을 바라본다
+            float facing = math.atan2(-position.y, -position.x);
             ecb.SetComponent(enemy, LocalTransform.FromPositionRotationScale(
-                new float3(position, 0f), quaternion.RotateZ(math.PI * 0.25f), radius * math.SQRT2));
+                new float3(position, 0f), quaternion.RotateZ(facing), radius * math.SQRT2));
         }
 
         static float2 RandomPointOnEdge(ref Random random, float2 limit)
