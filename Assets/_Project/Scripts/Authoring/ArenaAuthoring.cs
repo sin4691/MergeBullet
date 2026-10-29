@@ -22,6 +22,7 @@ namespace MergeBullet.Authoring
         [Header("Merge")]
         [Range(2, 4)] public int MaxLevel = 4;
         [Min(0f)] public float RadiusGrowthPerLevel = 0.5f;
+        [Min(0f)] public float BulletBaseDamage = 1f;
         public Color[] LevelColors =
         {
             new Color(1f, 0.85f, 0.2f), // 1 노랑
@@ -34,6 +35,7 @@ namespace MergeBullet.Authoring
         public GameObject MaxLevelEffectPrefab;
         [Min(0.01f)] public float EffectRadius = 1.2f;
         [Min(0.01f)] public float EffectDuration = 0.4f;
+        [Min(0f)] public float EffectDamage = 5f;
 
         [Header("Idle Despawn")]
         [Min(0.1f)] public float IdleLifetime = 8f;
@@ -55,6 +57,7 @@ namespace MergeBullet.Authoring
                     MaxLevel = authoring.MaxLevel,
                     BaseRadius = authoring.BulletRadius,
                     RadiusGrowth = authoring.RadiusGrowthPerLevel,
+                    BaseDamage = authoring.BulletBaseDamage,
                     Level1Color = LevelColor(authoring, 0),
                     Level2Color = LevelColor(authoring, 1),
                     Level3Color = LevelColor(authoring, 2),
@@ -87,6 +90,7 @@ namespace MergeBullet.Authoring
                         Prefab = GetEntity(authoring.MaxLevelEffectPrefab, TransformUsageFlags.Dynamic),
                         Radius = authoring.EffectRadius,
                         Duration = authoring.EffectDuration,
+                        Damage = authoring.EffectDamage,
                     });
                 }
 

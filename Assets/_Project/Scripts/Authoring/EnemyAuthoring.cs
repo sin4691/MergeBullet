@@ -9,6 +9,7 @@ namespace MergeBullet.Authoring
     {
         [Min(0f)] public float MoveSpeed = 2f;
         [Min(0.01f)] public float Radius = 0.35f;
+        [Min(0.1f)] public float MaxHealth = 3f;
 
         class Baker : Baker<EnemyAuthoring>
         {
@@ -16,6 +17,7 @@ namespace MergeBullet.Authoring
             {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
                 AddComponent(entity, new Enemy { MoveSpeed = authoring.MoveSpeed, Radius = authoring.Radius });
+                AddComponent(entity, new EnemyHealth { Value = authoring.MaxHealth });
             }
         }
     }
