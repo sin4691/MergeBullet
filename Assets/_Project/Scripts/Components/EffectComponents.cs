@@ -11,13 +11,16 @@ namespace MergeBullet.Components
         public Entity Prefab;
         public float Radius;
         public float Duration;
+        public float Damage;
     }
 
-    /// <summary>폭발 효과 엔티티. Duration 동안 커졌다 줄어든 뒤 사라진다.</summary>
+    /// <summary>폭발 효과 엔티티. 생긴 다음 프레임에 범위 피해를 한 번 주고, Duration 동안 커졌다 줄어든 뒤 사라진다.</summary>
     public struct Explosion : IComponentData
     {
         public float Age;
         public float Duration;
         public float MaxRadius;
+        public float Damage;
+        public bool DamageApplied;
     }
 }

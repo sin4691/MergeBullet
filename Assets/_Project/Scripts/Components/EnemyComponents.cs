@@ -9,6 +9,14 @@ namespace MergeBullet.Components
         public float Radius;
     }
 
+    /// <summary>
+    /// 적 체력. 피해를 주는 시스템(총알·폭발)은 깎기만 하고, 0 이하가 된 적의 제거는 EnemyDeathSystem 한 곳에서 한다.
+    /// </summary>
+    public struct EnemyHealth : IComponentData
+    {
+        public float Value;
+    }
+
     /// <summary>일정 간격으로 아레나 가장자리에 적을 만드는 스포너 싱글톤.</summary>
     public struct EnemySpawner : IComponentData
     {

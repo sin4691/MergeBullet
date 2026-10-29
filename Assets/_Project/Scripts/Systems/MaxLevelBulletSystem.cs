@@ -54,6 +54,7 @@ namespace MergeBullet.Systems
             {
                 Duration = Effect.Duration,
                 MaxRadius = Effect.Radius,
+                Damage = Effect.Damage,
             });
             Ecb.DestroyEntity(sortKey, entity);
         }
