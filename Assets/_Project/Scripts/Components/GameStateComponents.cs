@@ -11,4 +11,12 @@ namespace MergeBullet.Components
         public bool IsGameOver;
         public bool RestartRequested;
     }
+
+    /// <summary>이번 판 기록 싱글톤. HUD가 표시하고, 재시작하면 0으로 돌아간다.</summary>
+    public struct GameStats : IComponentData
+    {
+        /// <summary>생존 시간(초). 게임 오버면 timeScale 0이라 더 늘지 않는다.</summary>
+        public float SurvivalTime;
+        public int Kills;
+    }
 }

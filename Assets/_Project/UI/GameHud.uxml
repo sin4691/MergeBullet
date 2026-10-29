@@ -1,0 +1,22 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="GameHud.uss" />
+    <ui:VisualElement name="hud" class="hud" picking-mode="Ignore">
+        <ui:VisualElement class="top-bar" picking-mode="Ignore">
+            <ui:VisualElement name="hp-bar" class="hp-bar" picking-mode="Ignore">
+                <ui:VisualElement name="hp-fill" class="hp-fill" picking-mode="Ignore" />
+                <ui:Label name="hp-text" class="hp-text" text="HP 10 / 10" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:VisualElement class="stats" picking-mode="Ignore">
+                <ui:Label name="time-text" class="stat" text="00:00" picking-mode="Ignore" />
+                <ui:Label name="kill-text" class="stat" text="KILLS 0" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="game-over" class="game-over">
+            <ui:VisualElement class="game-over-box">
+                <ui:Label class="game-over-title" text="GAME OVER" />
+                <ui:Label name="final-text" class="final-text" text="" />
+                <ui:Button name="restart-button" class="restart-button" text="Restart (R)" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
