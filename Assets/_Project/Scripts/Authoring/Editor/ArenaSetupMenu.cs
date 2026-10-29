@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 namespace MergeBullet.Editor
 {
@@ -19,6 +20,10 @@ namespace MergeBullet.Editor
         const string PrefabsDir = Root + "/Prefabs";
         const string ScenesDir = Root + "/Scenes";
         const string SubScenePath = ScenesDir + "/ArenaSubScene.unity";
+        const string UiDir = Root + "/UI";
+        const string ThemePath = UiDir + "/MergeBulletTheme.tss";
+        const string HudLayoutPath = UiDir + "/GameHud.uxml";
+        const string PanelSettingsPath = UiDir + "/GamePanelSettings.asset";
         const float WallThickness = 0.2f;
 
         [MenuItem("MergeBullet/Create Arena SubScene")]
@@ -160,25 +165,61 @@ namespace MergeBullet.Editor
             Debug.Log("Enemy 생성 완료. Play를 눌러 확인하세요.");
         }
 
-        // HUD는 MonoBehaviour로 남아 있어야 하므로 SubScene이 아니라 메인 씬에 둔다
+        // HUD는 MonoBehaviour로 남아 있어야 하므로 SubScene이 아니라 메인 씬에 둔다.
+        // 이미 GameHud가 있으면(예전 IMGUI 버전) 새로 만들지 않고 UIDocument만 설정한다.
         [MenuItem("MergeBullet/Create HUD")]
         static void CreateHud()
         {
-            Scene mainScene = SceneManager.GetActiveScene();
-            if (Object.FindAnyObjectByType<GameHud>() != null)
+            var theme = AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(ThemePath);
+            var layout = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(HudLayoutPath);
+            if (theme == null || layout == null)
             {
-                Debug.LogWarning("씬에 이미 GameHud가 있습니다.");
+                Debug.LogError($"{ThemePath} 또는 {HudLayoutPath} 를 찾지 못했습니다.");
                 return;
             }
 
-            var hud = new GameObject("GameHud");
-            SceneManager.MoveGameObjectToScene(hud, mainScene);
-            hud.AddComponent<GameHud>();
-            Undo.RegisterCreatedObjectUndo(hud, "Create HUD");
+            PanelSettings panelSettings = LoadOrCreatePanelSettings(theme);
 
-            EditorSceneManager.MarkSceneDirty(mainScene);
-            EditorSceneManager.SaveScene(mainScene);
-            Debug.Log("HUD 생성 완료. Play를 눌러 확인하세요.");
+            Scene mainScene = SceneManager.GetActiveScene();
+            GameHud hud = Object.FindAnyObjectByType<GameHud>();
+            GameObject go;
+            if (hud != null)
+            {
+                go = hud.gameObject;
+            }
+            else
+            {
+                go = new GameObject("GameHud");
+                SceneManager.MoveGameObjectToScene(go, mainScene);
+                Undo.RegisterCreatedObjectUndo(go, "Create HUD");
+            }
+
+            UIDocument document = go.GetComponent<UIDocument>();
+            if (document == null) document = Undo.AddComponent<UIDocument>(go);
+            Undo.RecordObject(document, "Setup HUD Document");
+            document.panelSettings = panelSettings;
+            document.visualTreeAsset = layout;
+            if (hud == null) Undo.AddComponent<GameHud>(go);
+
+            EditorSceneManager.MarkSceneDirty(go.scene);
+            EditorSceneManager.SaveScene(go.scene);
+            Debug.Log("HUD 설정 완료. Play를 눌러 확인하세요.");
+        }
+
+        // 기준 해상도 1920x1080에 맞춰 화면 크기에 따라 UI 전체를 확대·축소한다 (PC·모바일 공용)
+        static PanelSettings LoadOrCreatePanelSettings(ThemeStyleSheet theme)
+        {
+            var settings = AssetDatabase.LoadAssetAtPath<PanelSettings>(PanelSettingsPath);
+            if (settings != null) return settings;
+
+            settings = ScriptableObject.CreateInstance<PanelSettings>();
+            settings.themeStyleSheet = theme;
+            settings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
+            settings.referenceResolution = new Vector2Int(1920, 1080);
+            settings.screenMatchMode = PanelScreenMatchMode.MatchWidthOrHeight;
+            settings.match = 0.5f;
+            AssetDatabase.CreateAsset(settings, PanelSettingsPath);
+            return settings;
         }
 
         /// <summary>

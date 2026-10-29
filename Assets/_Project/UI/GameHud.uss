@@ -1,0 +1,98 @@
+/* 기준 해상도 1920x1080 (PanelSettings: Scale With Screen Size) */
+
+.hud {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.top-bar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 36px;
+}
+
+.hp-bar {
+    width: 420px;
+    height: 36px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* 너비(%)와 색은 GameHud.cs가 체력 비율에 맞춰 바꾼다 */
+.hp-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(77, 217, 102);
+}
+
+.hp-text {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    -unity-text-align: middle-center;
+    -unity-font-style: bold;
+    font-size: 20px;
+    color: rgb(255, 255, 255);
+}
+
+.stats {
+    flex-direction: row;
+}
+
+.stat {
+    margin-left: 32px;
+    font-size: 28px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgba(0, 0, 0, 0.8);
+}
+
+/* 게임 오버일 때만 GameHud.cs가 display: flex로 켠다 */
+.game-over {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.game-over-box {
+    align-items: center;
+}
+
+.game-over-title {
+    font-size: 96px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+}
+
+.final-text {
+    margin: 8px 0 36px 0;
+    font-size: 32px;
+    -unity-text-align: middle-center;
+    color: rgb(230, 230, 230);
+}
+
+.restart-button {
+    width: 300px;
+    height: 76px;
+    font-size: 30px;
+    -unity-font-style: bold;
+}
