@@ -171,6 +171,13 @@ MonoBehaviour:
   EnemyPrefab: {fileID: 9211892432071304558, guid: ff33f4f6bf4318b4089b4640fc73857c, type: 3}
   EnemySpawnInterval: 1
   MaxEnemies: 30
+  BenchmarkMode: 0
+  BenchmarkBullets: 1000
+  BenchmarkEnemies: 300
+  BenchmarkWarmupSeconds: 8
+  BenchmarkSampleSeconds: 10
+  FirstLevelUpXp: 5
+  LevelUpXpGrowth: 3
 --- !u!4 &304486843
 Transform:
   m_ObjectHideFlags: 0
@@ -494,6 +501,10 @@ MonoBehaviour:
   MoveSpeed: 6
   Radius: 0.3
   MaxHealth: 10
+  InvulnerableDuration: 0.8
+  MagnetRadius: 2.5
+  PickupRadius: 0.5
+  GemPullSpeed: 12
   BulletPrefab: {fileID: 2610298770375272057, guid: 0e84d887aa186df4e962e680b9157348, type: 3}
   FireInterval: 0.25
   BulletSpeed: 7
