@@ -9,6 +9,11 @@ namespace MergeBullet.Components
         public float Radius;
         /// <summary>플레이어에 닿았을 때 한 번에 주는 피해. 이후 플레이어 무적 시간 동안은 다시 맞지 않는다.</summary>
         public float ContactDamage;
+        /// <summary>
+        /// 스폰 시 체력. 현재 체력(EnemyHealth)은 잡들이 계속 쓰지만 이 값은 읽기만 해서,
+        /// 스폰 시스템이 메인 스레드에서 읽어도 잡을 기다리지 않는다.
+        /// </summary>
+        public float MaxHealth;
     }
 
     /// <summary>
@@ -27,6 +32,11 @@ namespace MergeBullet.Components
         public int MaxAlive;
         /// <summary>다음 스폰까지 남은 시간.</summary>
         public float Cooldown;
+        /// <summary>난이도에 따른 배율. DifficultySystem이 갱신하고, 새로 스폰되는 적에만 적용된다.</summary>
+        public float HealthMultiplier;
+        public float SpeedMultiplier;
+        /// <summary>플레이어와 최소 이만큼 떨어진 가장자리에만 스폰한다 (바로 옆에 생겨 피할 수 없는 피격 방지).</summary>
+        public float SafeDistance;
         /// <summary>스폰 위치용 난수 상태. 컴포넌트에 두어야 프레임마다 이어서 뽑힌다.</summary>
         public Unity.Mathematics.Random Random;
     }

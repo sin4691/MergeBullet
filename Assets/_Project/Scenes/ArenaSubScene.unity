@@ -160,13 +160,13 @@ MonoBehaviour:
   LevelColors:
   - {r: 1, g: 0.85, b: 0.2, a: 1}
   - {r: 1, g: 0.5, b: 0.1, a: 1}
-  - {r: 1, g: 0.15, b: 0.2, a: 1}
   - {r: 0.75, g: 0.3, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
   MaxLevelEffectPrefab: {fileID: 5969894263373315911, guid: ca64700ba9c1c1d4a92f65b7dc771c08, type: 3}
   EffectRadius: 1.2
   EffectDuration: 0.4
   EffectDamage: 5
-  IdleLifetime: 8
+  IdleLifetime: 5
   IdleWarningTime: 1.5
   EnemyPrefab: {fileID: 9211892432071304558, guid: ff33f4f6bf4318b4089b4640fc73857c, type: 3}
   EnemySpawnInterval: 1
@@ -506,7 +506,7 @@ MonoBehaviour:
   PickupRadius: 0.5
   GemPullSpeed: 12
   BulletPrefab: {fileID: 2610298770375272057, guid: 0e84d887aa186df4e962e680b9157348, type: 3}
-  FireInterval: 0.25
+  FireInterval: 0.5
   BulletSpeed: 7
 --- !u!23 &1473608158
 MeshRenderer:

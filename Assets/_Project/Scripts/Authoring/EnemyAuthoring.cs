@@ -29,6 +29,7 @@ namespace MergeBullet.Authoring
                     MoveSpeed = authoring.MoveSpeed,
                     Radius = authoring.Radius,
                     ContactDamage = authoring.ContactDamage,
+                    MaxHealth = authoring.MaxHealth,
                 });
                 AddComponent(entity, new EnemyHealth { Value = authoring.MaxHealth });
 

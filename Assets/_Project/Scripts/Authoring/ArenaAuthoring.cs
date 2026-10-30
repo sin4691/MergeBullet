@@ -27,8 +27,9 @@ namespace MergeBullet.Authoring
         {
             new Color(1f, 0.85f, 0.2f), // 1 노랑
             new Color(1f, 0.5f, 0.1f),  // 2 주황
-            new Color(1f, 0.15f, 0.2f), // 3 빨강
-            new Color(0.75f, 0.3f, 1f), // 4 보라
+            // 빨강은 적 색과 헷갈려서 쓰지 않는다. 가장 센 레벨 4는 흰색 (폭발 색과 이어짐)
+            new Color(0.75f, 0.3f, 1f), // 3 보라
+            new Color(1f, 1f, 1f),      // 4 흰색
         };
 
         [Header("Max Level Effect")]
@@ -38,13 +39,22 @@ namespace MergeBullet.Authoring
         [Min(0f)] public float EffectDamage = 5f;
 
         [Header("Idle Despawn")]
-        [Min(0.1f)] public float IdleLifetime = 8f;
+        // 8초면 화면에 총알이 오래 남아 합성이 쉬웠다
+        [Min(0.1f)] public float IdleLifetime = 5f;
         [Min(0f)] public float IdleWarningTime = 1.5f;
 
         [Header("Enemies")]
         public GameObject EnemyPrefab;
         [Min(0.05f)] public float EnemySpawnInterval = 1f;
         [Min(0)] public int MaxEnemies = 30;
+        [Min(0f)] public float EnemySafeSpawnDistance = 4f;
+
+        [Header("Difficulty (위 스폰 값에서 시작해 RampSeconds 동안 아래 값까지 오른다)")]
+        [Min(1f)] public float DifficultyRampSeconds = 300f;
+        [Min(0.05f)] public float LateSpawnInterval = 0.15f;
+        [Min(0)] public int LateMaxEnemies = 200;
+        [Min(1f)] public float LateHealthMultiplier = 4f;
+        [Min(1f)] public float LateSpeedMultiplier = 1.5f;
 
         [Header("Benchmark (에디터에서 측정할 때만 켠다. 빌드는 실행 인자 -benchmark)")]
         public bool BenchmarkMode;
@@ -103,8 +113,21 @@ namespace MergeBullet.Authoring
                         Interval = authoring.EnemySpawnInterval,
                         MaxAlive = authoring.MaxEnemies,
                         Cooldown = authoring.EnemySpawnInterval,
+                        HealthMultiplier = 1f,
+                        SpeedMultiplier = 1f,
+                        SafeDistance = authoring.EnemySafeSpawnDistance,
                         // 총알 스폰과 다른 난수열을 쓰도록 시드를 비튼다
                         Random = Unity.Mathematics.Random.CreateFromIndex(authoring.Seed + 1),
+                    });
+                    AddComponent(entity, new DifficultySettings
+                    {
+                        RampSeconds = authoring.DifficultyRampSeconds,
+                        StartSpawnInterval = authoring.EnemySpawnInterval,
+                        EndSpawnInterval = authoring.LateSpawnInterval,
+                        StartMaxEnemies = authoring.MaxEnemies,
+                        EndMaxEnemies = authoring.LateMaxEnemies,
+                        EndHealthMultiplier = authoring.LateHealthMultiplier,
+                        EndSpeedMultiplier = authoring.LateSpeedMultiplier,
                     });
                 }
 
