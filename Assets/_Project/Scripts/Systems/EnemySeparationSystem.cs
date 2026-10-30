@@ -33,7 +33,8 @@ namespace MergeBullet.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            float enemyRadius = SystemAPI.GetComponent<Enemy>(SystemAPI.GetSingleton<EnemySpawner>().Prefab).Radius;
+            // 적 종류마다 크기가 달라서, 가장 큰 적 기준으로 칸 크기를 정해야 충돌을 놓치지 않는다
+            float enemyRadius = SystemAPI.GetSingleton<EnemySpawner>().MaxEnemyRadius;
 
             // 셀 크기 = 적 지름 → 겹칠 수 있는 이웃은 항상 주변 9칸 안에 있다
             float cellSize = 2f * enemyRadius;

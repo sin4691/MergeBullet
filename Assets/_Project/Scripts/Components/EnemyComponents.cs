@@ -24,10 +24,18 @@ namespace MergeBullet.Components
         public float Value;
     }
 
-    /// <summary>일정 간격으로 아레나 가장자리에 적을 만드는 스포너 싱글톤.</summary>
+    /// <summary>
+    /// 일정 간격으로 아레나 가장자리에 적을 만드는 스포너 싱글톤.
+    /// 어떤 적을 만들지는 같은 엔티티의 EnemySpawnEntry 버퍼(적 종류별 가중치)에서 고른다.
+    /// </summary>
     public struct EnemySpawner : IComponentData
     {
-        public Entity Prefab;
+        /// <summary>
+        /// 모든 적 종류 중 가장 큰 반지름. 공간 해시 칸 크기의 기준이라, 큰 적이 있어도 충돌을 놓치지 않는다.
+        /// </summary>
+        public float MaxEnemyRadius;
+        /// <summary>난이도 진행도 0~1. DifficultySystem이 갱신하고, 적 종류 가중치를 고를 때 쓴다.</summary>
+        public float Progress;
         public float Interval;
         public int MaxAlive;
         /// <summary>다음 스폰까지 남은 시간.</summary>
@@ -39,5 +47,16 @@ namespace MergeBullet.Components
         public float SafeDistance;
         /// <summary>스폰 위치용 난수 상태. 컴포넌트에 두어야 프레임마다 이어서 뽑힌다.</summary>
         public Unity.Mathematics.Random Random;
+    }
+
+    /// <summary>
+    /// 스폰 테이블 한 줄. 가중치는 난이도 진행도에 따라 StartWeight → EndWeight로 바뀐다.
+    /// 예: 탱커는 0 → 0.4라서 처음엔 안 나오다가 점점 섞여 나온다.
+    /// </summary>
+    public struct EnemySpawnEntry : IBufferElementData
+    {
+        public Entity Prefab;
+        public float StartWeight;
+        public float EndWeight;
     }
 }

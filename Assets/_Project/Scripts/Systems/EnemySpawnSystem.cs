@@ -8,6 +8,7 @@ namespace MergeBullet.Systems
 {
     /// <summary>
     /// 스폰 간격마다, 살아 있는 적이 MaxAlive 미만이면 아레나 네 변 중 임의의 위치에 적을 하나 만든다.
+    /// 적 종류는 스폰 테이블(EnemySpawnEntry)에서 난이도 진행도에 맞는 가중치로 고른다.
     /// 간격·최대 수·체력·속도 배율은 DifficultySystem이 생존 시간에 따라 바꿔 둔다.
     /// 생성은 ECB로 미뤄서 메인 스레드가 다른 잡을 기다리는 구조 변경(sync point)을 만들지 않는다.
     /// 플레이어와 SafeDistance 이상 떨어진 곳에만 스폰한다. 플레이어 위치는 이번 프레임 이동 잡보다 먼저 읽어서
@@ -30,6 +31,7 @@ namespace MergeBullet.Systems
         {
             _enemyQuery = SystemAPI.QueryBuilder().WithAll<Enemy>().Build();
             state.RequireForUpdate<EnemySpawner>();
+            state.RequireForUpdate<EnemySpawnEntry>();
             state.RequireForUpdate<ArenaBounds>();
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         }
@@ -44,7 +46,8 @@ namespace MergeBullet.Systems
 
             if (_enemyQuery.CalculateEntityCount() >= spawner.ValueRO.MaxAlive) return;
 
-            Entity prefab = spawner.ValueRO.Prefab;
+            DynamicBuffer<EnemySpawnEntry> spawnTable = SystemAPI.GetSingletonBuffer<EnemySpawnEntry>(true);
+            Entity prefab = PickPrefab(spawnTable, spawner.ValueRO.Progress, ref spawner.ValueRW.Random);
             // Enemy는 어떤 잡도 쓰지 않는 읽기 전용 데이터라, 메인 스레드에서 읽어도 잡을 기다리지 않는다
             Enemy stats = SystemAPI.GetComponent<Enemy>(prefab);
             float radius = stats.Radius;
@@ -75,6 +78,23 @@ namespace MergeBullet.Systems
             stats.MoveSpeed *= spawner.ValueRO.SpeedMultiplier;
             ecb.SetComponent(enemy, stats);
             ecb.SetComponent(enemy, new EnemyHealth { Value = stats.MaxHealth });
+        }
+
+        // 가중치 비례로 하나를 고른다. 각 가중치는 진행도에 따라 Start → End로 보간된다
+        static Entity PickPrefab(DynamicBuffer<EnemySpawnEntry> table, float progress, ref Random random)
+        {
+            float total = 0f;
+            for (int i = 0; i < table.Length; i++)
+                total += math.max(math.lerp(table[i].StartWeight, table[i].EndWeight, progress), 0f);
+            if (total <= 0f) return table[0].Prefab;
+
+            float roll = random.NextFloat(total);
+            for (int i = 0; i < table.Length; i++)
+            {
+                roll -= math.max(math.lerp(table[i].StartWeight, table[i].EndWeight, progress), 0f);
+                if (roll < 0f) return table[i].Prefab;
+            }
+            return table[table.Length - 1].Prefab; // 부동소수 오차로 끝까지 온 경우
         }
 
         // 가장자리에서 임의로 뽑되, 플레이어와 safeDistance 이상 떨어진 첫 자리를 쓴다.
