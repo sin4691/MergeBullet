@@ -47,6 +47,7 @@ namespace MergeBullet.Authoring
         public GameObject EnemyPrefab;
         [Min(0.05f)] public float EnemySpawnInterval = 1f;
         [Min(0)] public int MaxEnemies = 30;
+        [Min(0f)] public float EnemySafeSpawnDistance = 4f;
 
         [Header("Difficulty (위 스폰 값에서 시작해 RampSeconds 동안 아래 값까지 오른다)")]
         [Min(1f)] public float DifficultyRampSeconds = 300f;
@@ -114,6 +115,7 @@ namespace MergeBullet.Authoring
                         Cooldown = authoring.EnemySpawnInterval,
                         HealthMultiplier = 1f,
                         SpeedMultiplier = 1f,
+                        SafeDistance = authoring.EnemySafeSpawnDistance,
                         // 총알 스폰과 다른 난수열을 쓰도록 시드를 비튼다
                         Random = Unity.Mathematics.Random.CreateFromIndex(authoring.Seed + 1),
                     });
