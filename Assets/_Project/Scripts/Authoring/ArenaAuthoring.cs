@@ -27,8 +27,9 @@ namespace MergeBullet.Authoring
         {
             new Color(1f, 0.85f, 0.2f), // 1 노랑
             new Color(1f, 0.5f, 0.1f),  // 2 주황
-            new Color(1f, 0.15f, 0.2f), // 3 빨강
-            new Color(0.75f, 0.3f, 1f), // 4 보라
+            // 빨강은 적 색과 헷갈려서 쓰지 않는다. 가장 센 레벨 4는 흰색 (폭발 색과 이어짐)
+            new Color(0.75f, 0.3f, 1f), // 3 보라
+            new Color(1f, 1f, 1f),      // 4 흰색
         };
 
         [Header("Max Level Effect")]
@@ -38,7 +39,8 @@ namespace MergeBullet.Authoring
         [Min(0f)] public float EffectDamage = 5f;
 
         [Header("Idle Despawn")]
-        [Min(0.1f)] public float IdleLifetime = 8f;
+        // 8초면 화면에 총알이 오래 남아 합성이 쉬웠다
+        [Min(0.1f)] public float IdleLifetime = 5f;
         [Min(0f)] public float IdleWarningTime = 1.5f;
 
         [Header("Enemies")]

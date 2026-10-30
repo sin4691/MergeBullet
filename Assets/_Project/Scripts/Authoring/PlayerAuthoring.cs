@@ -21,7 +21,8 @@ namespace MergeBullet.Authoring
 
         [Header("Auto Fire")]
         public GameObject BulletPrefab;
-        [Min(0.01f)] public float FireInterval = 0.25f;
+        // 0.25초(초당 4발)는 합성 재료가 너무 빨리 쌓여 초반부터 레벨 4가 나왔다
+        [Min(0.01f)] public float FireInterval = 0.5f;
         [Min(0f)] public float BulletSpeed = 7f;
 
         class Baker : Baker<PlayerAuthoring>
