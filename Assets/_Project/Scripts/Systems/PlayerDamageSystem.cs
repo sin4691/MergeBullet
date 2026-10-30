@@ -22,6 +22,8 @@ namespace MergeBullet.Systems
         {
             state.RequireForUpdate<PlayerHealth>();
             state.RequireForUpdate<GameState>();
+            state.RequireForUpdate<EffectQueue>();
+            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
         [BurstCompile]
@@ -49,6 +51,11 @@ namespace MergeBullet.Systems
                 GameStateEntity = SystemAPI.GetSingletonEntity<GameState>(),
                 Health = SystemAPI.GetComponentLookup<PlayerHealth>(),
                 GameStates = SystemAPI.GetComponentLookup<GameState>(),
+                PlayerPositions = SystemAPI.GetComponentLookup<PlayerPosition>(true),
+                Players = SystemAPI.GetComponentLookup<Player>(true),
+                EffectQueueEntity = SystemAPI.GetSingletonEntity<EffectQueue>(),
+                Ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
+                    .CreateCommandBuffer(state.WorldUnmanaged),
             }.Schedule(find);
 
             strongestHit.Dispose(apply);
@@ -86,6 +93,10 @@ namespace MergeBullet.Systems
         public Entity GameStateEntity;
         public ComponentLookup<PlayerHealth> Health;
         public ComponentLookup<GameState> GameStates;
+        [ReadOnly] public ComponentLookup<PlayerPosition> PlayerPositions;
+        [ReadOnly] public ComponentLookup<Player> Players;
+        public Entity EffectQueueEntity;
+        public EntityCommandBuffer Ecb;
 
         public void Execute()
         {
@@ -96,6 +107,14 @@ namespace MergeBullet.Systems
 
             health.ValueRW.Value = math.max(health.ValueRO.Value - StrongestHit.Value, 0f);
             health.ValueRW.InvulnerableTimer = health.ValueRO.InvulnerableDuration;
+
+            Ecb.AppendToBuffer(EffectQueueEntity, new EffectEvent
+            {
+                Type = EffectType.PlayerHit,
+                Position = PlayerPositions[PlayerEntity].Value,
+                Size = Players[PlayerEntity].Radius,
+                Color = new float4(1f, 0.25f, 0.25f, 1f),
+            });
 
             if (health.ValueRO.Value <= 0f)
                 GameStates.GetRefRW(GameStateEntity).ValueRW.IsGameOver = true;

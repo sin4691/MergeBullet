@@ -33,6 +33,7 @@ namespace MergeBullet.Systems
             state.RequireForUpdate(_bulletQuery);
             state.RequireForUpdate<BulletLevelSettings>();
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
+            state.RequireForUpdate<EffectQueue>();
         }
 
         [BurstCompile]
@@ -83,6 +84,7 @@ namespace MergeBullet.Systems
                 Partners = partners,
                 Ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
                     .CreateCommandBuffer(state.WorldUnmanaged),
+                EffectQueueEntity = SystemAPI.GetSingletonEntity<EffectQueue>(),
             }.Schedule(find);
 
             // 잡이 끝난 뒤 해제되도록 의존성에 묶는다
@@ -175,6 +177,7 @@ namespace MergeBullet.Systems
         [ReadOnly] public NativeArray<Bullet> Bullets;
         [ReadOnly] public NativeArray<int> Partners;
         public EntityCommandBuffer Ecb;
+        public Entity EffectQueueEntity;
 
         public void Execute()
         {
@@ -209,6 +212,15 @@ namespace MergeBullet.Systems
                     Value = BulletLevelUtility.ColorOf(level, Settings),
                 });
                 Ecb.DestroyEntity(Entities[j]);
+
+                // 연출은 이벤트만 남기고, 재생은 EffectPresenter가 한다
+                Ecb.AppendToBuffer(EffectQueueEntity, new EffectEvent
+                {
+                    Type = EffectType.Merge,
+                    Position = position,
+                    Size = radius,
+                    Color = BulletLevelUtility.ColorOf(level, Settings),
+                });
             }
         }
     }

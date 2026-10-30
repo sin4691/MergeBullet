@@ -81,6 +81,9 @@ namespace MergeBullet.Authoring
                 AddComponent(entity, new ArenaBounds { HalfSize = authoring.ArenaSize * 0.5f });
                 AddComponent(entity, new GameState());
                 AddComponent(entity, new GameStats());
+                // 연출 이벤트 큐: 로직 시스템이 쓰고 EffectPresenter가 읽는다
+                AddComponent(entity, new EffectQueue());
+                AddBuffer<EffectEvent>(entity);
                 AddComponent(entity, new PlayerProgress
                 {
                     Level = 1,
