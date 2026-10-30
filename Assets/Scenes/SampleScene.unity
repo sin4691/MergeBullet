@@ -552,6 +552,75 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1396208247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1396208249}
+  - component: {fileID: 1396208248}
+  m_Layer: 0
+  m_Name: Effects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1396208248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1396208247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b23bfd5b10becce42b47da071540a184, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Presentation.EffectPresenter
+  Effects:
+  - Type: 0
+    Prefab: {fileID: 8815735784754927443, guid: 32cf9c32829df684496c3b79d60729b3, type: 3}
+    Clip: {fileID: 0}
+    Volume: 0.25
+    MaxPerFrame: 6
+    PoolSize: 24
+  - Type: 1
+    Prefab: {fileID: 4408696207009573824, guid: fe5eeb937519c5c4bafa3c21376570fa, type: 3}
+    Clip: {fileID: 0}
+    Volume: 0.35
+    MaxPerFrame: 6
+    PoolSize: 24
+  - Type: 2
+    Prefab: {fileID: 8896360944288412564, guid: fcd6970ed667c83449e92f4aefdac591, type: 3}
+    Clip: {fileID: 0}
+    Volume: 0.6
+    MaxPerFrame: 6
+    PoolSize: 24
+  - Type: 3
+    Prefab: {fileID: 4339105522532878470, guid: 349195596508cd8469ca82ff8af51ec2, type: 3}
+    Clip: {fileID: 0}
+    Volume: 0.6
+    MaxPerFrame: 6
+    PoolSize: 24
+--- !u!4 &1396208249
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1396208247}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -561,3 +630,4 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 1030574092}
   - {fileID: 283190292}
+  - {fileID: 1396208249}

@@ -1,4 +1,6 @@
 using MergeBullet.Authoring;
+using MergeBullet.Components;
+using MergeBullet.Presentation;
 using MergeBullet.UI;
 using Unity.Scenes;
 using UnityEditor;
@@ -258,6 +260,111 @@ namespace MergeBullet.Editor
                 PrefabUtility.UnloadPrefabContents(enemy);
             }
             Debug.Log("XP Gem 생성 완료. Play를 눌러 확인하세요.");
+        }
+
+        // 연출용 파티클 프리팹 4종을 만들고, 메인 씬에 EffectPresenter를 두어 연결한다.
+        // 프리팹은 "반지름 1" 기준 크기라 EffectPresenter가 대상 크기만큼 늘려서 쓴다 (Scaling Mode: Hierarchy)
+        [MenuItem("MergeBullet/Create Effects")]
+        static void CreateEffects()
+        {
+            const string effectsDir = PrefabsDir + "/Effects";
+            EnsureFolder(MaterialsDir);
+            EnsureFolder(PrefabsDir);
+            EnsureFolder(effectsDir);
+
+            Material material = CreateParticleMaterial();
+            var entries = new[]
+            {
+                EffectEntry(EffectType.Merge, CreateBurstPrefab(effectsDir, "MergeSpark", material,
+                    count: 10, lifetime: 0.3f, speed: new Vector2(15f, 25f), size: new Vector2(0.6f, 1f)), volume: 0.25f),
+                EffectEntry(EffectType.EnemyKilled, CreateBurstPrefab(effectsDir, "KillDebris", material,
+                    count: 16, lifetime: 0.45f, speed: new Vector2(8f, 14f), size: new Vector2(0.3f, 0.5f)), volume: 0.35f),
+                EffectEntry(EffectType.Explosion, CreateBurstPrefab(effectsDir, "ExplosionBurst", material,
+                    count: 36, lifetime: 0.6f, speed: new Vector2(4f, 8f), size: new Vector2(0.12f, 0.2f)), volume: 0.6f),
+                EffectEntry(EffectType.PlayerHit, CreateBurstPrefab(effectsDir, "PlayerHitBurst", material,
+                    count: 12, lifetime: 0.35f, speed: new Vector2(8f, 14f), size: new Vector2(0.3f, 0.45f)), volume: 0.6f),
+            };
+
+            Scene mainScene = SceneManager.GetActiveScene();
+            EffectPresenter presenter = Object.FindAnyObjectByType<EffectPresenter>();
+            if (presenter == null)
+            {
+                var go = new GameObject("Effects");
+                SceneManager.MoveGameObjectToScene(go, mainScene);
+                Undo.RegisterCreatedObjectUndo(go, "Create Effects");
+                presenter = go.AddComponent<EffectPresenter>();
+            }
+
+            Undo.RecordObject(presenter, "Setup Effects");
+            presenter.Effects = entries;
+            EditorUtility.SetDirty(presenter);
+            EditorSceneManager.MarkSceneDirty(presenter.gameObject.scene);
+            EditorSceneManager.SaveScene(presenter.gameObject.scene);
+            Debug.Log("Effects 생성 완료. Play를 눌러 확인하세요.");
+        }
+
+        static EffectPresenter.EffectEntry EffectEntry(EffectType type, ParticleSystem prefab, float volume)
+            => new EffectPresenter.EffectEntry { Type = type, Prefab = prefab, Volume = volume };
+
+        // URP 기본 파티클 머티리얼(부드러운 원, 반투명)을 복사해서 쓴다
+        static Material CreateParticleMaterial()
+        {
+            string path = MaterialsDir + "/Particle.mat";
+            var existing = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (existing != null) return existing;
+
+            var source = AssetDatabase.LoadAssetAtPath<Material>(
+                "Packages/com.unity.render-pipelines.universal/Runtime/Materials/ParticlesUnlit.mat");
+            var material = new Material(source);
+            AssetDatabase.CreateAsset(material, path);
+            return material;
+        }
+
+        // 한 번 터지고 끝나는 파티클. 원(XY 평면)에서 사방으로 퍼지며, 점점 작아지고 투명해진다
+        static ParticleSystem CreateBurstPrefab(string dir, string name, Material material,
+            int count, float lifetime, Vector2 speed, Vector2 size)
+        {
+            var go = new GameObject(name);
+            var particles = go.AddComponent<ParticleSystem>();
+            particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+            ParticleSystem.MainModule main = particles.main;
+            main.duration = lifetime;
+            main.loop = false;
+            main.playOnAwake = false;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(lifetime * 0.6f, lifetime);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(speed.x, speed.y);
+            main.startSize = new ParticleSystem.MinMaxCurve(size.x, size.y);
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.scalingMode = ParticleSystemScalingMode.Hierarchy;
+            main.maxParticles = count * 2;
+
+            ParticleSystem.EmissionModule emission = particles.emission;
+            emission.rateOverTime = 0f;
+            emission.SetBursts(new[] { new ParticleSystem.Burst(0f, (short)count) });
+
+            // 회전 없는 Circle 모양은 XY 평면 → 위에서 보는 카메라 기준으로 사방으로 퍼진다
+            ParticleSystem.ShapeModule shape = particles.shape;
+            shape.shapeType = ParticleSystemShapeType.Circle;
+            shape.radius = 0.5f;
+
+            ParticleSystem.ColorOverLifetimeModule color = particles.colorOverLifetime;
+            color.enabled = true;
+            var fade = new Gradient();
+            fade.SetKeys(
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) });
+            color.color = fade;
+
+            ParticleSystem.SizeOverLifetimeModule shrink = particles.sizeOverLifetime;
+            shrink.enabled = true;
+            shrink.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 1f, 1f, 0.2f));
+
+            go.GetComponent<ParticleSystemRenderer>().sharedMaterial = material;
+
+            GameObject prefab = PrefabUtility.SaveAsPrefabAsset(go, $"{dir}/{name}.prefab");
+            Object.DestroyImmediate(go);
+            return prefab.GetComponent<ParticleSystem>();
         }
 
         // HUD는 MonoBehaviour로 남아 있어야 하므로 SubScene이 아니라 메인 씬에 둔다.

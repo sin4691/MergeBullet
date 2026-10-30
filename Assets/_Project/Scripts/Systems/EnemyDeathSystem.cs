@@ -22,6 +22,7 @@ namespace MergeBullet.Systems
         {
             state.RequireForUpdate<EnemyHealth>();
             state.RequireForUpdate<GameStats>();
+            state.RequireForUpdate<EffectQueue>();
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
@@ -43,6 +44,9 @@ namespace MergeBullet.Systems
                 Stats = SystemAPI.GetComponentLookup<GameStats>(),
                 Drops = SystemAPI.GetComponentLookup<XpDrop>(true),
                 Transforms = SystemAPI.GetComponentLookup<LocalTransform>(true),
+                Enemies = SystemAPI.GetComponentLookup<Enemy>(true),
+                BaseColors = SystemAPI.GetComponentLookup<BaseColor>(true),
+                EffectQueueEntity = SystemAPI.GetSingletonEntity<EffectQueue>(),
             }.Schedule();
         }
     }
@@ -56,6 +60,9 @@ namespace MergeBullet.Systems
         public ComponentLookup<GameStats> Stats;
         [ReadOnly] public ComponentLookup<XpDrop> Drops;
         [ReadOnly] public ComponentLookup<LocalTransform> Transforms;
+        [ReadOnly] public ComponentLookup<Enemy> Enemies;
+        [ReadOnly] public ComponentLookup<BaseColor> BaseColors;
+        public Entity EffectQueueEntity;
 
         void Execute(Entity entity, in EnemyHealth health)
         {
@@ -63,6 +70,15 @@ namespace MergeBullet.Systems
 
             DestroyEcb.DestroyEntity(entity);
             Stats.GetRefRW(StatsEntity).ValueRW.Kills++;
+
+            // 처치 파편은 적의 색·크기로 (적 종류마다 다르게 보이도록)
+            DestroyEcb.AppendToBuffer(EffectQueueEntity, new EffectEvent
+            {
+                Type = EffectType.EnemyKilled,
+                Position = Transforms[entity].Position.xy,
+                Size = Enemies[entity].Radius,
+                Color = BaseColors.TryGetComponent(entity, out BaseColor color) ? color.Value : new float4(1f),
+            });
 
             if (!Drops.TryGetComponent(entity, out XpDrop drop)) return;
 

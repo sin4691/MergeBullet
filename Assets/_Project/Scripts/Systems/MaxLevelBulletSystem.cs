@@ -20,6 +20,7 @@ namespace MergeBullet.Systems
         {
             state.RequireForUpdate<MaxLevelEffect>();
             state.RequireForUpdate<BulletLevelSettings>();
+            state.RequireForUpdate<EffectQueue>();
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         }
 
@@ -32,6 +33,7 @@ namespace MergeBullet.Systems
             {
                 MaxLevel = SystemAPI.GetSingleton<BulletLevelSettings>().MaxLevel,
                 Effect = SystemAPI.GetSingleton<MaxLevelEffect>(),
+                EffectQueueEntity = SystemAPI.GetSingletonEntity<EffectQueue>(),
                 Ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
                     .CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter(),
             }.ScheduleParallel();
@@ -43,6 +45,7 @@ namespace MergeBullet.Systems
     {
         public int MaxLevel;
         public MaxLevelEffect Effect;
+        public Entity EffectQueueEntity;
         public EntityCommandBuffer.ParallelWriter Ecb;
 
         // sortKey: 병렬로 기록된 명령을 재생할 때 순서를 결정적으로 만들기 위한 키
@@ -60,6 +63,15 @@ namespace MergeBullet.Systems
                 Damage = Effect.Damage,
             });
             Ecb.DestroyEntity(sortKey, entity);
+
+            // 폭발 구 위에 파편·소리를 더한다 (병렬 잡이라 sortKey로 순서를 고정)
+            Ecb.AppendToBuffer(sortKey, EffectQueueEntity, new EffectEvent
+            {
+                Type = EffectType.Explosion,
+                Position = transform.Position.xy,
+                Size = Effect.Radius,
+                Color = new float4(1f, 0.95f, 0.8f, 1f),
+            });
         }
     }
 }
