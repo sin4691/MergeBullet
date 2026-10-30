@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using MergeBullet.Components;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -44,7 +46,10 @@ namespace MergeBullet.Authoring
         [Min(0f)] public float IdleWarningTime = 1.5f;
 
         [Header("Enemies")]
+        // 기본 적. 처음부터 끝까지 가중치 1로 나온다
         public GameObject EnemyPrefab;
+        // 추가 적 종류. 난이도 진행도에 따라 가중치가 Start → End로 바뀐다
+        public List<EnemyVariant> EnemyVariants = new List<EnemyVariant>();
         [Min(0.05f)] public float EnemySpawnInterval = 1f;
         [Min(0)] public int MaxEnemies = 30;
         [Min(0f)] public float EnemySafeSpawnDistance = 4f;
@@ -107,9 +112,17 @@ namespace MergeBullet.Authoring
 
                 if (authoring.EnemyPrefab != null)
                 {
+                    var spawnTable = new List<EnemySpawnEntry>();
+                    float maxRadius = AddSpawnEntry(spawnTable, authoring.EnemyPrefab, 1f, 1f);
+                    foreach (EnemyVariant variant in authoring.EnemyVariants)
+                    {
+                        if (variant.Prefab == null) continue;
+                        maxRadius = math.max(maxRadius, AddSpawnEntry(spawnTable, variant.Prefab, variant.StartWeight, variant.EndWeight));
+                    }
+
                     AddComponent(entity, new EnemySpawner
                     {
-                        Prefab = GetEntity(authoring.EnemyPrefab, TransformUsageFlags.Dynamic),
+                        MaxEnemyRadius = maxRadius,
                         Interval = authoring.EnemySpawnInterval,
                         MaxAlive = authoring.MaxEnemies,
                         Cooldown = authoring.EnemySpawnInterval,
@@ -129,6 +142,10 @@ namespace MergeBullet.Authoring
                         EndHealthMultiplier = authoring.LateHealthMultiplier,
                         EndSpeedMultiplier = authoring.LateSpeedMultiplier,
                     });
+
+                    // 버퍼는 다른 AddComponent가 끝난 뒤에 채운다
+                    DynamicBuffer<EnemySpawnEntry> buffer = AddBuffer<EnemySpawnEntry>(entity);
+                    foreach (EnemySpawnEntry entry in spawnTable) buffer.Add(entry);
                 }
 
                 if (authoring.MaxLevelEffectPrefab != null)
@@ -168,6 +185,20 @@ namespace MergeBullet.Authoring
                 });
             }
 
+            // 스폰 테이블에 한 줄 추가하고, 그 적의 반지름을 돌려준다 (가장 큰 적 반지름 계산용).
+            // 프리팹의 EnemyAuthoring을 읽으므로 그 값이 바뀌면 다시 베이킹된다
+            float AddSpawnEntry(List<EnemySpawnEntry> table, GameObject prefab, float startWeight, float endWeight)
+            {
+                table.Add(new EnemySpawnEntry
+                {
+                    Prefab = GetEntity(prefab, TransformUsageFlags.Dynamic),
+                    StartWeight = startWeight,
+                    EndWeight = endWeight,
+                });
+                EnemyAuthoring enemy = GetComponent<EnemyAuthoring>(prefab);
+                return enemy != null ? enemy.Radius : 0f;
+            }
+
             // 머티리얼 프로퍼티 오버라이드는 셰이더에 그대로 들어가므로 선형 색공간 값으로 넘긴다
             static float4 LevelColor(ArenaAuthoring authoring, int index)
             {
@@ -176,5 +207,14 @@ namespace MergeBullet.Authoring
                 return new float4(linear.r, linear.g, linear.b, linear.a);
             }
         }
+    }
+
+    /// <summary>추가 적 종류 한 줄 (Inspector 편집용). 난이도 진행도 0 → 1에 따라 가중치가 Start → End.</summary>
+    [Serializable]
+    public class EnemyVariant
+    {
+        public GameObject Prefab;
+        [Min(0f)] public float StartWeight;
+        [Min(0f)] public float EndWeight = 1f;
     }
 }

@@ -169,8 +169,21 @@ MonoBehaviour:
   IdleLifetime: 5
   IdleWarningTime: 1.5
   EnemyPrefab: {fileID: 9211892432071304558, guid: ff33f4f6bf4318b4089b4640fc73857c, type: 3}
+  EnemyVariants:
+  - Prefab: {fileID: 9043063038586309262, guid: d7e7708a38c375f4a9a6d83ab469c5e6, type: 3}
+    StartWeight: 0
+    EndWeight: 1
+  - Prefab: {fileID: 4303522275096004051, guid: 413c81b4eca35de498e5a526375bca62, type: 3}
+    StartWeight: 0
+    EndWeight: 0.4
   EnemySpawnInterval: 1
   MaxEnemies: 30
+  EnemySafeSpawnDistance: 4
+  DifficultyRampSeconds: 300
+  LateSpawnInterval: 0.15
+  LateMaxEnemies: 200
+  LateHealthMultiplier: 4
+  LateSpeedMultiplier: 1.5
   BenchmarkMode: 0
   BenchmarkBullets: 1000
   BenchmarkEnemies: 300

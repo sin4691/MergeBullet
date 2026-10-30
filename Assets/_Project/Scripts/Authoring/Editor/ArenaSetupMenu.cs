@@ -165,6 +165,66 @@ namespace MergeBullet.Editor
             Debug.Log("Enemy 생성 완료. Play를 눌러 확인하세요.");
         }
 
+        // 러너(작고 빠르고 약함)와 탱커(크고 느리고 단단함)를 만들어 스폰 테이블에 넣는다.
+        // 둘 다 시작 가중치 0이라 처음엔 안 나오고, 난이도가 오를수록 섞여 나온다. 색은 모두 빨간 계열(= 적)
+        [MenuItem("MergeBullet/Create Enemy Variants")]
+        static void CreateEnemyVariants()
+        {
+            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath) == null)
+            {
+                Debug.LogError("먼저 MergeBullet/Create Arena SubScene 을 실행하세요.");
+                return;
+            }
+
+            EnsureFolder(MaterialsDir);
+            EnsureFolder(PrefabsDir);
+            var gem = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabsDir + "/XpGem.prefab");
+
+            GameObject runner = CreateEnemyVariantPrefab("Runner", new Color(1f, 0.4f, 0.45f), gem,
+                moveSpeed: 3.5f, radius: 0.25f, maxHealth: 1f, contactDamage: 1f, xp: 1);
+            GameObject tank = CreateEnemyVariantPrefab("Tank", new Color(0.55f, 0.08f, 0.15f), gem,
+                moveSpeed: 1.2f, radius: 0.6f, maxHealth: 12f, contactDamage: 2f, xp: 4);
+
+            EditArenaSubScene((subScene, arena) =>
+            {
+                Undo.RecordObject(arena, "Add Enemy Variants");
+                SetVariant(arena, runner, startWeight: 0f, endWeight: 1f);
+                SetVariant(arena, tank, startWeight: 0f, endWeight: 0.4f);
+                EditorUtility.SetDirty(arena);
+            });
+            Debug.Log("Enemy Variants(Runner, Tank) 생성 완료. Play를 눌러 확인하세요.");
+        }
+
+        static GameObject CreateEnemyVariantPrefab(string name, Color color, GameObject gem,
+            float moveSpeed, float radius, float maxHealth, float contactDamage, int xp)
+        {
+            Material material = CreateMaterial(name, color);
+            GameObject go = CreatePrimitiveWithoutCollider(PrimitiveType.Cube, name, material);
+            var enemy = go.AddComponent<EnemyAuthoring>();
+            enemy.MoveSpeed = moveSpeed;
+            enemy.Radius = radius;
+            enemy.MaxHealth = maxHealth;
+            enemy.ContactDamage = contactDamage;
+            enemy.XpGemPrefab = gem;
+            enemy.XpValue = xp;
+            GameObject prefab = PrefabUtility.SaveAsPrefabAsset(go, $"{PrefabsDir}/{name}.prefab");
+            Object.DestroyImmediate(go);
+            return prefab;
+        }
+
+        // 같은 프리팹이 이미 테이블에 있으면 가중치만 고친다 (메뉴를 다시 실행해도 중복되지 않게)
+        static void SetVariant(ArenaAuthoring arena, GameObject prefab, float startWeight, float endWeight)
+        {
+            EnemyVariant variant = arena.EnemyVariants.Find(v => v.Prefab == prefab);
+            if (variant == null)
+            {
+                variant = new EnemyVariant { Prefab = prefab };
+                arena.EnemyVariants.Add(variant);
+            }
+            variant.StartWeight = startWeight;
+            variant.EndWeight = endWeight;
+        }
+
         // 젬 프리팹을 만들고 적 프리팹의 드롭으로 연결한다 (드롭은 적마다 다를 수 있어서 적 프리팹이 갖는다)
         [MenuItem("MergeBullet/Create XP Gem")]
         static void CreateXpGem()
