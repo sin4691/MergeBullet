@@ -403,6 +403,9 @@ namespace MergeBullet.Editor
             Undo.RecordObject(cam, "Fit Camera");
             Undo.RecordObject(cam.transform, "Fit Camera");
             cam.orthographic = true;
+            // 기본 하늘색 배경은 총알·적 색과 대비가 약해서 검은색 단색으로 둔다
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = Color.black;
             cam.transform.SetPositionAndRotation(new Vector3(0f, 0f, -10f), Quaternion.identity);
 
             const float margin = 1f;
