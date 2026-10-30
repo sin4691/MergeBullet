@@ -8,6 +8,7 @@ namespace MergeBullet.Systems
 {
     /// <summary>
     /// 스폰 간격마다, 살아 있는 적이 MaxAlive 미만이면 아레나 네 변 중 임의의 위치에 적을 하나 만든다.
+    /// 간격·최대 수·체력·속도 배율은 DifficultySystem이 생존 시간에 따라 바꿔 둔다.
     /// 생성은 ECB로 미뤄서 메인 스레드가 다른 잡을 기다리는 구조 변경(sync point)을 만들지 않는다.
     /// </summary>
     [BurstCompile]
@@ -39,7 +40,9 @@ namespace MergeBullet.Systems
             if (_enemyQuery.CalculateEntityCount() >= spawner.ValueRO.MaxAlive) return;
 
             Entity prefab = spawner.ValueRO.Prefab;
-            float radius = SystemAPI.GetComponent<Enemy>(prefab).Radius;
+            // Enemy는 어떤 잡도 쓰지 않는 읽기 전용 데이터라, 메인 스레드에서 읽어도 잡을 기다리지 않는다
+            Enemy stats = SystemAPI.GetComponent<Enemy>(prefab);
+            float radius = stats.Radius;
             float2 limit = SystemAPI.GetSingleton<ArenaBounds>().HalfSize - radius;
             float2 position = RandomPointOnEdge(ref spawner.ValueRW.Random, limit);
 
@@ -60,6 +63,12 @@ namespace MergeBullet.Systems
             float facing = math.atan2(-position.y, -position.x);
             ecb.SetComponent(enemy, LocalTransform.FromPositionRotationScale(
                 new float3(position, 0f), quaternion.RotateZ(facing), radius * math.SQRT2));
+
+            // 난이도 배율은 스폰할 때 한 번만 곱한다 (이미 나온 적은 그대로)
+            stats.MaxHealth *= spawner.ValueRO.HealthMultiplier;
+            stats.MoveSpeed *= spawner.ValueRO.SpeedMultiplier;
+            ecb.SetComponent(enemy, stats);
+            ecb.SetComponent(enemy, new EnemyHealth { Value = stats.MaxHealth });
         }
 
         static float2 RandomPointOnEdge(ref Random random, float2 limit)
