@@ -41,6 +41,8 @@ namespace MergeBullet.Systems
             state.RequireForUpdate<PlayerHealth>();
             state.RequireForUpdate<AutoFire>();
             state.RequireForUpdate<BulletLevelSettings>();
+            // 영구 강화 보너스가 정해진 뒤에 기본 능력치를 기록해야 한다 (PermanentBonusSystem이 만든다)
+            state.RequireForUpdate<PermanentBonus>();
         }
 
         [BurstCompile]
@@ -125,17 +127,26 @@ namespace MergeBullet.Systems
             };
         }
 
+        // 베이킹된 능력치에 영구 강화 보너스를 곱한 값이 이번 판의 기본 능력치가 된다.
+        // 기록한 뒤 바로 실제 컴포넌트에도 써서, 첫 판부터 보너스가 적용된 상태로 시작한다
         void CaptureBaseStats(ref SystemState state, ref BaseStats stats)
         {
+            PermanentBonus bonus = SystemAPI.GetSingleton<PermanentBonus>();
             AutoFire weapon = SystemAPI.GetSingleton<AutoFire>();
-            stats.MoveSpeed = SystemAPI.GetSingleton<Player>().MoveSpeed;
-            stats.MaxHealth = SystemAPI.GetSingleton<PlayerHealth>().Max;
-            stats.FireInterval = weapon.Interval;
+            stats.MoveSpeed = SystemAPI.GetSingleton<Player>().MoveSpeed * bonus.MoveSpeedMultiplier;
+            stats.MaxHealth = SystemAPI.GetSingleton<PlayerHealth>().Max + bonus.BonusMaxHealth;
+            stats.FireInterval = weapon.Interval * bonus.FireIntervalMultiplier;
             stats.BulletSpeed = weapon.BulletSpeed;
-            stats.BulletDamage = SystemAPI.GetSingleton<BulletLevelSettings>().BaseDamage;
+            stats.BulletDamage = SystemAPI.GetSingleton<BulletLevelSettings>().BaseDamage * bonus.DamageMultiplier;
             stats.ExplosionRadius = SystemAPI.TryGetSingleton(out MaxLevelEffect effect) ? effect.Radius : 0f;
-            stats.MagnetRadius = SystemAPI.TryGetSingleton(out GemCollector collector) ? collector.MagnetRadius : 0f;
+            stats.MagnetRadius = SystemAPI.TryGetSingleton(out GemCollector collector)
+                ? collector.MagnetRadius * bonus.MagnetRadiusMultiplier
+                : 0f;
             stats.Captured = true;
+
+            RestoreBaseStats(ref state, stats);
+            RefRW<PlayerHealth> health = SystemAPI.GetSingletonRW<PlayerHealth>();
+            health.ValueRW.Value = health.ValueRO.Max;
         }
 
         void RestoreBaseStats(ref SystemState state, in BaseStats stats)

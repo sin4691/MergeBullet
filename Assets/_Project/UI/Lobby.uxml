@@ -4,6 +4,11 @@
         <ui:Label class="overlay-title game-title" text="MERGE BULLET" />
         <ui:Label name="coins" class="coin-text" text="0 coins" />
         <ui:Label name="best" class="final-text" text="" />
+        <ui:VisualElement name="shop" class="shop">
+            <ui:Label class="shop-title" text="UPGRADES" />
+            <!-- 줄은 LobbyScreen.cs가 강화 종류만큼 만든다 -->
+            <ui:VisualElement name="shop-list" class="shop-list" />
+        </ui:VisualElement>
         <ui:Button name="start-button" class="restart-button" text="Start (Space)" />
     </ui:VisualElement>
 </ui:UXML>

@@ -13,6 +13,18 @@ namespace MergeBullet.Meta
         public int RunsPlayed;
         public float BestSurvivalTime;
         public int BestKills;
+        /// <summary>영구 강화 단계. 인덱스 = PermanentUpgradeType. 예전 저장 파일엔 없을 수 있어 길이를 맞춰 쓴다.</summary>
+        public int[] UpgradeLevels = new int[PermanentUpgrades.Count];
+
+        public int GetUpgradeLevel(PermanentUpgradeType type)
+            => UpgradeLevels != null && (int)type < UpgradeLevels.Length ? UpgradeLevels[(int)type] : 0;
+
+        public void SetUpgradeLevel(PermanentUpgradeType type, int level)
+        {
+            if (UpgradeLevels == null || UpgradeLevels.Length < PermanentUpgrades.Count)
+                Array.Resize(ref UpgradeLevels, PermanentUpgrades.Count);
+            UpgradeLevels[(int)type] = level;
+        }
     }
 
     /// <summary>한 판이 끝났을 때 받은 보상과 갱신된 기록.</summary>
@@ -62,6 +74,22 @@ namespace MergeBullet.Meta
             Save();
 
             return new RunReward(coins, newBestTime, newBestKills);
+        }
+
+        /// <summary>코인이 충분하고 최대 단계가 아니면 한 단계 사고 저장한다.</summary>
+        public static bool TryBuyUpgrade(PermanentUpgradeType type)
+        {
+            SaveData data = Current;
+            int level = data.GetUpgradeLevel(type);
+            if (level >= PermanentUpgrades.Get(type).MaxLevel) return false;
+
+            int cost = PermanentUpgrades.CostOf(type, level);
+            if (data.Coins < cost) return false;
+
+            data.Coins -= cost;
+            data.SetUpgradeLevel(type, level + 1);
+            Save();
+            return true;
         }
 
         public static void Save()
