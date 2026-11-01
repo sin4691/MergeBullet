@@ -435,6 +435,43 @@ namespace MergeBullet.Editor
             return saved;
         }
 
+        // 보스 프리팹(크고 단단한 적 + 돌진 패턴)을 만들고 Arena의 보스 스포너에 연결한다
+        [MenuItem("MergeBullet/Create Boss")]
+        static void CreateBoss()
+        {
+            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath) == null)
+            {
+                Debug.LogError("먼저 MergeBullet/Create Arena SubScene 을 실행하세요.");
+                return;
+            }
+
+            EnsureFolder(MaterialsDir);
+            EnsureFolder(PrefabsDir);
+            var gem = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabsDir + "/XpGem.prefab");
+
+            // 빨간 계열(= 적)이지만 일반 적보다 진하고 크게
+            GameObject boss = CreateEnemyVariantPrefab("Boss", new Color(0.75f, 0.05f, 0.25f), gem,
+                moveSpeed: 1.4f, radius: 1f, maxHealth: 300f, contactDamage: 3f, xp: 20);
+            GameObject contents = PrefabUtility.LoadPrefabContents(PrefabsDir + "/Boss.prefab");
+            try
+            {
+                if (contents.GetComponent<BossAuthoring>() == null) contents.AddComponent<BossAuthoring>();
+                PrefabUtility.SaveAsPrefabAsset(contents, PrefabsDir + "/Boss.prefab");
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(contents);
+            }
+
+            EditArenaSubScene((subScene, arena) =>
+            {
+                Undo.RecordObject(arena, "Assign Boss");
+                arena.BossPrefab = boss;
+                EditorUtility.SetDirty(arena);
+            });
+            Debug.Log("Boss 생성 완료. 생존 시간 Boss Interval(기본 180초)마다 나옵니다.");
+        }
+
         // HUD는 MonoBehaviour로 남아 있어야 하므로 SubScene이 아니라 메인 씬에 둔다.
         // 이미 GameHud가 있으면(예전 IMGUI 버전) 새로 만들지 않고 UIDocument만 설정한다.
         [MenuItem("MergeBullet/Create HUD")]

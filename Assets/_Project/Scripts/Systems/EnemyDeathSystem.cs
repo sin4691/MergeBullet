@@ -46,6 +46,7 @@ namespace MergeBullet.Systems
                 Transforms = SystemAPI.GetComponentLookup<LocalTransform>(true),
                 Enemies = SystemAPI.GetComponentLookup<Enemy>(true),
                 BaseColors = SystemAPI.GetComponentLookup<BaseColor>(true),
+                Bosses = SystemAPI.GetComponentLookup<Boss>(true),
                 EffectQueueEntity = SystemAPI.GetSingletonEntity<EffectQueue>(),
             }.Schedule();
         }
@@ -62,6 +63,7 @@ namespace MergeBullet.Systems
         [ReadOnly] public ComponentLookup<LocalTransform> Transforms;
         [ReadOnly] public ComponentLookup<Enemy> Enemies;
         [ReadOnly] public ComponentLookup<BaseColor> BaseColors;
+        [ReadOnly] public ComponentLookup<Boss> Bosses;
         public Entity EffectQueueEntity;
 
         void Execute(Entity entity, in EnemyHealth health)
@@ -69,7 +71,9 @@ namespace MergeBullet.Systems
             if (health.Value > 0f) return;
 
             DestroyEcb.DestroyEntity(entity);
-            Stats.GetRefRW(StatsEntity).ValueRW.Kills++;
+            RefRW<GameStats> stats = Stats.GetRefRW(StatsEntity);
+            stats.ValueRW.Kills++;
+            if (Bosses.HasComponent(entity)) stats.ValueRW.BossKills++;
 
             // 처치 파편은 적의 색·크기로 (적 종류마다 다르게 보이도록)
             DestroyEcb.AppendToBuffer(EffectQueueEntity, new EffectEvent

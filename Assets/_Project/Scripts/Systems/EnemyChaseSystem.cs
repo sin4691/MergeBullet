@@ -34,6 +34,8 @@ namespace MergeBullet.Systems
         }
     }
 
+    // 보스가 예고·돌진 중이면(BossOverride 켜짐) 추적하지 않는다. 일반 적은 BossOverride가 없어서 항상 대상이다
+    [WithNone(typeof(BossOverride))]
     [BurstCompile]
     partial struct EnemyChaseJob : IJobEntity
     {
