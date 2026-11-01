@@ -10,19 +10,18 @@ namespace MergeBullet.Meta
         Storm,
     }
 
-    /// <summary>캐릭터 하나의 정의. 캐릭터마다 레벨 4 특수효과와 플레이어 색이 다르다.</summary>
+    /// <summary>
+    /// 캐릭터 하나의 정의. 캐릭터마다 레벨 4 특수효과와 플레이어 색이 다르다.
+    /// 이름·설명은 화면 문구라 여기 두지 않고 UI 문자열 표(character.{종류}.name/desc)에 둔다.
+    /// </summary>
     public readonly struct CharacterDefinition
     {
-        public readonly string Name;
-        public readonly string Description;
         public readonly MaxLevelEffectKind Effect;
         public readonly int UnlockCost;
         public readonly Color Color;
 
-        public CharacterDefinition(string name, string description, MaxLevelEffectKind effect, int unlockCost, Color color)
+        public CharacterDefinition(MaxLevelEffectKind effect, int unlockCost, Color color)
         {
-            Name = name;
-            Description = description;
             Effect = effect;
             UnlockCost = unlockCost;
             Color = color;
@@ -36,9 +35,9 @@ namespace MergeBullet.Meta
 
         static readonly CharacterDefinition[] Table =
         {
-            new CharacterDefinition("Blaster", "Level 4 bullets explode", MaxLevelEffectKind.Explosion,
+            new CharacterDefinition(MaxLevelEffectKind.Explosion, // 레벨 4 총알이 폭발
                 unlockCost: 0, new Color(0.3f, 0.75f, 1f)),
-            new CharacterDefinition("Storm", "Level 4 bullets chain lightning", MaxLevelEffectKind.Lightning,
+            new CharacterDefinition(MaxLevelEffectKind.Lightning, // 레벨 4 총알이 연쇄 번개
                 unlockCost: 100, new Color(0.2f, 0.95f, 0.85f)),
         };
 

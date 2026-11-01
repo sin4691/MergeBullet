@@ -1,16 +1,18 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <Style src="GameHud.uss" />
     <ui:VisualElement name="lobby" class="overlay title lobby">
+        <!-- 지금 언어 이름을 보여 주고, 누르면 다음 언어로 바뀐다 -->
+        <ui:Button name="language-button" class="language-button" text="English" />
         <ui:Label class="overlay-title game-title" text="MERGE BULLET" />
         <ui:Label name="coins" class="coin-text" text="0 coins" />
         <ui:Label name="best" class="final-text" text="" />
         <ui:VisualElement name="characters" class="shop">
-            <ui:Label class="shop-title" text="CHARACTER" />
+            <ui:Label name="characters-title" class="shop-title" text="CHARACTER" />
             <!-- 줄은 LobbyScreen.cs가 캐릭터 수만큼 만든다 -->
             <ui:VisualElement name="character-list" class="shop-list" />
         </ui:VisualElement>
         <ui:VisualElement name="shop" class="shop">
-            <ui:Label class="shop-title" text="UPGRADES" />
+            <ui:Label name="upgrades-title" class="shop-title" text="UPGRADES" />
             <!-- 줄은 LobbyScreen.cs가 강화 종류만큼 만든다 -->
             <ui:VisualElement name="shop-list" class="shop-list" />
         </ui:VisualElement>

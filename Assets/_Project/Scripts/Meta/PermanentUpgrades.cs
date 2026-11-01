@@ -13,17 +13,15 @@ namespace MergeBullet.Meta
         Magnet,
     }
 
-    /// <summary>영구 강화 하나의 정의 (이름, 단계당 효과, 최대 단계, 1단계 가격).</summary>
+    /// <summary>영구 강화 하나의 정의 (단계당 효과, 최대 단계, 1단계 가격). 이름·설명은 UI 문자열 표(perm.{종류}.name/desc)에 있다.</summary>
     public readonly struct PermanentUpgradeInfo
     {
-        public readonly string Name;
         public readonly float PerLevel;
         public readonly int MaxLevel;
         public readonly int BaseCost;
 
-        public PermanentUpgradeInfo(string name, float perLevel, int maxLevel, int baseCost)
+        public PermanentUpgradeInfo(float perLevel, int maxLevel, int baseCost)
         {
-            Name = name;
             PerLevel = perLevel;
             MaxLevel = maxLevel;
             BaseCost = baseCost;
@@ -43,11 +41,11 @@ namespace MergeBullet.Meta
 
         static readonly PermanentUpgradeInfo[] Table =
         {
-            new PermanentUpgradeInfo("Rapid Fire", perLevel: 0.05f, maxLevel: 10, baseCost: 20), // 발사 간격 -5%
-            new PermanentUpgradeInfo("Vitality", perLevel: 2f, maxLevel: 10, baseCost: 15),      // 최대 체력 +2
-            new PermanentUpgradeInfo("Power", perLevel: 0.10f, maxLevel: 10, baseCost: 25),      // 피해 +10%
-            new PermanentUpgradeInfo("Agility", perLevel: 0.05f, maxLevel: 5, baseCost: 20),     // 이동 속도 +5%
-            new PermanentUpgradeInfo("Magnet", perLevel: 0.15f, maxLevel: 5, baseCost: 10),      // 줍기 범위 +15%
+            new PermanentUpgradeInfo(perLevel: 0.05f, maxLevel: 10, baseCost: 20), // 발사 간격 -5%
+            new PermanentUpgradeInfo(perLevel: 2f, maxLevel: 10, baseCost: 15),      // 최대 체력 +2
+            new PermanentUpgradeInfo(perLevel: 0.10f, maxLevel: 10, baseCost: 25),      // 피해 +10%
+            new PermanentUpgradeInfo(perLevel: 0.05f, maxLevel: 5, baseCost: 20),     // 이동 속도 +5%
+            new PermanentUpgradeInfo(perLevel: 0.15f, maxLevel: 5, baseCost: 10),      // 줍기 범위 +15%
         };
 
         public static PermanentUpgradeInfo Get(PermanentUpgradeType type) => Table[(int)type];
@@ -56,24 +54,13 @@ namespace MergeBullet.Meta
         public static int CostOf(PermanentUpgradeType type, int currentLevel)
             => Mathf.RoundToInt(Get(type).BaseCost * Mathf.Pow(CostGrowth, currentLevel));
 
-        /// <summary>해당 단계까지 산 총 효과를 사람이 읽는 문장으로.</summary>
-        public static string Describe(PermanentUpgradeType type, int level)
-        {
-            float total = Get(type).PerLevel * level;
-            switch (type)
-            {
-                case PermanentUpgradeType.FireRate: return $"Fire interval -{Percent(total)}";
-                case PermanentUpgradeType.MaxHealth: return $"Max HP +{total:0}";
-                case PermanentUpgradeType.Damage: return $"Bullet damage +{Percent(total)}";
-                case PermanentUpgradeType.MoveSpeed: return $"Move speed +{Percent(total)}";
-                default: return $"Gem pickup range +{Percent(total)}";
-            }
-        }
+        /// <summary>해당 단계까지 산 총 효과 (체력은 수치, 나머지는 비율. 0.15 = 15%).</summary>
+        public static float TotalEffect(PermanentUpgradeType type, int level) => Get(type).PerLevel * level;
 
         /// <summary>저장된 단계로 이번 판의 보너스를 계산한다.</summary>
         public static PermanentBonus BonusFor(SaveData save)
         {
-            float Total(PermanentUpgradeType type) => Get(type).PerLevel * save.GetUpgradeLevel(type);
+            float Total(PermanentUpgradeType type) => TotalEffect(type, save.GetUpgradeLevel(type));
 
             return new PermanentBonus
             {
@@ -84,7 +71,5 @@ namespace MergeBullet.Meta
                 MagnetRadiusMultiplier = 1f + Total(PermanentUpgradeType.Magnet),
             };
         }
-
-        static string Percent(float value) => $"{Mathf.RoundToInt(value * 100f)}%";
     }
 }

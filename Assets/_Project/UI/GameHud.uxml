@@ -22,15 +22,15 @@
 
         <!-- 보스가 있을 때만 GameHud.cs가 보여 준다 -->
         <ui:VisualElement name="boss-bar" class="boss-bar" picking-mode="Ignore">
-            <ui:Label class="boss-name" text="BOSS" picking-mode="Ignore" />
+            <ui:Label name="boss-name" class="boss-name" text="BOSS" picking-mode="Ignore" />
             <ui:VisualElement class="boss-track" picking-mode="Ignore">
                 <ui:VisualElement name="boss-fill" class="boss-fill" picking-mode="Ignore" />
             </ui:VisualElement>
         </ui:VisualElement>
 
         <ui:VisualElement name="level-up" class="overlay">
-            <ui:Label class="overlay-title" text="LEVEL UP!" />
-            <ui:Label class="overlay-hint" text="Choose an upgrade  (1 / 2 / 3)" />
+            <ui:Label name="levelup-title" class="overlay-title" text="LEVEL UP!" />
+            <ui:Label name="levelup-hint" class="overlay-hint" text="Choose an upgrade  (1 / 2 / 3)" />
             <ui:VisualElement class="choice-row">
                 <ui:Button name="choice-0" class="choice">
                     <ui:Label name="choice-0-key" class="choice-key" text="1" picking-mode="Ignore" />
@@ -51,7 +51,7 @@
         </ui:VisualElement>
 
         <ui:VisualElement name="game-over" class="overlay">
-            <ui:Label class="overlay-title game-over-title" text="GAME OVER" />
+            <ui:Label name="gameover-title" class="overlay-title game-over-title" text="GAME OVER" />
             <ui:Label name="final-text" class="final-text" text="" />
             <ui:Label name="reward-text" class="coin-text" text="" />
             <ui:VisualElement class="button-row">

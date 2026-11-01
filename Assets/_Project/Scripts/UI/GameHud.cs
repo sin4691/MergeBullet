@@ -14,6 +14,7 @@ namespace MergeBullet.UI
     /// ECS에서 체력·게임 상태·기록·레벨을 읽어 그리고, ECS에는 재시작 요청과 업그레이드 선택만 쓴다.
     /// 로비로 가는 건 씬 이동이라 여기서 직접 하고, 남은 엔티티 정리는 GameSceneExitCleanupSystem이 한다.
     /// 판이 끝나면 코인 보상을 저장 데이터(SaveSystem)에 반영한다.
+    /// 화면 문구는 전부 L10n(UI 문자열 표)에서 가져온다. 언어는 로비에서만 바꾸므로 켜질 때 한 번 채운다.
     /// 메인 씬(SubScene 밖)에 둔다.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
@@ -22,6 +23,17 @@ namespace MergeBullet.UI
         const int ChoiceCount = 3;
         static readonly Color HealthLowColor = new Color(0.9f, 0.2f, 0.2f);
         static readonly Color HealthFullColor = new Color(0.3f, 0.85f, 0.4f);
+
+        // UXML의 고정 문구: 요소 이름 → 문자열 키
+        static readonly (string Element, string Key)[] StaticTexts =
+        {
+            ("boss-name", "hud.boss"),
+            ("levelup-title", "levelup.title"),
+            ("levelup-hint", "levelup.hint"),
+            ("gameover-title", "gameover.title"),
+            ("restart-button", "gameover.retry"),
+            ("lobby-button", "gameover.lobby"),
+        };
 
         World _world;
         EntityQuery _playerQuery;
@@ -65,6 +77,9 @@ namespace MergeBullet.UI
         void OnEnable()
         {
             VisualElement root = GetComponent<UIDocument>().rootVisualElement;
+            foreach ((string element, string key) in StaticTexts)
+                root.Q<TextElement>(element).text = L10n.Get(key);
+
             _hpFill = root.Q("hp-fill");
             _hpText = root.Q<Label>("hp-text");
             _levelText = root.Q<Label>("level-text");
@@ -193,7 +208,7 @@ namespace MergeBullet.UI
             if (value == _shownHealth && max == _shownMaxHealth) return;
             _shownHealth = value;
             _shownMaxHealth = max;
-            _hpText.text = $"HP {value} / {max}";
+            _hpText.text = L10n.Get("hud.hp", value, max);
         }
 
         void ShowLevel(PlayerProgress progress)
@@ -204,7 +219,7 @@ namespace MergeBullet.UI
 
             if (progress.Level == _shownLevel) return;
             _shownLevel = progress.Level;
-            _levelText.text = $"LV {progress.Level}";
+            _levelText.text = L10n.Get("hud.level", progress.Level);
         }
 
         void ShowStats(GameStats stats)
@@ -219,7 +234,7 @@ namespace MergeBullet.UI
             if (stats.Kills != _shownKills)
             {
                 _shownKills = stats.Kills;
-                _killText.text = $"KILLS {stats.Kills}";
+                _killText.text = L10n.Get("hud.kills", stats.Kills);
             }
         }
 
@@ -257,31 +272,21 @@ namespace MergeBullet.UI
             _choiceDescs[index].text = description;
         }
 
-        // 업그레이드 이름·설명은 화면 표시용이라 UI가 정한다. 수치는 실제 적용 값(UpgradeTuning)에서 가져온다
+        // 이름·설명 문장은 문자열 표(upgrade.{종류}.name/desc)에, 수치는 실제 적용 값(UpgradeTuning)에서 가져온다
         static (string title, string description) Describe(UpgradeType type)
         {
-            switch (type)
+            string amount = type switch
             {
-                case UpgradeType.FireRate:
-                    return ("Rapid Fire", $"Fire interval -{Percent(1f - UpgradeTuning.FireIntervalMultiplier)}");
-                case UpgradeType.Damage:
-                    return ("Heavy Rounds", $"Bullet damage +{Percent(UpgradeTuning.DamageBonus)}");
-                case UpgradeType.MoveSpeed:
-                    return ("Swift Feet", $"Move speed +{Percent(UpgradeTuning.MoveSpeedBonus)}");
-                case UpgradeType.BulletSpeed:
-                    return ("Velocity", $"Bullet speed +{Percent(UpgradeTuning.BulletSpeedBonus)}");
-                case UpgradeType.MaxHealth:
-                    return ("Vitality", $"Max HP +{UpgradeTuning.MaxHealthBonus:0} and heal {UpgradeTuning.MaxHealthBonus:0}");
-                case UpgradeType.ExplosionRadius:
-                    return ("Big Boom", $"Explosion radius +{Percent(UpgradeTuning.ExplosionRadiusBonus)}");
-                case UpgradeType.Magnet:
-                    return ("Magnet", $"Gem pickup range +{Percent(UpgradeTuning.MagnetRadiusBonus)}");
-                default:
-                    return (type.ToString(), "");
-            }
+                UpgradeType.FireRate => L10n.Percent(1f - UpgradeTuning.FireIntervalMultiplier),
+                UpgradeType.Damage => L10n.Percent(UpgradeTuning.DamageBonus),
+                UpgradeType.MoveSpeed => L10n.Percent(UpgradeTuning.MoveSpeedBonus),
+                UpgradeType.BulletSpeed => L10n.Percent(UpgradeTuning.BulletSpeedBonus),
+                UpgradeType.MaxHealth => UpgradeTuning.MaxHealthBonus.ToString("0"),
+                UpgradeType.ExplosionRadius => L10n.Percent(UpgradeTuning.ExplosionRadiusBonus),
+                _ => L10n.Percent(UpgradeTuning.MagnetRadiusBonus),
+            };
+            return (L10n.Get($"upgrade.{type}.name"), L10n.Get($"upgrade.{type}.desc", amount));
         }
-
-        static string Percent(float value) => $"{Mathf.RoundToInt(value * 100f)}%";
 
         void ShowGameOver(bool isGameOver, GameStats stats)
         {
@@ -291,9 +296,9 @@ namespace MergeBullet.UI
             _gameOver.style.display = isGameOver ? DisplayStyle.Flex : DisplayStyle.None;
             if (!isGameOver) return;
 
-            _finalText.text = $"Survived {FormatTime(Mathf.FloorToInt(stats.SurvivalTime))}   ·   {stats.Kills} kills";
-            string best = _reward.NewBestTime || _reward.NewBestKills ? "   NEW BEST!" : "";
-            _rewardText.text = $"+{_reward.Coins} coins   (total {SaveSystem.Current.Coins}){best}";
+            _finalText.text = L10n.Get("gameover.summary", FormatTime(Mathf.FloorToInt(stats.SurvivalTime)), stats.Kills);
+            string best = _reward.NewBestTime || _reward.NewBestKills ? "   " + L10n.Get("gameover.newbest") : "";
+            _rewardText.text = L10n.Get("gameover.reward", _reward.Coins, SaveSystem.Current.Coins) + best;
         }
 
         public static string FormatTime(int totalSeconds) => $"{totalSeconds / 60:00}:{totalSeconds % 60:00}";
