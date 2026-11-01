@@ -176,6 +176,9 @@ MonoBehaviour:
   - Prefab: {fileID: 4303522275096004051, guid: 413c81b4eca35de498e5a526375bca62, type: 3}
     StartWeight: 0
     EndWeight: 0.4
+  BossPrefab: {fileID: 6302997230523232388, guid: 01936f16ffe6d734d86d797262e35458, type: 3}
+  BossInterval: 180
+  BossHealthGrowth: 0.5
   EnemySpawnInterval: 1
   MaxEnemies: 30
   EnemySafeSpawnDistance: 4

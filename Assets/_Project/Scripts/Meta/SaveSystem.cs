@@ -50,6 +50,8 @@ namespace MergeBullet.Meta
     {
         // 생존 시간 이 초마다 코인 1개 (+ 처치 1마리당 코인 1개)
         public const float SecondsPerCoin = 5f;
+        // 보스 1마리당 추가 코인
+        public const int CoinsPerBoss = 20;
 
         static SaveData _current;
 
@@ -57,7 +59,8 @@ namespace MergeBullet.Meta
 
         public static SaveData Current => _current ??= Load();
 
-        public static int CoinsFor(GameStats stats) => stats.Kills + Mathf.FloorToInt(stats.SurvivalTime / SecondsPerCoin);
+        public static int CoinsFor(GameStats stats)
+            => stats.Kills + Mathf.FloorToInt(stats.SurvivalTime / SecondsPerCoin) + stats.BossKills * CoinsPerBoss;
 
         /// <summary>끝난 판의 코인을 더하고 최고 기록을 갱신한 뒤 저장한다.</summary>
         public static RunReward AwardRun(GameStats stats)

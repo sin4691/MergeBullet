@@ -18,5 +18,7 @@ namespace MergeBullet.Components
         /// <summary>생존 시간(초). 게임 오버면 timeScale 0이라 더 늘지 않는다.</summary>
         public float SurvivalTime;
         public int Kills;
+        /// <summary>처치한 보스 수 (Kills에도 포함). 보스는 코인을 따로 더 준다.</summary>
+        public int BossKills;
     }
 }

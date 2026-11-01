@@ -100,6 +100,44 @@
     -unity-text-outline-color: rgba(0, 0, 0, 0.8);
 }
 
+/* ---------- 보스 체력 ---------- */
+
+.boss-bar {
+    display: none;
+    position: absolute;
+    top: 110px;
+    left: 25%;
+    right: 25%;
+    align-items: center;
+}
+
+.boss-name {
+    margin-bottom: 4px;
+    font-size: 26px;
+    -unity-font-style: bold;
+    color: rgb(255, 90, 110);
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgba(0, 0, 0, 0.8);
+}
+
+.boss-track {
+    width: 100%;
+    height: 18px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 9px;
+    overflow: hidden;
+}
+
+/* 너비(%)는 GameHud.cs가 보스 체력 비율에 맞춰 바꾼다 */
+.boss-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(220, 40, 70);
+}
+
 /* ---------- 전체 화면 오버레이 (레벨업, 게임 오버) ---------- */
 
 /* 필요할 때만 GameHud.cs가 display: flex로 켠다 */

@@ -29,6 +29,7 @@ namespace MergeBullet.UI
         EntityQuery _statsQuery;
         EntityQuery _progressQuery;
         EntityQuery _offerQuery;
+        EntityQuery _bossQuery;
 
         VisualElement _hpFill;
         Label _hpText;
@@ -36,6 +37,8 @@ namespace MergeBullet.UI
         VisualElement _xpFill;
         Label _timeText;
         Label _killText;
+        VisualElement _bossBar;
+        VisualElement _bossFill;
         VisualElement _levelUp;
         readonly Button[] _choiceButtons = new Button[ChoiceCount];
         readonly Label[] _choiceTitles = new Label[ChoiceCount];
@@ -68,6 +71,8 @@ namespace MergeBullet.UI
             _xpFill = root.Q("xp-fill");
             _timeText = root.Q<Label>("time-text");
             _killText = root.Q<Label>("kill-text");
+            _bossBar = root.Q("boss-bar");
+            _bossFill = root.Q("boss-fill");
             _levelUp = root.Q("level-up");
             _gameOver = root.Q("game-over");
             _finalText = root.Q<Label>("final-text");
@@ -110,12 +115,14 @@ namespace MergeBullet.UI
             _statsQuery.CompleteDependency();
             _progressQuery.CompleteDependency();
             _offerQuery.CompleteDependency();
+            _bossQuery.CompleteDependency();
 
             if (_playerQuery.TryGetSingleton(out PlayerHealth health))
                 ShowHealth(health);
 
             _statsQuery.TryGetSingleton(out GameStats stats);
             ShowStats(stats);
+            ShowBoss();
 
             if (_progressQuery.TryGetSingleton(out PlayerProgress progress))
                 ShowLevel(progress);
@@ -171,6 +178,7 @@ namespace MergeBullet.UI
             _statsQuery = em.CreateEntityQuery(typeof(GameStats));
             _progressQuery = em.CreateEntityQuery(typeof(PlayerProgress));
             _offerQuery = em.CreateEntityQuery(typeof(LevelUpOffer));
+            _bossQuery = em.CreateEntityQuery(typeof(Boss), typeof(Enemy), typeof(EnemyHealth));
             return true;
         }
 
@@ -213,6 +221,19 @@ namespace MergeBullet.UI
                 _shownKills = stats.Kills;
                 _killText.text = $"KILLS {stats.Kills}";
             }
+        }
+
+        // 보스가 있으면 첫 번째 보스의 체력 비율을 보여 준다 (Temp 할당이라 GC가 생기지 않는다)
+        void ShowBoss()
+        {
+            bool hasBoss = !_bossQuery.IsEmpty;
+            _bossBar.style.display = hasBoss ? DisplayStyle.Flex : DisplayStyle.None;
+            if (!hasBoss) return;
+
+            using var healths = _bossQuery.ToComponentDataArray<EnemyHealth>(Unity.Collections.Allocator.Temp);
+            using var enemies = _bossQuery.ToComponentDataArray<Enemy>(Unity.Collections.Allocator.Temp);
+            float ratio = enemies[0].MaxHealth > 0f ? Mathf.Clamp01(healths[0].Value / enemies[0].MaxHealth) : 0f;
+            _bossFill.style.width = Length.Percent(ratio * 100f);
         }
 
         void ShowLevelUp(LevelUpOffer offer, int level)

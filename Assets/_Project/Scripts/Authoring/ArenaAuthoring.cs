@@ -50,6 +50,11 @@ namespace MergeBullet.Authoring
         public GameObject EnemyPrefab;
         // 추가 적 종류. 난이도 진행도에 따라 가중치가 Start → End로 바뀐다
         public List<EnemyVariant> EnemyVariants = new List<EnemyVariant>();
+
+        [Header("Boss")]
+        public GameObject BossPrefab;
+        [Min(10f)] public float BossInterval = 180f;
+        [Min(0f)] public float BossHealthGrowth = 0.5f;
         [Min(0.05f)] public float EnemySpawnInterval = 1f;
         [Min(0)] public int MaxEnemies = 30;
         [Min(0f)] public float EnemySafeSpawnDistance = 4f;
@@ -121,6 +126,20 @@ namespace MergeBullet.Authoring
                     {
                         if (variant.Prefab == null) continue;
                         maxRadius = math.max(maxRadius, AddSpawnEntry(spawnTable, variant.Prefab, variant.StartWeight, variant.EndWeight));
+                    }
+
+                    // 보스도 같은 공간 해시로 충돌하므로 가장 큰 반지름 계산에 넣어야 한다 (보스가 가장 크다)
+                    if (authoring.BossPrefab != null)
+                    {
+                        EnemyAuthoring boss = GetComponent<EnemyAuthoring>(authoring.BossPrefab);
+                        if (boss != null) maxRadius = math.max(maxRadius, boss.Radius);
+
+                        AddComponent(entity, new BossSpawner
+                        {
+                            Prefab = GetEntity(authoring.BossPrefab, TransformUsageFlags.Dynamic),
+                            Interval = authoring.BossInterval,
+                            HealthGrowthPerBoss = authoring.BossHealthGrowth,
+                        });
                     }
 
                     AddComponent(entity, new EnemySpawner
