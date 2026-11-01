@@ -222,6 +222,42 @@ MonoBehaviour:
     m_Localized: Level 4 bullets chain lightning
     m_Metadata:
       m_Items: []
+  - m_Id: 9355034636288
+    m_Localized: Press any key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967936
+    m_Localized: Tap to start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967937
+    m_Localized: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967938
+    m_Localized: Upgrades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967939
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967940
+    m_Localized: Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967941
+    m_Localized: SETTINGS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967942
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967943
+    m_Localized: Back (Esc)
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

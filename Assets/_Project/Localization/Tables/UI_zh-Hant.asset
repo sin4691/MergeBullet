@@ -222,6 +222,42 @@ MonoBehaviour:
     m_Localized: "4\u7D1A\u5B50\u5F48\u91CB\u653E\u9023\u9396\u9583\u96FB"
     m_Metadata:
       m_Items: []
+  - m_Id: 9355034636288
+    m_Localized: "\u6309\u4EFB\u610F\u9375\u958B\u59CB"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967936
+    m_Localized: "\u9EDE\u64CA\u87A2\u5E55\u958B\u59CB"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967937
+    m_Localized: "\u958B\u59CB\u904A\u6232"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967938
+    m_Localized: "\u5F37\u5316"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967939
+    m_Localized: "\u8A2D\u5B9A"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967940
+    m_Localized: "\u9000\u51FA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967941
+    m_Localized: "\u8A2D\u5B9A"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967942
+    m_Localized: "\u8A9E\u8A00"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967943
+    m_Localized: "\u8FD4\u56DE (Esc)"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

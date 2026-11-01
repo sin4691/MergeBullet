@@ -219,6 +219,42 @@ MonoBehaviour:
     m_Key: character.Storm.desc
     m_Metadata:
       m_Items: []
+  - m_Id: 9355034636288
+    m_Key: title.press
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967936
+    m_Key: title.tap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967937
+    m_Key: menu.play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967938
+    m_Key: menu.upgrades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967939
+    m_Key: menu.settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967940
+    m_Key: menu.quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967941
+    m_Key: settings.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967942
+    m_Key: settings.language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967943
+    m_Key: common.back
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

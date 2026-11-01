@@ -222,6 +222,42 @@ MonoBehaviour:
     m_Localized: I proiettili di livello 4 scatenano fulmini a catena
     m_Metadata:
       m_Items: []
+  - m_Id: 9355034636288
+    m_Localized: Premi un tasto qualsiasi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967936
+    m_Localized: Tocca per iniziare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967937
+    m_Localized: Gioca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967938
+    m_Localized: Potenziamenti
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967939
+    m_Localized: Impostazioni
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967940
+    m_Localized: Esci
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967941
+    m_Localized: IMPOSTAZIONI
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967942
+    m_Localized: Lingua
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967943
+    m_Localized: Indietro (Esc)
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

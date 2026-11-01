@@ -1,21 +1,56 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <Style src="GameHud.uss" />
-    <ui:VisualElement name="lobby" class="overlay title lobby">
-        <!-- 언어 목록은 LobbyScreen.cs가 각 언어 자신의 이름으로 채운다 -->
-        <ui:DropdownField name="language-dropdown" class="language-dropdown" />
-        <ui:Label class="overlay-title game-title" text="MERGE BULLET" />
-        <ui:Label name="coins" class="coin-text" text="0 coins" />
-        <ui:Label name="best" class="final-text" text="" />
-        <ui:VisualElement name="characters" class="shop">
-            <ui:Label name="characters-title" class="shop-title" text="CHARACTER" />
-            <!-- 줄은 LobbyScreen.cs가 캐릭터 수만큼 만든다 -->
-            <ui:VisualElement name="character-list" class="shop-list" />
+    <!-- 배경 연출(TitleBackground)은 LobbyScreen.cs가 맨 뒤에 끼워 넣는다.
+         화면(page)은 한 번에 하나만 보이고, LobbyScreen.cs가 바꾼다 -->
+    <ui:VisualElement name="lobby" class="lobby">
+        <!-- 코인·최고 기록: 타이틀을 뺀 모든 화면 오른쪽 위 -->
+        <ui:VisualElement name="wallet" class="wallet" picking-mode="Ignore">
+            <ui:Label name="coins" class="coin-text" text="0 coins" />
+            <ui:Label name="best" class="best-text" text="" />
         </ui:VisualElement>
-        <ui:VisualElement name="shop" class="shop">
-            <ui:Label name="upgrades-title" class="shop-title" text="UPGRADES" />
+
+        <ui:VisualElement name="title-page" class="page title-page">
+            <ui:Label name="title-logo" class="game-title" text="MERGE BULLET" />
+            <ui:Label name="title-press" class="title-press" text="Press any key" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="menu-page" class="page menu-page">
+            <ui:Label class="game-title menu-logo" text="MERGE BULLET" />
+            <ui:VisualElement name="menu-list" class="menu-list">
+                <ui:Button name="menu-play" class="menu-item" text="Play" />
+                <ui:Button name="menu-upgrades" class="menu-item" text="Upgrades" />
+                <ui:Button name="menu-settings" class="menu-item" text="Settings" />
+                <ui:Button name="menu-quit" class="menu-item" text="Quit" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="play-page" class="page sub-page">
+            <ui:Label name="characters-title" class="page-title" text="CHARACTER" />
+            <!-- 카드는 LobbyScreen.cs가 캐릭터 수만큼 만든다 -->
+            <ui:VisualElement name="character-list" class="character-list" />
+            <ui:Button name="start-button" class="restart-button start-button" text="Start (Space)" />
+            <ui:Button name="play-back" class="back-button" text="Back (Esc)" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="upgrades-page" class="page sub-page">
+            <ui:Label name="upgrades-title" class="page-title" text="UPGRADES" />
             <!-- 줄은 LobbyScreen.cs가 강화 종류만큼 만든다 -->
-            <ui:VisualElement name="shop-list" class="shop-list" />
+            <ui:VisualElement name="shop" class="shop">
+                <ui:VisualElement name="shop-list" class="shop-list" />
+            </ui:VisualElement>
+            <ui:Button name="upgrades-back" class="back-button" text="Back (Esc)" />
         </ui:VisualElement>
-        <ui:Button name="start-button" class="restart-button" text="Start (Space)" />
+
+        <ui:VisualElement name="settings-page" class="page sub-page">
+            <ui:Label name="settings-title" class="page-title" text="SETTINGS" />
+            <ui:VisualElement class="shop settings-panel">
+                <ui:VisualElement class="settings-row">
+                    <ui:Label name="language-label" class="shop-name" text="Language" />
+                    <!-- 언어 목록은 LobbyScreen.cs가 각 언어 자신의 이름으로 채운다 -->
+                    <ui:DropdownField name="language-dropdown" class="language-dropdown" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Button name="settings-back" class="back-button" text="Back (Esc)" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

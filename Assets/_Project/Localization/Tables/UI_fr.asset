@@ -222,6 +222,42 @@ MonoBehaviour:
     m_Localized: "Les balles de niveau 4 lancent un \xE9clair en cha\xEEne"
     m_Metadata:
       m_Items: []
+  - m_Id: 9355034636288
+    m_Localized: Appuyez sur une touche
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967936
+    m_Localized: Touchez pour commencer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967937
+    m_Localized: Jouer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967938
+    m_Localized: "Am\xE9liorations"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967939
+    m_Localized: "Param\xE8tres"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967940
+    m_Localized: Quitter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967941
+    m_Localized: "PARAM\xC8TRES"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967942
+    m_Localized: Langue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967943
+    m_Localized: "Retour (\xC9chap)"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

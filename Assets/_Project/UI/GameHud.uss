@@ -226,30 +226,188 @@
     color: rgb(230, 230, 230);
 }
 
-/* ---------- 시작 화면 · 결과 ---------- */
+/* ---------- 로비: 타이틀 · 메뉴 · 하위 화면 ---------- */
 
-/* 시작 화면은 게임 화면이 비치지 않게 더 어둡게 */
-.title {
-    background-color: rgba(0, 0, 0, 0.85);
-}
-
-/* 로비 씬에서는 화면 전체가 이 오버레이라 항상 보인다 (.overlay 기본값 display: none을 덮어씀) */
-.overlay.lobby {
-    display: flex;
-}
-
-/* 로비 오른쪽 위 언어 선택 (화면 흐름에서 빼서 가운데 정렬에 영향을 주지 않게) */
-.language-dropdown {
+.lobby {
     position: absolute;
-    top: 32px;
-    right: 40px;
-    width: 280px;
-    font-size: 24px;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* 배경 연출(TitleBackground)은 화면 전체를 덮고, 클릭은 받지 않는다 */
+.title-background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* 화면 하나. LobbyScreen.cs가 display로 하나만 보이게 하고, 나타날 때 opacity를 0 → 1로 바꿔 서서히 보인다 */
+.page {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    transition-property: opacity;
+    transition-duration: 0.25s;
 }
 
 .game-title {
     font-size: 110px;
+    -unity-font-style: bold;
     color: rgb(255, 255, 255);
+    /* 글자 테두리로 배경의 공 위에서도 또렷하게 */
+    -unity-text-outline-width: 2px;
+    -unity-text-outline-color: rgba(0, 0, 0, 0.8);
+}
+
+.title-page .game-title {
+    font-size: 150px;
+}
+
+.title-press {
+    margin-top: 48px;
+    font-size: 34px;
+    color: rgb(255, 214, 77);
+}
+
+/* 메인 메뉴: 왼쪽 정렬 세로 목록 */
+.menu-page {
+    align-items: flex-start;
+    padding-left: 180px;
+}
+
+.menu-logo {
+    margin-bottom: 56px;
+}
+
+.menu-item {
+    margin: 6px 0;
+    padding: 6px 0 6px 20px;
+    border-width: 0 0 0 6px;
+    border-color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 52px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+    color: rgb(170, 170, 180);
+    transition-property: color, translate, border-color;
+    transition-duration: 0.12s;
+}
+
+/* 선택된 항목: 노란색 + 왼쪽 막대 + 살짝 오른쪽으로 */
+.menu-item.selected {
+    color: rgb(255, 214, 77);
+    border-color: rgb(255, 214, 77);
+    translate: 16px 0;
+}
+
+/* 오른쪽 위 지갑 (코인 · 최고 기록) */
+.wallet {
+    position: absolute;
+    top: 36px;
+    right: 48px;
+    align-items: flex-end;
+}
+
+.wallet .coin-text {
+    margin: 0;
+}
+
+.best-text {
+    margin-top: 4px;
+    font-size: 24px;
+    color: rgb(200, 200, 210);
+}
+
+.page-title {
+    margin-bottom: 28px;
+    font-size: 64px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+}
+
+/* 하위 화면 아래쪽 뒤로 가기 */
+.back-button {
+    margin-top: 20px;
+    padding: 6px 20px;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 26px;
+    color: rgb(170, 170, 180);
+}
+
+.back-button:hover {
+    color: rgb(255, 255, 255);
+}
+
+.start-button {
+    margin-top: 36px;
+}
+
+/* 캐릭터 카드 */
+.character-list {
+    flex-direction: row;
+}
+
+.character-card {
+    width: 340px;
+    min-height: 380px;
+    margin: 0 18px;
+    padding: 28px 24px;
+    align-items: center;
+    border-radius: 16px;
+    border-width: 3px;
+    border-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(40, 44, 58, 0.9);
+}
+
+.character-card:hover {
+    background-color: rgba(62, 68, 90, 0.95);
+}
+
+.character-card.selected {
+    border-color: rgb(255, 214, 77);
+}
+
+.card-swatch {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 24px;
+    border-radius: 55px;
+}
+
+.card-name {
+    font-size: 40px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+}
+
+.card-desc {
+    flex-grow: 1;
+    margin: 12px 0 20px 0;
+    font-size: 24px;
+    white-space: normal;
+    -unity-text-align: upper-center;
+    color: rgb(210, 210, 220);
+}
+
+/* 설정 */
+.settings-row {
+    flex-direction: row;
+    align-items: center;
+    min-height: 60px;
+}
+
+.language-dropdown {
+    flex-grow: 1;
+    font-size: 24px;
 }
 
 .coin-text {
@@ -316,21 +474,6 @@
 }
 
 /* 캐릭터 줄: 색 견본 · 이름 · 설명 · 선택/해금 버튼. 선택된 줄은 테두리로 표시 */
-.character-swatch {
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-    margin-right: 16px;
-    border-radius: 6px;
-}
-
-.shop-row.selected {
-    border-width: 2px;
-    border-color: rgb(255, 214, 77);
-    border-radius: 8px;
-    padding: 0 8px;
-}
-
 .button-row {
     flex-direction: row;
 }

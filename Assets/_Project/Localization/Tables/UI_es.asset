@@ -222,6 +222,42 @@ MonoBehaviour:
     m_Localized: Las balas de nivel 4 lanzan rayos en cadena
     m_Metadata:
       m_Items: []
+  - m_Id: 9355034636288
+    m_Localized: Pulsa cualquier tecla
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967936
+    m_Localized: Toca para empezar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967937
+    m_Localized: Jugar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967938
+    m_Localized: Mejoras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967939
+    m_Localized: Ajustes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967940
+    m_Localized: Salir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967941
+    m_Localized: AJUSTES
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967942
+    m_Localized: Idioma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967943
+    m_Localized: Volver (Esc)
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
