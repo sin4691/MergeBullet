@@ -18,6 +18,7 @@ namespace MergeBullet.Presentation
                 case EffectType.Merge: return Sweep("Merge", 0.08f, 880f, 1320f, 0f);       // 짧게 올라가는 '띵'
                 case EffectType.EnemyKilled: return Sweep("Kill", 0.10f, 320f, 120f, 0.3f); // 내려가는 '퍽'
                 case EffectType.Explosion: return Sweep("Boom", 0.40f, 90f, 40f, 0.9f);     // 낮고 거친 '쾅'
+                case EffectType.Lightning: return Sweep("Zap", 0.12f, 2000f, 600f, 0.7f);  // 높고 지직거리는 '찌직'
                 default: return Sweep("Hit", 0.15f, 180f, 90f, 0.5f);                       // 둔한 피격음
             }
         }

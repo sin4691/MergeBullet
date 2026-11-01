@@ -8,7 +8,8 @@ using UnityEngine.UIElements;
 namespace MergeBullet.UI
 {
     /// <summary>
-    /// 로비 씬 화면. 저장 데이터(코인·최고 기록)를 보여 주고, 영구 강화를 사고, 시작하면 게임 씬을 불러온다.
+    /// 로비 씬 화면. 저장 데이터(코인·최고 기록)를 보여 주고, 캐릭터를 고르거나 해금하고, 영구 강화를 사고,
+    /// 시작하면 게임 씬을 불러온다. 고른 캐릭터는 게임 씬에서 CharacterSetupSystem이 적용한다.
     /// 로비에는 ECS 게임 로직이 없다 (게임 시스템들은 게임 씬의 싱글톤이 없으면 돌지 않는다).
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
@@ -18,6 +19,7 @@ namespace MergeBullet.UI
         Label _coinsText;
         Label _bestText;
         readonly ShopRow[] _rows = new ShopRow[PermanentUpgrades.Count];
+        readonly ShopRow[] _characterRows = new ShopRow[Characters.Count];
 
         // 상점 한 줄: 이름 · 현재 단계와 효과 · 구매 버튼
         struct ShopRow
@@ -45,6 +47,7 @@ namespace MergeBullet.UI
             _coinsText = root.Q<Label>("coins");
             _bestText = root.Q<Label>("best");
 
+            BuildCharacters(root.Q("character-list"));
             BuildShop(root.Q("shop-list"));
             Refresh();
         }
@@ -60,6 +63,43 @@ namespace MergeBullet.UI
             Keyboard keyboard = Keyboard.current;
             if (keyboard != null && keyboard.spaceKey.wasPressedThisFrame)
                 StartGame();
+        }
+
+        void BuildCharacters(VisualElement list)
+        {
+            list.Clear();
+            for (int i = 0; i < Characters.Count; i++)
+            {
+                var type = (CharacterType)i;
+                CharacterDefinition info = Characters.Get(type);
+                var row = new VisualElement();
+                row.AddToClassList("shop-row");
+
+                var swatch = new VisualElement();
+                swatch.AddToClassList("character-swatch");
+                swatch.style.backgroundColor = info.Color;
+                var name = new Label(info.Name);
+                name.AddToClassList("shop-name");
+                var description = new Label(info.Description);
+                description.AddToClassList("shop-effect");
+                var button = new Button(() => ChooseCharacter(type)) { focusable = false };
+                button.AddToClassList("shop-buy");
+
+                row.Add(swatch);
+                row.Add(name);
+                row.Add(description);
+                row.Add(button);
+                list.Add(row);
+                _characterRows[i] = new ShopRow { Name = name, Effect = description, Buy = button };
+            }
+        }
+
+        // 해금된 캐릭터는 선택, 잠긴 캐릭터는 코인으로 해금(해금하면 바로 선택된다)
+        void ChooseCharacter(CharacterType type)
+        {
+            if (SaveSystem.Current.IsUnlocked(type)) SaveSystem.SelectCharacter(type);
+            else SaveSystem.TryUnlockCharacter(type);
+            Refresh();
         }
 
         // 강화 종류만큼 줄을 코드로 만든다 (종류가 늘어도 UXML을 고칠 필요가 없게)
@@ -101,6 +141,25 @@ namespace MergeBullet.UI
             _bestText.text = save.RunsPlayed == 0
                 ? ""
                 : $"Best  {GameHud.FormatTime(Mathf.FloorToInt(save.BestSurvivalTime))}   ·   {save.BestKills} kills";
+
+            for (int i = 0; i < _characterRows.Length; i++)
+            {
+                var type = (CharacterType)i;
+                ShopRow row = _characterRows[i];
+                bool selected = save.Selected == type;
+                row.Buy.parent.EnableInClassList("selected", selected);
+
+                if (save.IsUnlocked(type))
+                {
+                    row.Buy.text = selected ? "Selected" : "Select";
+                    row.Buy.SetEnabled(!selected);
+                    continue;
+                }
+
+                int cost = Characters.Get(type).UnlockCost;
+                row.Buy.text = $"Unlock {cost}";
+                row.Buy.SetEnabled(save.Coins >= cost);
+            }
 
             for (int i = 0; i < _rows.Length; i++)
             {

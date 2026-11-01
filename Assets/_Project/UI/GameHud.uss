@@ -261,7 +261,7 @@
 .shop-row {
     flex-direction: row;
     align-items: center;
-    height: 56px;
+    height: 52px;
 }
 
 .shop-name {
@@ -283,6 +283,21 @@
     font-size: 22px;
     -unity-font-style: bold;
     color: rgb(255, 214, 77);
+}
+
+/* 캐릭터 줄: 색 견본 · 이름 · 설명 · 선택/해금 버튼. 선택된 줄은 테두리로 표시 */
+.character-swatch {
+    width: 28px;
+    height: 28px;
+    margin-right: 16px;
+    border-radius: 6px;
+}
+
+.shop-row.selected {
+    border-width: 2px;
+    border-color: rgb(255, 214, 77);
+    border-radius: 8px;
+    padding: 0 8px;
 }
 
 .button-row {

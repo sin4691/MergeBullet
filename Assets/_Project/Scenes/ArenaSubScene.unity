@@ -166,6 +166,9 @@ MonoBehaviour:
   EffectRadius: 1.2
   EffectDuration: 0.4
   EffectDamage: 5
+  LightningChainCount: 5
+  LightningChainRange: 4
+  LightningDamage: 4
   IdleLifetime: 5
   IdleWarningTime: 1.5
   EnemyPrefab: {fileID: 9211892432071304558, guid: ff33f4f6bf4318b4089b4640fc73857c, type: 3}
