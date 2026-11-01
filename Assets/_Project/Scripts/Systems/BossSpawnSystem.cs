@@ -47,8 +47,10 @@ namespace MergeBullet.Systems
 
             float2 limit = SystemAPI.GetSingleton<ArenaBounds>().HalfSize - stats.Radius;
             float2 player = SystemAPI.TryGetSingleton(out PlayerPosition playerPosition) ? playerPosition.Value : float2.zero;
+            bool hasView = SystemAPI.TryGetSingleton(out CameraView view);
+            EnemySpawnUtility.SpawnRing(hasView, view, limit, stats.Radius, out float2 ringCenter, out float2 ringHalf);
             float2 position = EnemySpawnUtility.PickSpawnPoint(
-                ref enemySpawner.ValueRW.Random, limit, player, enemySpawner.ValueRO.SafeDistance);
+                ref enemySpawner.ValueRW.Random, limit, ringCenter, ringHalf, player, enemySpawner.ValueRO.SafeDistance);
 
             EntityCommandBuffer ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);

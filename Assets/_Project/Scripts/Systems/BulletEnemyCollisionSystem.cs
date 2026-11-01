@@ -128,9 +128,11 @@ namespace MergeBullet.Systems
             float2 position = transform.Position.xy;
             int2 cell = SpatialHash.CellOf(position, CellSize);
 
-            // 가장 깊이 겹친(가장 가까운) 적 하나와만 충돌 처리한다
+            // 적은 반 변 = Radius인 축 정렬 정사각형. 총알(원)과 상자의 가장 가까운 점 거리로 겹침을 본다.
+            // 가장 깊이 겹친(표면까지 가장 가까운) 적 하나와만 충돌 처리한다
             int hit = -1;
             float bestDistSq = float.MaxValue;
+            float radiusSq = bullet.Radius * bullet.Radius;
             for (int dy = -1; dy <= 1; dy++)
             for (int dx = -1; dx <= 1; dx++)
             {
@@ -138,9 +140,10 @@ namespace MergeBullet.Systems
                 if (!Grid.TryGetFirstValue(key, out int j, out var it)) continue;
                 do
                 {
-                    float distSq = math.distancesq(position, EnemyPositions[j]);
-                    float touch = bullet.Radius + EnemyRadii[j];
-                    if (distSq < touch * touch && distSq < bestDistSq)
+                    float2 relative = position - EnemyPositions[j];
+                    float2 closest = math.clamp(relative, -EnemyRadii[j], EnemyRadii[j]);
+                    float distSq = math.distancesq(relative, closest);
+                    if (distSq < radiusSq && distSq < bestDistSq)
                     {
                         bestDistSq = distSq;
                         hit = j;
@@ -149,12 +152,31 @@ namespace MergeBullet.Systems
             }
             if (hit < 0) return;
 
-            // 적 중심 → 총알 방향이 충돌면의 법선. 중심이 겹치면 진행 반대 방향을 법선으로 쓴다
             float2 v = velocity.Value;
-            float2 normal = math.normalizesafe(position - EnemyPositions[hit], -math.normalizesafe(v));
+            float2 center = EnemyPositions[hit];
+            float half = EnemyRadii[hit];
+            float2 rel = position - center;
+            float2 nearest = math.clamp(rel, -half, half);
+            float2 normal;
+            if (math.distancesq(rel, nearest) > 1e-8f)
+            {
+                // 면에 닿으면 법선이 축 방향(벽처럼 반듯한 반사), 모서리에 닿으면 모서리 → 총알 방향
+                normal = math.normalize(rel - nearest);
+                position = center + nearest + normal * bullet.Radius;
+            }
+            else
+            {
+                // 총알 중심이 상자 안까지 들어왔으면 덜 파고든 축 쪽 면으로 꺼낸다
+                float2 depth = half - math.abs(rel);
+                normal = depth.x < depth.y
+                    ? new float2(rel.x >= 0f ? 1f : -1f, 0f)
+                    : new float2(0f, rel.y >= 0f ? 1f : -1f);
+                if (depth.x < depth.y) rel.x = normal.x * (half + bullet.Radius);
+                else rel.y = normal.y * (half + bullet.Radius);
+                position = center + rel;
+            }
 
-            // 다음 프레임에 같은 적과 또 겹치지 않게 표면 밖으로 밀어낸다
-            position = EnemyPositions[hit] + normal * (bullet.Radius + EnemyRadii[hit]);
+            // 다음 프레임에 같은 적과 또 겹치지 않게 표면 밖으로 밀어낸 위치
             transform.Position = new float3(position, transform.Position.z);
 
             // 적 쪽으로 날아가던 경우에만 반사 + 피해 (적이 다가와 겹친 경우는 밀어내기만)

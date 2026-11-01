@@ -46,7 +46,10 @@ namespace MergeBullet.Systems
             float radius = stats.Radius;
             float2 limit = SystemAPI.GetSingleton<ArenaBounds>().HalfSize - radius;
             float2 player = SystemAPI.TryGetSingleton(out PlayerPosition playerPosition) ? playerPosition.Value : float2.zero;
-            float2 position = EnemySpawnUtility.PickSpawnPoint(ref spawner.ValueRW.Random, limit, player, spawner.ValueRO.SafeDistance);
+            bool hasView = SystemAPI.TryGetSingleton(out CameraView view);
+            EnemySpawnUtility.SpawnRing(hasView, view, limit, radius, out float2 ringCenter, out float2 ringHalf);
+            float2 position = EnemySpawnUtility.PickSpawnPoint(
+                ref spawner.ValueRW.Random, limit, ringCenter, ringHalf, player, spawner.ValueRO.SafeDistance);
 
             // 생성은 다음 프레임 시작(BeginSimulation)에 재생한다. 프레임 끝(EndSimulation)에 만들면 이번 프레임의
             // 위치 계산(TransformSystemGroup)이 이미 끝난 뒤라, 새 엔티티가 한 프레임 동안 프리팹 위치(원점)에 그려진다.

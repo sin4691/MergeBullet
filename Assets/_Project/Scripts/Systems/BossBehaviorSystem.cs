@@ -68,8 +68,7 @@ namespace MergeBullet.Systems
                     return;
 
                 case BossPhase.Windup:
-                    // 멈춘 채 플레이어를 계속 노려보고, 하얗게 깜빡여 돌진을 예고한다 (피격 번쩍임을 재사용)
-                    transform.Rotation = quaternion.RotateZ(math.atan2(toPlayer.y, toPlayer.x));
+                    // 멈춘 채 하얗게 깜빡여 돌진을 예고한다 (피격 번쩍임을 재사용). 적은 상자 충돌이라 회전하지 않는다
                     if (math.frac(boss.Timer * WindupBlinkRate) < 0.5f) flash.Timer = flash.Duration;
                     if (boss.Timer < boss.WindupSeconds) return;
 
