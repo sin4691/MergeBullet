@@ -19,6 +19,8 @@ namespace MergeBullet.Meta
         public int SelectedCharacter;
         /// <summary>해금한 캐릭터 비트 (1 &lt;&lt; CharacterType). 기본 캐릭터(Blaster)는 처음부터 해금.</summary>
         public int UnlockedCharacters = 1;
+        /// <summary>고른 언어 코드 (en, ko). 비어 있으면 OS 언어로 시작한다.</summary>
+        public string Language = "";
 
         public bool IsUnlocked(CharacterType type) => (UnlockedCharacters & (1 << (int)type)) != 0;
 

@@ -1,0 +1,52 @@
+key,en,ko,ja,zh-Hans,zh-Hant,de,fr,es,pt-BR,ru,it,pl
+hud.hp,HP {0} / {1},HP {0} / {1},HP {0} / {1},HP {0} / {1},HP {0} / {1},HP {0} / {1},PV {0} / {1},PV {0} / {1},PV {0} / {1},ОЗ {0} / {1},PS {0} / {1},PŻ {0} / {1}
+hud.level,LV {0},LV {0},LV {0},LV {0},LV {0},LV {0},LV {0},LV {0},LV {0},LV {0},LV {0},LV {0}
+hud.kills,KILLS {0},처치 {0},撃破 {0},击杀 {0},擊殺 {0},ABSCHÜSSE {0},ÉLIMINATIONS {0},BAJAS {0},ABATES {0},УБИЙСТВА {0},UCCISIONI {0},ZABÓJSTWA {0}
+hud.boss,BOSS,보스,ボス,首领,首領,BOSS,BOSS,JEFE,CHEFE,БОСС,BOSS,BOSS
+levelup.title,LEVEL UP!,레벨 업!,レベルアップ！,升级！,升級！,LEVEL UP!,NIVEAU SUPÉRIEUR !,¡SUBES DE NIVEL!,SUBIU DE NÍVEL!,НОВЫЙ УРОВЕНЬ!,LIVELLO SUPERIORE!,NOWY POZIOM!
+levelup.hint,Choose an upgrade  (1 / 2 / 3),강화를 고르세요  (1 / 2 / 3),強化を選択  (1 / 2 / 3),选择强化  (1 / 2 / 3),選擇強化  (1 / 2 / 3),Wähle ein Upgrade  (1 / 2 / 3),Choisissez une amélioration  (1 / 2 / 3),Elige una mejora  (1 / 2 / 3),Escolha uma melhoria  (1 / 2 / 3),Выберите улучшение  (1 / 2 / 3),Scegli un potenziamento  (1 / 2 / 3),Wybierz ulepszenie  (1 / 2 / 3)
+gameover.title,GAME OVER,게임 오버,ゲームオーバー,游戏结束,遊戲結束,GAME OVER,PARTIE TERMINÉE,FIN DE LA PARTIDA,FIM DE JOGO,ИГРА ОКОНЧЕНА,GAME OVER,KONIEC GRY
+gameover.summary,Survived {0}   ·   {1} kills,생존 {0}   ·   처치 {1},生存 {0}   ·   撃破 {1},存活 {0}   ·   击杀 {1},存活 {0}   ·   擊殺 {1},Überlebt {0}   ·   {1} Abschüsse,Survie {0}   ·   {1} éliminations,Sobreviviste {0}   ·   {1} bajas,Sobreviveu {0}   ·   {1} abates,Выживание {0}   ·   убийств: {1},Sopravvissuto {0}   ·   {1} uccisioni,Przetrwano {0}   ·   zabójstwa: {1}
+gameover.reward,+{0} coins   (total {1}),+{0} 코인   (보유 {1}),+{0} コイン   (所持 {1}),+{0} 金币   (共 {1}),+{0} 金幣   (共 {1}),+{0} Münzen   (gesamt {1}),+{0} pièces   (total {1}),+{0} monedas   (total {1}),+{0} moedas   (total {1}),+{0} монет   (всего {1}),+{0} monete   (totale {1}),+{0} monet   (łącznie {1})
+gameover.newbest,NEW BEST!,최고 기록!,自己ベスト！,新纪录！,新紀錄！,NEUER REKORD!,NOUVEAU RECORD !,¡NUEVO RÉCORD!,NOVO RECORDE!,НОВЫЙ РЕКОРД!,NUOVO RECORD!,NOWY REKORD!
+gameover.retry,Retry (R),다시 하기 (R),リトライ (R),重试 (R),重試 (R),Nochmal (R),Rejouer (R),Reintentar (R),Tentar de novo (R),Заново (R),Riprova (R),Jeszcze raz (R)
+gameover.lobby,Lobby (Esc),로비 (Esc),ロビー (Esc),大厅 (Esc),大廳 (Esc),Lobby (Esc),Lobby (Échap),Lobby (Esc),Lobby (Esc),Лобби (Esc),Lobby (Esc),Lobby (Esc)
+upgrade.FireRate.name,Rapid Fire,속사,速射,速射,速射,Schnellfeuer,Tir rapide,Fuego rápido,Tiro rápido,Скорострельность,Fuoco rapido,Szybki ogień
+upgrade.Damage.name,Heavy Rounds,강화탄,強化弾,强化弹,強化彈,Schwere Munition,Munitions lourdes,Balas pesadas,Balas pesadas,Тяжёлые пули,Proiettili pesanti,Ciężka amunicja
+upgrade.MoveSpeed.name,Swift Feet,신속,俊足,疾步,疾步,Flinke Füße,Pieds agiles,Pies ligeros,Pés ligeiros,Быстрые ноги,Piedi veloci,Szybkie nogi
+upgrade.BulletSpeed.name,Velocity,탄속,弾速,弹速,彈速,Geschosstempo,Vélocité,Velocidad,Velocidade,Скорость пуль,Velocità,Prędkość
+upgrade.MaxHealth.name,Vitality,활력,活力,活力,活力,Vitalität,Vitalité,Vitalidad,Vitalidade,Живучесть,Vitalità,Witalność
+upgrade.ExplosionRadius.name,Big Boom,대폭발,大爆発,大爆炸,大爆炸,Großer Knall,Gros boum,Gran explosión,Grande explosão,Большой взрыв,Grande botto,Wielkie bum
+upgrade.Magnet.name,Magnet,자석,マグネット,磁铁,磁鐵,Magnet,Aimant,Imán,Ímã,Магнит,Magnete,Magnes
+upgrade.FireRate.desc,Fire interval -{0},발사 간격 -{0},発射間隔 -{0},射击间隔 -{0},射擊間隔 -{0},Feuerintervall -{0},Intervalle de tir -{0},Intervalo de disparo -{0},Intervalo de disparo -{0},Интервал стрельбы -{0},Intervallo di fuoco -{0},Odstęp strzałów -{0}
+upgrade.Damage.desc,Bullet damage +{0},총알 피해 +{0},弾のダメージ +{0},子弹伤害 +{0},子彈傷害 +{0},Geschossschaden +{0},Dégâts des balles +{0},Daño de bala +{0},Dano da bala +{0},Урон пуль +{0},Danno proiettili +{0},Obrażenia pocisków +{0}
+upgrade.MoveSpeed.desc,Move speed +{0},이동 속도 +{0},移動速度 +{0},移动速度 +{0},移動速度 +{0},Bewegungstempo +{0},Vitesse de déplacement +{0},Velocidad de movimiento +{0},Velocidade de movimento +{0},Скорость передвижения +{0},Velocità di movimento +{0},Szybkość ruchu +{0}
+upgrade.BulletSpeed.desc,Bullet speed +{0},총알 속도 +{0},弾速 +{0},子弹速度 +{0},子彈速度 +{0},Geschosstempo +{0},Vitesse des balles +{0},Velocidad de bala +{0},Velocidade da bala +{0},Скорость пуль +{0},Velocità proiettili +{0},Prędkość pocisków +{0}
+upgrade.MaxHealth.desc,Max HP +{0} and heal {0},"최대 체력 +{0}, {0} 회복",最大HP +{0}、{0} 回復,"最大HP +{0}，回复 {0}","最大HP +{0}，回復 {0}","Max. HP +{0}, heilt {0}",PV max +{0} et soigne {0},PV máx. +{0} y cura {0},PV máx. +{0} e cura {0},Макс. ОЗ +{0} и лечение {0},PS max +{0} e cura {0},Maks. PŻ +{0} i leczy {0}
+upgrade.ExplosionRadius.desc,Explosion radius +{0},폭발 범위 +{0},爆発範囲 +{0},爆炸范围 +{0},爆炸範圍 +{0},Explosionsradius +{0},Rayon d'explosion +{0},Radio de explosión +{0},Raio de explosão +{0},Радиус взрыва +{0},Raggio esplosione +{0},Zasięg wybuchu +{0}
+upgrade.Magnet.desc,Gem pickup range +{0},젬 줍기 범위 +{0},ジェム回収範囲 +{0},宝石拾取范围 +{0},寶石拾取範圍 +{0},Edelstein-Sammelradius +{0},Portée de collecte +{0},Alcance de recogida +{0},Alcance de coleta +{0},Радиус сбора кристаллов +{0},Raggio di raccolta +{0},Zasięg zbierania +{0}
+lobby.coins,{0} coins,{0} 코인,{0} コイン,{0} 金币,{0} 金幣,{0} Münzen,{0} pièces,{0} monedas,{0} moedas,Монеты: {0},{0} monete,Monety: {0}
+lobby.best,Best  {0}   ·   {1} kills,최고  {0}   ·   처치 {1},ベスト  {0}   ·   撃破 {1},最佳  {0}   ·   击杀 {1},最佳  {0}   ·   擊殺 {1},Rekord  {0}   ·   {1} Abschüsse,Record  {0}   ·   {1} éliminations,Récord  {0}   ·   {1} bajas,Recorde  {0}   ·   {1} abates,Рекорд  {0}   ·   убийств: {1},Record  {0}   ·   {1} uccisioni,Rekord  {0}   ·   zabójstwa: {1}
+lobby.characters,CHARACTER,캐릭터,キャラクター,角色,角色,CHARAKTER,PERSONNAGE,PERSONAJE,PERSONAGEM,ПЕРСОНАЖ,PERSONAGGIO,POSTAĆ
+lobby.upgrades,UPGRADES,강화,強化,强化,強化,UPGRADES,AMÉLIORATIONS,MEJORAS,MELHORIAS,УЛУЧШЕНИЯ,POTENZIAMENTI,ULEPSZENIA
+lobby.start,Start (Space),시작 (Space),スタート (Space),开始 (空格),開始 (空白鍵),Start (Leertaste),Jouer (Espace),Jugar (Espacio),Jogar (Espaço),Играть (Пробел),Gioca (Spazio),Graj (Spacja)
+lobby.select,Select,선택,選択,选择,選擇,Wählen,Choisir,Elegir,Escolher,Выбрать,Scegli,Wybierz
+lobby.selected,Selected,선택됨,選択中,已选择,已選擇,Gewählt,Choisi,Elegido,Escolhido,Выбран,Scelto,Wybrano
+lobby.unlock,Unlock {0},해금 {0},解放 {0},解锁 {0},解鎖 {0},Freischalten {0},Débloquer {0},Desbloquear {0},Desbloquear {0},Открыть {0},Sblocca {0},Odblokuj {0}
+lobby.max,MAX,최대,MAX,已满,已滿,MAX,MAX,MÁX.,MÁX.,МАКС.,MAX,MAKS.
+lobby.level,Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1}
+lobby.language,English,한국어,日本語,简体中文,繁體中文,Deutsch,Français,Español,Português (Brasil),Русский,Italiano,Polski
+perm.FireRate.name,Rapid Fire,속사,速射,速射,速射,Schnellfeuer,Tir rapide,Fuego rápido,Tiro rápido,Скорострельность,Fuoco rapido,Szybki ogień
+perm.MaxHealth.name,Vitality,활력,活力,活力,活力,Vitalität,Vitalité,Vitalidad,Vitalidade,Живучесть,Vitalità,Witalność
+perm.Damage.name,Power,파워,パワー,力量,力量,Kraft,Puissance,Poder,Poder,Мощь,Potenza,Moc
+perm.MoveSpeed.name,Agility,민첩,敏捷,敏捷,敏捷,Wendigkeit,Agilité,Agilidad,Agilidade,Ловкость,Agilità,Zwinność
+perm.Magnet.name,Magnet,자석,マグネット,磁铁,磁鐵,Magnet,Aimant,Imán,Ímã,Магнит,Magnete,Magnes
+perm.FireRate.desc,Fire interval -{0},발사 간격 -{0},発射間隔 -{0},射击间隔 -{0},射擊間隔 -{0},Feuerintervall -{0},Intervalle de tir -{0},Intervalo de disparo -{0},Intervalo de disparo -{0},Интервал стрельбы -{0},Intervallo di fuoco -{0},Odstęp strzałów -{0}
+perm.MaxHealth.desc,Max HP +{0},최대 체력 +{0},最大HP +{0},最大HP +{0},最大HP +{0},Max. HP +{0},PV max +{0},PV máx. +{0},PV máx. +{0},Макс. ОЗ +{0},PS max +{0},Maks. PŻ +{0}
+perm.Damage.desc,Bullet damage +{0},총알 피해 +{0},弾のダメージ +{0},子弹伤害 +{0},子彈傷害 +{0},Geschossschaden +{0},Dégâts des balles +{0},Daño de bala +{0},Dano da bala +{0},Урон пуль +{0},Danno proiettili +{0},Obrażenia pocisków +{0}
+perm.MoveSpeed.desc,Move speed +{0},이동 속도 +{0},移動速度 +{0},移动速度 +{0},移動速度 +{0},Bewegungstempo +{0},Vitesse de déplacement +{0},Velocidad de movimiento +{0},Velocidade de movimento +{0},Скорость передвижения +{0},Velocità di movimento +{0},Szybkość ruchu +{0}
+perm.Magnet.desc,Gem pickup range +{0},젬 줍기 범위 +{0},ジェム回収範囲 +{0},宝石拾取范围 +{0},寶石拾取範圍 +{0},Edelstein-Sammelradius +{0},Portée de collecte +{0},Alcance de recogida +{0},Alcance de coleta +{0},Радиус сбора кристаллов +{0},Raggio di raccolta +{0},Zasięg zbierania +{0}
+character.Blaster.name,Blaster,블래스터,ブラスター,爆破手,爆破手,Blaster,Blaster,Blaster,Blaster,Бластер,Blaster,Blaster
+character.Storm.name,Storm,스톰,ストーム,风暴,風暴,Sturm,Tempête,Tormenta,Tempestade,Шторм,Tempesta,Burza
+character.Blaster.desc,Level 4 bullets explode,레벨 4 총알이 폭발,レベル4の弾が爆発,4级子弹会爆炸,4級子彈會爆炸,Stufe-4-Geschosse explodieren,Les balles de niveau 4 explosent,Las balas de nivel 4 explotan,Balas de nível 4 explodem,Пули 4-го уровня взрываются,I proiettili di livello 4 esplodono,Pociski 4. poziomu wybuchają
+character.Storm.desc,Level 4 bullets chain lightning,레벨 4 총알이 연쇄 번개,レベル4の弾が連鎖する雷に,4级子弹释放连锁闪电,4級子彈釋放連鎖閃電,Stufe-4-Geschosse lösen Kettenblitze aus,Les balles de niveau 4 lancent un éclair en chaîne,Las balas de nivel 4 lanzan rayos en cadena,Balas de nível 4 soltam raios em cadeia,Пули 4-го уровня бьют цепной молнией,I proiettili di livello 4 scatenano fulmini a catena,Pociski 4. poziomu razią łańcuchowym piorunem

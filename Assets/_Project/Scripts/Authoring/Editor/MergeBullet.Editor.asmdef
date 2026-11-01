@@ -3,7 +3,11 @@
     "rootNamespace": "MergeBullet.Editor",
     "references": [
         "MergeBullet.Runtime",
-        "Unity.Scenes"
+        "Unity.Scenes",
+        "Unity.Localization",
+        "Unity.Localization.Editor",
+        "Unity.Addressables",
+        "Unity.Addressables.Editor"
     ],
     "includePlatforms": [
         "Editor"

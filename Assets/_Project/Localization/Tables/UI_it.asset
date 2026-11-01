@@ -1,0 +1,227 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_it
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: it
+  m_SharedData: {fileID: 11400000, guid: 7f0b84f10aed1e34a89f2a59e5e6b377, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1363423232
+    m_Localized: PS {0} / {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1434726400
+    m_Localized: LV {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1434726401
+    m_Localized: UCCISIONI {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1434726402
+    m_Localized: BOSS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920704
+    m_Localized: LIVELLO SUPERIORE!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920705
+    m_Localized: Scegli un potenziamento  (1 / 2 / 3)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920706
+    m_Localized: GAME OVER
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920707
+    m_Localized: "Sopravvissuto {0}   \xB7   {1} uccisioni"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920708
+    m_Localized: +{0} monete   (totale {1})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920709
+    m_Localized: NUOVO RECORD!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920710
+    m_Localized: Riprova (R)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920711
+    m_Localized: Lobby (Esc)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920712
+    m_Localized: Fuoco rapido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920713
+    m_Localized: Proiettili pesanti
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920714
+    m_Localized: Piedi veloci
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920715
+    m_Localized: "Velocit\xE0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920716
+    m_Localized: "Vitalit\xE0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920717
+    m_Localized: Grande botto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920718
+    m_Localized: Magnete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920719
+    m_Localized: Intervallo di fuoco -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920720
+    m_Localized: Danno proiettili +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920721
+    m_Localized: "Velocit\xE0 di movimento +{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920722
+    m_Localized: "Velocit\xE0 proiettili +{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920723
+    m_Localized: PS max +{0} e cura {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920724
+    m_Localized: Raggio esplosione +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920725
+    m_Localized: Raggio di raccolta +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920726
+    m_Localized: '{0} monete'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920727
+    m_Localized: "Record  {0}   \xB7   {1} uccisioni"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920728
+    m_Localized: PERSONAGGIO
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920729
+    m_Localized: POTENZIAMENTI
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920730
+    m_Localized: Gioca (Spazio)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920731
+    m_Localized: Scegli
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920732
+    m_Localized: Scelto
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920733
+    m_Localized: Sblocca {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920734
+    m_Localized: MAX
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920735
+    m_Localized: Lv {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920736
+    m_Localized: Italiano
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920737
+    m_Localized: Fuoco rapido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920738
+    m_Localized: "Vitalit\xE0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920739
+    m_Localized: Potenza
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920740
+    m_Localized: "Agilit\xE0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920741
+    m_Localized: Magnete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920742
+    m_Localized: Intervallo di fuoco -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920743
+    m_Localized: PS max +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920744
+    m_Localized: Danno proiettili +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920745
+    m_Localized: "Velocit\xE0 di movimento +{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920746
+    m_Localized: Raggio di raccolta +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920747
+    m_Localized: Blaster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920748
+    m_Localized: Tempesta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920749
+    m_Localized: I proiettili di livello 4 esplodono
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920750
+    m_Localized: I proiettili di livello 4 scatenano fulmini a catena
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

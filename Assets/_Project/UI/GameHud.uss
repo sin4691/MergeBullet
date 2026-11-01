@@ -1,5 +1,11 @@
 /* 기준 해상도 1920x1080 (PanelSettings: Scale With Screen Size) */
 
+/* UI 전체 기본 폰트 (하위 요소가 상속). UI-Latin은 한중일 폰트를 대체 폰트로 갖고 있어 어떤 글자도 깨지지 않는다.
+   화면별로 L10n.ApplyFont가 지금 언어에 맞는 폰트로 덮어쓴다. 폰트 에셋은 Setup Localization 메뉴가 만든다 */
+:root {
+    -unity-font-definition: url("/Assets/_Project/Fonts/Assets/UI-Latin.asset");
+}
+
 .hud {
     position: absolute;
     left: 0;
@@ -191,8 +197,11 @@
     color: rgb(160, 160, 170);
 }
 
+/* 긴 이름(Скорострельность 등)은 카드 안에서 줄바꿈 */
 .choice-title {
     margin: 8px 0;
+    white-space: normal;
+    -unity-text-align: middle-center;
     font-size: 36px;
     -unity-font-style: bold;
     color: rgb(255, 255, 255);
@@ -229,6 +238,15 @@
     display: flex;
 }
 
+/* 로비 오른쪽 위 언어 선택 (화면 흐름에서 빼서 가운데 정렬에 영향을 주지 않게) */
+.language-dropdown {
+    position: absolute;
+    top: 32px;
+    right: 40px;
+    width: 280px;
+    font-size: 24px;
+}
+
 .game-title {
     font-size: 110px;
     color: rgb(255, 255, 255);
@@ -258,28 +276,40 @@
     color: rgb(160, 160, 170);
 }
 
+/* 언어마다 글 길이가 달라서(독일어·폴란드어는 영어의 1.3~1.5배) 높이는 최소값만 두고,
+   남는 폭은 설명 칸만 나눠 쓴다. 이름·견본·버튼은 줄어들지 않고, 긴 설명은 다음 줄로 넘긴다 */
 .shop-row {
     flex-direction: row;
     align-items: center;
-    height: 52px;
+    min-height: 52px;
+    padding: 2px 0;
 }
 
 .shop-name {
-    width: 200px;
+    width: 220px;
+    flex-shrink: 0;
     font-size: 26px;
     -unity-font-style: bold;
     color: rgb(255, 255, 255);
+    white-space: normal;
 }
 
 .shop-effect {
     flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    margin-right: 12px;
     font-size: 22px;
     color: rgb(210, 210, 220);
+    white-space: normal;
 }
 
+/* 버튼 글이 긴 언어("Desbloquear 100")에서는 버튼이 넓어진다 */
 .shop-buy {
-    width: 120px;
+    min-width: 120px;
+    flex-shrink: 0;
     height: 44px;
+    padding: 0 12px;
     font-size: 22px;
     -unity-font-style: bold;
     color: rgb(255, 214, 77);
@@ -289,6 +319,7 @@
 .character-swatch {
     width: 28px;
     height: 28px;
+    flex-shrink: 0;
     margin-right: 16px;
     border-radius: 6px;
 }
@@ -308,8 +339,10 @@
     margin: 0 12px;
 }
 
+/* 긴 문구(Tentar de novo (R) 등)에서는 버튼이 넓어진다 */
 .restart-button {
-    width: 300px;
+    min-width: 300px;
+    padding: 0 24px;
     height: 76px;
     font-size: 30px;
     -unity-font-style: bold;

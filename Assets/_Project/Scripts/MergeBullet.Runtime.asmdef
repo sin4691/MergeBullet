@@ -9,7 +9,8 @@
         "Unity.Mathematics",
         "Unity.Burst",
         "Unity.Collections",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.Localization"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
