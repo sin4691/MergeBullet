@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="GameHud.uss" />
+    <ui:VisualElement name="lobby" class="overlay title lobby">
+        <ui:Label class="overlay-title game-title" text="MERGE BULLET" />
+        <ui:Label name="coins" class="coin-text" text="0 coins" />
+        <ui:Label name="best" class="final-text" text="" />
+        <ui:Button name="start-button" class="restart-button" text="Start (Space)" />
+    </ui:VisualElement>
+</ui:UXML>

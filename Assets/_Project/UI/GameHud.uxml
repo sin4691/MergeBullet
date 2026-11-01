@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <Style src="GameHud.uss" />
     <ui:VisualElement name="hud" class="hud" picking-mode="Ignore">
-        <ui:VisualElement class="top-bar" picking-mode="Ignore">
+        <ui:VisualElement name="top-bar" class="top-bar" picking-mode="Ignore">
             <ui:VisualElement class="player-info" picking-mode="Ignore">
                 <ui:VisualElement name="hp-bar" class="hp-bar" picking-mode="Ignore">
                     <ui:VisualElement name="hp-fill" class="hp-fill" picking-mode="Ignore" />
@@ -45,7 +45,11 @@
         <ui:VisualElement name="game-over" class="overlay">
             <ui:Label class="overlay-title game-over-title" text="GAME OVER" />
             <ui:Label name="final-text" class="final-text" text="" />
-            <ui:Button name="restart-button" class="restart-button" text="Restart (R)" />
+            <ui:Label name="reward-text" class="coin-text" text="" />
+            <ui:VisualElement class="button-row">
+                <ui:Button name="restart-button" class="restart-button" text="Retry (R)" />
+                <ui:Button name="lobby-button" class="restart-button" text="Lobby (Esc)" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

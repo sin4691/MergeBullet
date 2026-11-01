@@ -26,6 +26,9 @@ namespace MergeBullet.Editor
         const string ThemePath = UiDir + "/MergeBulletTheme.tss";
         const string HudLayoutPath = UiDir + "/GameHud.uxml";
         const string PanelSettingsPath = UiDir + "/GamePanelSettings.asset";
+        const string LobbyLayoutPath = UiDir + "/Lobby.uxml";
+        const string GameScenePath = ScenesDir + "/Game.unity";
+        const string LobbyScenePath = ScenesDir + "/Lobby.unity";
         const float WallThickness = 0.2f;
 
         [MenuItem("MergeBullet/Create Arena SubScene")]
@@ -365,6 +368,71 @@ namespace MergeBullet.Editor
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(go, $"{dir}/{name}.prefab");
             Object.DestroyImmediate(go);
             return prefab.GetComponent<ParticleSystem>();
+        }
+
+        // 로비 씬과 게임 씬으로 나눈다.
+        // 1) 기존 게임 씬(SampleScene)을 _Project/Scenes/Game으로 옮긴다 (MoveAsset은 GUID를 유지해 참조가 안 깨진다)
+        // 2) 로비 씬을 만든다 (카메라 + 로비 화면)
+        // 3) 빌드 씬 목록을 로비 → 게임 순으로 (첫 화면이 로비)
+        [MenuItem("MergeBullet/Setup Lobby And Game Scenes")]
+        static void SetupLobbyAndGameScenes()
+        {
+            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            EnsureFolder(ScenesDir);
+
+            const string oldGameScenePath = "Assets/Scenes/SampleScene.unity";
+            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(GameScenePath) == null &&
+                AssetDatabase.LoadAssetAtPath<SceneAsset>(oldGameScenePath) != null)
+            {
+                string error = AssetDatabase.MoveAsset(oldGameScenePath, GameScenePath);
+                if (!string.IsNullOrEmpty(error))
+                {
+                    Debug.LogError($"게임 씬을 옮기지 못했습니다: {error}");
+                    return;
+                }
+            }
+
+            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(LobbyScenePath) == null && !CreateLobbyScene()) return;
+
+            EditorBuildSettings.scenes = new[]
+            {
+                new EditorBuildSettingsScene(LobbyScenePath, true),
+                new EditorBuildSettingsScene(GameScenePath, true),
+            };
+            Debug.Log("Lobby/Game 씬 설정 완료. Lobby 씬을 열고 Play를 눌러 확인하세요.");
+        }
+
+        static bool CreateLobbyScene()
+        {
+            var theme = AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(ThemePath);
+            var layout = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(LobbyLayoutPath);
+            if (theme == null || layout == null)
+            {
+                Debug.LogError($"{ThemePath} 또는 {LobbyLayoutPath} 를 찾지 못했습니다.");
+                return false;
+            }
+
+            Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
+
+            // 게임 씬과 같은 검은 배경 카메라 (UI만 있지만 카메라가 없으면 화면이 비어 보인다)
+            var cameraObject = new GameObject("Main Camera") { tag = "MainCamera" };
+            SceneManager.MoveGameObjectToScene(cameraObject, scene);
+            var cam = cameraObject.AddComponent<Camera>();
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = Color.black;
+            cam.orthographic = true;
+            cameraObject.AddComponent<AudioListener>();
+
+            var lobby = new GameObject("Lobby");
+            SceneManager.MoveGameObjectToScene(lobby, scene);
+            var document = lobby.AddComponent<UIDocument>();
+            document.panelSettings = LoadOrCreatePanelSettings(theme);
+            document.visualTreeAsset = layout;
+            lobby.AddComponent<LobbyScreen>();
+
+            bool saved = EditorSceneManager.SaveScene(scene, LobbyScenePath);
+            EditorSceneManager.CloseScene(scene, true);
+            return saved;
         }
 
         // HUD는 MonoBehaviour로 남아 있어야 하므로 SubScene이 아니라 메인 씬에 둔다.

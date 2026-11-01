@@ -1,8 +1,10 @@
 using MergeBullet.Components;
+using MergeBullet.Meta;
 using MergeBullet.Systems;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace MergeBullet.UI
@@ -10,6 +12,8 @@ namespace MergeBullet.UI
     /// <summary>
     /// UI Toolkit HUD 컨트롤러. 레이아웃은 GameHud.uxml, 스타일은 GameHud.uss에 있고, 여기서는 값만 채운다.
     /// ECS에서 체력·게임 상태·기록·레벨을 읽어 그리고, ECS에는 재시작 요청과 업그레이드 선택만 쓴다.
+    /// 로비로 가는 건 씬 이동이라 여기서 직접 하고, 남은 엔티티 정리는 GameSceneExitCleanupSystem이 한다.
+    /// 판이 끝나면 코인 보상을 저장 데이터(SaveSystem)에 반영한다.
     /// 메인 씬(SubScene 밖)에 둔다.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
@@ -38,7 +42,9 @@ namespace MergeBullet.UI
         readonly Label[] _choiceDescs = new Label[ChoiceCount];
         VisualElement _gameOver;
         Label _finalText;
+        Label _rewardText;
         Button _restartButton;
+        Button _lobbyButton;
 
         // 값이 바뀔 때만 문자열을 새로 만든다 (매 프레임 문자열 할당 → GC 방지)
         int _shownHealth = -1;
@@ -47,6 +53,9 @@ namespace MergeBullet.UI
         int _shownKills = -1;
         int _shownLevel = -1;
         bool _shownGameOver;
+        // 이번 판 보상을 이미 받았는지 (게임 오버 화면이 떠 있는 동안 한 번만 지급)
+        bool _rewarded;
+        RunReward _reward;
         // 지금 보여 주는 선택지가 몇 레벨 것인지 (-1: 닫힘). 연속 레벨업이면 열린 채로 내용만 바뀐다
         int _shownOfferLevel;
 
@@ -62,8 +71,11 @@ namespace MergeBullet.UI
             _levelUp = root.Q("level-up");
             _gameOver = root.Q("game-over");
             _finalText = root.Q<Label>("final-text");
+            _rewardText = root.Q<Label>("reward-text");
             _restartButton = root.Q<Button>("restart-button");
             _restartButton.clicked += RequestRestart;
+            _lobbyButton = root.Q<Button>("lobby-button");
+            _lobbyButton.clicked += GoToLobby;
 
             for (int i = 0; i < ChoiceCount; i++)
             {
@@ -83,6 +95,7 @@ namespace MergeBullet.UI
         void OnDisable()
         {
             if (_restartButton != null) _restartButton.clicked -= RequestRestart;
+            if (_lobbyButton != null) _lobbyButton.clicked -= GoToLobby;
             // 선택지 버튼은 UIDocument와 함께 새로 만들어지므로 따로 해제하지 않는다
         }
 
@@ -111,6 +124,17 @@ namespace MergeBullet.UI
             ShowLevelUp(offer, progress.Level);
 
             _gameQuery.TryGetSingleton(out GameState game);
+            // 판이 끝난 순간 한 번만 코인을 지급·저장한다 (게임 오버 화면을 그리기 전에)
+            if (game.IsGameOver && !_rewarded)
+            {
+                _reward = SaveSystem.AwardRun(stats);
+                _rewarded = true;
+            }
+            else if (!game.IsGameOver)
+            {
+                _rewarded = false;
+            }
+
             ShowGameOver(game.IsGameOver, stats);
 
             HandleKeys(game, offer);
@@ -121,8 +145,11 @@ namespace MergeBullet.UI
             Keyboard keyboard = Keyboard.current;
             if (keyboard == null) return;
 
-            if (game.IsGameOver && keyboard.rKey.wasPressedThisFrame)
-                RequestRestart();
+            if (game.IsGameOver)
+            {
+                if (keyboard.rKey.wasPressedThisFrame) RequestRestart();
+                else if (keyboard.escapeKey.wasPressedThisFrame) GoToLobby();
+            }
 
             if (!offer.Active || offer.Selected >= 0) return;
             if (keyboard.digit1Key.wasPressedThisFrame || keyboard.numpad1Key.wasPressedThisFrame) SelectUpgrade(0);
@@ -241,11 +268,14 @@ namespace MergeBullet.UI
             _shownGameOver = isGameOver;
 
             _gameOver.style.display = isGameOver ? DisplayStyle.Flex : DisplayStyle.None;
-            if (isGameOver)
-                _finalText.text = $"Survived {FormatTime(Mathf.FloorToInt(stats.SurvivalTime))}   ·   {stats.Kills} kills";
+            if (!isGameOver) return;
+
+            _finalText.text = $"Survived {FormatTime(Mathf.FloorToInt(stats.SurvivalTime))}   ·   {stats.Kills} kills";
+            string best = _reward.NewBestTime || _reward.NewBestKills ? "   NEW BEST!" : "";
+            _rewardText.text = $"+{_reward.Coins} coins   (total {SaveSystem.Current.Coins}){best}";
         }
 
-        static string FormatTime(int totalSeconds) => $"{totalSeconds / 60:00}:{totalSeconds % 60:00}";
+        public static string FormatTime(int totalSeconds) => $"{totalSeconds / 60:00}:{totalSeconds % 60:00}";
 
         // EntityManager 읽기/쓰기는 관련 잡을 알아서 끝낸 뒤 실행된다
         void SelectUpgrade(int index)
@@ -267,5 +297,8 @@ namespace MergeBullet.UI
             game.RestartRequested = true;
             _world.EntityManager.SetComponentData(entity, game);
         }
+
+        // 다시 하기는 씬 안에서 바로 초기화(빠름), 로비는 씬 이동
+        static void GoToLobby() => SceneManager.LoadScene(SceneNames.Lobby);
     }
 }
