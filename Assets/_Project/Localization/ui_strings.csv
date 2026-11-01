@@ -50,3 +50,12 @@ character.Blaster.name,Blaster,블래스터,ブラスター,爆破手,爆破手,
 character.Storm.name,Storm,스톰,ストーム,风暴,風暴,Sturm,Tempête,Tormenta,Tempestade,Шторм,Tempesta,Burza
 character.Blaster.desc,Level 4 bullets explode,레벨 4 총알이 폭발,レベル4の弾が爆発,4级子弹会爆炸,4級子彈會爆炸,Stufe-4-Geschosse explodieren,Les balles de niveau 4 explosent,Las balas de nivel 4 explotan,Balas de nível 4 explodem,Пули 4-го уровня взрываются,I proiettili di livello 4 esplodono,Pociski 4. poziomu wybuchają
 character.Storm.desc,Level 4 bullets chain lightning,레벨 4 총알이 연쇄 번개,レベル4の弾が連鎖する雷に,4级子弹释放连锁闪电,4級子彈釋放連鎖閃電,Stufe-4-Geschosse lösen Kettenblitze aus,Les balles de niveau 4 lancent un éclair en chaîne,Las balas de nivel 4 lanzan rayos en cadena,Balas de nível 4 soltam raios em cadeia,Пули 4-го уровня бьют цепной молнией,I proiettili di livello 4 scatenano fulmini a catena,Pociski 4. poziomu razią łańcuchowym piorunem
+title.press,Press any key,아무 키나 누르세요,何かキーを押してください,按任意键开始,按任意鍵開始,Beliebige Taste drücken,Appuyez sur une touche,Pulsa cualquier tecla,Pressione qualquer tecla,Нажмите любую клавишу,Premi un tasto qualsiasi,Naciśnij dowolny klawisz
+title.tap,Tap to start,화면을 터치하세요,タップしてスタート,点击屏幕开始,點擊螢幕開始,Tippen zum Starten,Touchez pour commencer,Toca para empezar,Toque para começar,"Коснитесь, чтобы начать",Tocca per iniziare,"Dotknij, aby zacząć"
+menu.play,Play,시작,プレイ,开始游戏,開始遊戲,Spielen,Jouer,Jugar,Jogar,Играть,Gioca,Graj
+menu.upgrades,Upgrades,강화,強化,强化,強化,Upgrades,Améliorations,Mejoras,Melhorias,Улучшения,Potenziamenti,Ulepszenia
+menu.settings,Settings,설정,設定,设置,設定,Einstellungen,Paramètres,Ajustes,Configurações,Настройки,Impostazioni,Ustawienia
+menu.quit,Quit,종료,終了,退出,退出,Beenden,Quitter,Salir,Sair,Выход,Esci,Wyjdź
+settings.title,SETTINGS,설정,設定,设置,設定,EINSTELLUNGEN,PARAMÈTRES,AJUSTES,CONFIGURAÇÕES,НАСТРОЙКИ,IMPOSTAZIONI,USTAWIENIA
+settings.language,Language,언어,言語,语言,語言,Sprache,Langue,Idioma,Idioma,Язык,Lingua,Język
+common.back,Back (Esc),뒤로 (Esc),戻る (Esc),返回 (Esc),返回 (Esc),Zurück (Esc),Retour (Échap),Volver (Esc),Voltar (Esc),Назад (Esc),Indietro (Esc),Wstecz (Esc)

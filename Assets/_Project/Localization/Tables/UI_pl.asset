@@ -222,6 +222,42 @@ MonoBehaviour:
     m_Localized: "Pociski 4. poziomu razi\u0105 \u0142a\u0144cuchowym piorunem"
     m_Metadata:
       m_Items: []
+  - m_Id: 9355034636288
+    m_Localized: "Naci\u015Bnij dowolny klawisz"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967936
+    m_Localized: "Dotknij, aby zacz\u0105\u0107"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967937
+    m_Localized: Graj
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967938
+    m_Localized: Ulepszenia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967939
+    m_Localized: Ustawienia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967940
+    m_Localized: "Wyjd\u017A"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967941
+    m_Localized: USTAWIENIA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967942
+    m_Localized: "J\u0119zyk"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9355084967943
+    m_Localized: Wstecz (Esc)
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
