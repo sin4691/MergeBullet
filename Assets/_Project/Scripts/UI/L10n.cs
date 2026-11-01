@@ -1,21 +1,30 @@
 using System;
+using System.Collections.Generic;
 using MergeBullet.Meta;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+using UnityEngine.TextCore.Text;
+using UnityEngine.UIElements;
 
 namespace MergeBullet.UI
 {
     /// <summary>
-    /// 화면 문구를 지금 언어로 가져오는 얇은 도우미 (UI 문자열 표 "UI").
+    /// 화면 문구와 폰트를 지금 언어로 가져오는 얇은 도우미 (문자열 표 "UI", 폰트 표 "Fonts").
     /// 언어 바꾸기는 패키지의 SelectedLocale로만 하고, 고른 언어는 저장해서 다음 실행 때 다시 적용한다.
     /// </summary>
     public static class L10n
     {
-        const string Table = "UI";
+        public const string Table = "UI";
+        public const string FontTable = "Fonts";
+        public const string FontKey = "ui";
+        // 각 언어 표에 그 언어의 이름이 그 언어로 들어 있다 (English, 한국어, 日本語 ...)
+        const string LanguageNameKey = "lobby.language";
 
         /// <summary>언어가 바뀌면 화면 문구를 다시 그리도록 알린다.</summary>
         public static event Action Changed;
+
+        static bool _warnedMissingSettings;
 
         static L10n()
         {
@@ -39,25 +48,46 @@ namespace MergeBullet.UI
             return LocalizationSettings.StringDatabase.GetLocalizedString(Table, key, args);
         }
 
-        static bool _warnedMissingSettings;
-
         /// <summary>0.15 → "15%"</summary>
         public static string Percent(float value) => $"{Mathf.RoundToInt(value * 100f)}%";
 
-        /// <summary>다음 언어로 바꾸고 저장한다 (언어 목록을 한 바퀴 돈다).</summary>
-        public static void CycleLanguage()
+        /// <summary>
+        /// 지금 언어의 폰트를 화면 루트에 적용한다 (하위 요소가 상속). 한자는 언어마다 모양이 달라서
+        /// 일본어·간체·번체가 각자 맞는 폰트를 쓰게 한다. USS의 기본 폰트(UI-Latin)를 덮어쓴다.
+        /// </summary>
+        public static void ApplyFont(VisualElement root)
         {
-            var locales = LocalizationSettings.AvailableLocales.Locales;
-            if (locales.Count == 0) return;
-
-            int current = locales.IndexOf(LocalizationSettings.SelectedLocale);
-            Locale next = locales[(current + 1) % locales.Count];
-            LocalizationSettings.SelectedLocale = next;
-
-            SaveSystem.Current.Language = next.Identifier.Code;
-            SaveSystem.Save();
+            if (!LocalizationSettings.HasSettings) return;
+            FontAsset font = LocalizationSettings.AssetDatabase.GetLocalizedAsset<FontAsset>(FontTable, FontKey);
+            if (font != null) root.style.unityFontDefinition = FontDefinition.FromSDFFont(font);
         }
 
+        /// <summary>언어 목록을 각 언어 자신의 이름으로 (언어 선택 드롭다운용).</summary>
+        public static List<string> LanguageNames()
+        {
+            var names = new List<string>();
+            if (!LocalizationSettings.HasSettings) return names;
+            foreach (Locale locale in LocalizationSettings.AvailableLocales.Locales)
+                names.Add(LocalizationSettings.StringDatabase.GetLocalizedString(Table, LanguageNameKey, locale));
+            return names;
+        }
+
+        /// <summary>지금 언어가 목록에서 몇 번째인지 (LanguageNames와 같은 순서).</summary>
+        public static int CurrentLanguageIndex => LocalizationSettings.HasSettings
+            ? LocalizationSettings.AvailableLocales.Locales.IndexOf(LocalizationSettings.SelectedLocale)
+            : -1;
+
+        /// <summary>목록의 index번째 언어로 바꾸고 저장한다.</summary>
+        public static void SetLanguage(int index)
+        {
+            List<Locale> locales = LocalizationSettings.AvailableLocales.Locales;
+            if (index < 0 || index >= locales.Count) return;
+
+            Locale locale = locales[index];
+            LocalizationSettings.SelectedLocale = locale;
+            SaveSystem.Current.Language = locale.Identifier.Code;
+            SaveSystem.Save();
+        }
     }
 
     /// <summary>

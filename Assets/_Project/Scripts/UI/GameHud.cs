@@ -77,6 +77,7 @@ namespace MergeBullet.UI
         void OnEnable()
         {
             VisualElement root = GetComponent<UIDocument>().rootVisualElement;
+            L10n.ApplyFont(root);
             foreach ((string element, string key) in StaticTexts)
                 root.Q<TextElement>(element).text = L10n.Get(key);
 

@@ -1,0 +1,227 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_pt-BR
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: pt-BR
+  m_SharedData: {fileID: 11400000, guid: 7f0b84f10aed1e34a89f2a59e5e6b377, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1363423232
+    m_Localized: PV {0} / {1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1434726400
+    m_Localized: LV {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1434726401
+    m_Localized: ABATES {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1434726402
+    m_Localized: CHEFE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920704
+    m_Localized: "SUBIU DE N\xCDVEL!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920705
+    m_Localized: Escolha uma melhoria  (1 / 2 / 3)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920706
+    m_Localized: FIM DE JOGO
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920707
+    m_Localized: "Sobreviveu {0}   \xB7   {1} abates"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920708
+    m_Localized: +{0} moedas   (total {1})
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920709
+    m_Localized: NOVO RECORDE!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920710
+    m_Localized: Tentar de novo (R)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920711
+    m_Localized: Lobby (Esc)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920712
+    m_Localized: "Tiro r\xE1pido"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920713
+    m_Localized: Balas pesadas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920714
+    m_Localized: "P\xE9s ligeiros"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920715
+    m_Localized: Velocidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920716
+    m_Localized: Vitalidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920717
+    m_Localized: "Grande explos\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920718
+    m_Localized: "\xCDm\xE3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920719
+    m_Localized: Intervalo de disparo -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920720
+    m_Localized: Dano da bala +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920721
+    m_Localized: Velocidade de movimento +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920722
+    m_Localized: Velocidade da bala +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920723
+    m_Localized: "PV m\xE1x. +{0} e cura {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920724
+    m_Localized: "Raio de explos\xE3o +{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920725
+    m_Localized: Alcance de coleta +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920726
+    m_Localized: '{0} moedas'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920727
+    m_Localized: "Recorde  {0}   \xB7   {1} abates"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920728
+    m_Localized: PERSONAGEM
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920729
+    m_Localized: MELHORIAS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920730
+    m_Localized: "Jogar (Espa\xE7o)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920731
+    m_Localized: Escolher
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920732
+    m_Localized: Escolhido
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920733
+    m_Localized: Desbloquear {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920734
+    m_Localized: "M\xC1X."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920735
+    m_Localized: Lv {0}/{1}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920736
+    m_Localized: "Portugu\xEAs (Brasil)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920737
+    m_Localized: "Tiro r\xE1pido"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920738
+    m_Localized: Vitalidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920739
+    m_Localized: Poder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920740
+    m_Localized: Agilidade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920741
+    m_Localized: "\xCDm\xE3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920742
+    m_Localized: Intervalo de disparo -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920743
+    m_Localized: "PV m\xE1x. +{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920744
+    m_Localized: Dano da bala +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920745
+    m_Localized: Velocidade de movimento +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920746
+    m_Localized: Alcance de coleta +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920747
+    m_Localized: Blaster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920748
+    m_Localized: Tempestade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920749
+    m_Localized: "Balas de n\xEDvel 4 explodem"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1438920750
+    m_Localized: "Balas de n\xEDvel 4 soltam raios em cadeia"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

@@ -1,8 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <Style src="GameHud.uss" />
     <ui:VisualElement name="lobby" class="overlay title lobby">
-        <!-- 지금 언어 이름을 보여 주고, 누르면 다음 언어로 바뀐다 -->
-        <ui:Button name="language-button" class="language-button" text="English" />
+        <!-- 언어 목록은 LobbyScreen.cs가 각 언어 자신의 이름으로 채운다 -->
+        <ui:DropdownField name="language-dropdown" class="language-dropdown" />
         <ui:Label class="overlay-title game-title" text="MERGE BULLET" />
         <ui:Label name="coins" class="coin-text" text="0 coins" />
         <ui:Label name="best" class="final-text" text="" />

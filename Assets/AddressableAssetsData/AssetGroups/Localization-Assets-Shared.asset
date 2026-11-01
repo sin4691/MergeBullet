@@ -15,10 +15,28 @@ MonoBehaviour:
   m_GroupName: Localization-Assets-Shared
   m_GUID: 67bf957c6858b9f429c98b35027a3916
   m_SerializeEntries:
+  - m_GUID: 4bf2d4693f65ef749876b9aa8b857ec5
+    m_Address: Assets/_Project/Localization/Tables/Fonts Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7f0b84f10aed1e34a89f2a59e5e6b377
     m_Address: Assets/_Project/Localization/Tables/UI Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8b369d7abcc7cfc40893ee3996ec3831
+    m_Address: UI-Latin
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-de
+    - Locale-en
+    - Locale-es
+    - Locale-fr
+    - Locale-it
+    - Locale-pl
+    - Locale-pt-BR
+    - Locale-ru
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 6628400263b1cea49821bb9b4b097bff, type: 2}

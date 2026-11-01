@@ -11,7 +11,7 @@ namespace MergeBullet.UI
     /// 로비 씬 화면. 저장 데이터(코인·최고 기록)를 보여 주고, 캐릭터를 고르거나 해금하고, 영구 강화를 사고,
     /// 시작하면 게임 씬을 불러온다. 고른 캐릭터는 게임 씬에서 CharacterSetupSystem이 적용한다.
     /// 로비에는 ECS 게임 로직이 없다 (게임 시스템들은 게임 씬의 싱글톤이 없으면 돌지 않는다).
-    /// 언어 버튼으로 언어를 바꾸면(L10n.Changed) 화면 문구를 전부 다시 채운다.
+    /// 언어를 고르면(L10n.Changed) 폰트와 화면 문구를 전부 다시 채운다.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public class LobbyScreen : MonoBehaviour
@@ -22,12 +22,11 @@ namespace MergeBullet.UI
             ("characters-title", "lobby.characters"),
             ("upgrades-title", "lobby.upgrades"),
             ("start-button", "lobby.start"),
-            ("language-button", "lobby.language"),
         };
 
         VisualElement _root;
         Button _startButton;
-        Button _languageButton;
+        DropdownField _languageDropdown;
         Label _coinsText;
         Label _bestText;
         readonly ShopRow[] _rows = new ShopRow[PermanentUpgrades.Count];
@@ -57,9 +56,11 @@ namespace MergeBullet.UI
             _startButton = root.Q<Button>("start-button");
             _startButton.focusable = false;
             _startButton.clicked += StartGame;
-            _languageButton = root.Q<Button>("language-button");
-            _languageButton.focusable = false;
-            _languageButton.clicked += L10n.CycleLanguage;
+            _languageDropdown = root.Q<DropdownField>("language-dropdown");
+            // 포커스를 가져가면 Space(시작 단축키)가 드롭다운을 여는 데 쓰여서 끈다
+            _languageDropdown.focusable = false;
+            _languageDropdown.choices = L10n.LanguageNames();
+            _languageDropdown.RegisterValueChangedCallback(OnLanguagePicked);
             _coinsText = root.Q<Label>("coins");
             _bestText = root.Q<Label>("best");
 
@@ -73,7 +74,7 @@ namespace MergeBullet.UI
         {
             L10n.Changed -= Refresh;
             if (_startButton != null) _startButton.clicked -= StartGame;
-            if (_languageButton != null) _languageButton.clicked -= L10n.CycleLanguage;
+            _languageDropdown?.UnregisterValueChangedCallback(OnLanguagePicked);
             // 상점 버튼은 UIDocument와 함께 새로 만들어지므로 따로 해제하지 않는다
         }
 
@@ -154,8 +155,12 @@ namespace MergeBullet.UI
         // 구매·선택·언어 변경 때만 다시 그린다 (매 프레임 갱신하지 않음)
         void Refresh()
         {
+            L10n.ApplyFont(_root);
             foreach ((string element, string key) in StaticTexts)
                 _root.Q<TextElement>(element).text = L10n.Get(key);
+            int language = L10n.CurrentLanguageIndex;
+            if (language >= 0 && language < _languageDropdown.choices.Count)
+                _languageDropdown.SetValueWithoutNotify(_languageDropdown.choices[language]);
 
             SaveData save = SaveSystem.Current;
             _coinsText.text = L10n.Get("lobby.coins", save.Coins);
@@ -207,6 +212,9 @@ namespace MergeBullet.UI
                 row.Buy.SetEnabled(save.Coins >= cost);
             }
         }
+
+        // 목록 순서가 언어 순서와 같아서 고른 위치로 언어를 바꾼다 (이름 문자열로 찾지 않음)
+        void OnLanguagePicked(ChangeEvent<string> evt) => L10n.SetLanguage(_languageDropdown.index);
 
         // 체력은 수치(+4), 나머지는 비율(+15%)로 보여 준다
         static string DescribePermanent(PermanentUpgradeType type, int level)
