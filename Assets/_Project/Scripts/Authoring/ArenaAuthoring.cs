@@ -39,6 +39,10 @@ namespace MergeBullet.Authoring
         [Min(0.01f)] public float EffectRadius = 1.2f;
         [Min(0.01f)] public float EffectDuration = 0.4f;
         [Min(0f)] public float EffectDamage = 5f;
+        // Storm 캐릭터의 연쇄 번개 (어느 효과를 쓸지는 게임 시작 시 캐릭터로 정해진다)
+        [Min(1)] public int LightningChainCount = 5;
+        [Min(0.1f)] public float LightningChainRange = 4f;
+        [Min(0f)] public float LightningDamage = 4f;
 
         [Header("Idle Despawn")]
         // 8초면 화면에 총알이 오래 남아 합성이 쉬웠다
@@ -178,6 +182,10 @@ namespace MergeBullet.Authoring
                         Radius = authoring.EffectRadius,
                         Duration = authoring.EffectDuration,
                         Damage = authoring.EffectDamage,
+                        Kind = MaxLevelEffectKind.Explosion,
+                        ChainCount = authoring.LightningChainCount,
+                        ChainRange = authoring.LightningChainRange,
+                        ChainDamage = authoring.LightningDamage,
                     });
                 }
 

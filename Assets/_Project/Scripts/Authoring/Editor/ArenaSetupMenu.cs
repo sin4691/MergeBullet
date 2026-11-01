@@ -286,6 +286,14 @@ namespace MergeBullet.Editor
                     count: 36, lifetime: 0.6f, speed: new Vector2(4f, 8f), size: new Vector2(0.12f, 0.2f)), volume: 0.6f),
                 EffectEntry(EffectType.PlayerHit, CreateBurstPrefab(effectsDir, "PlayerHitBurst", material,
                     count: 12, lifetime: 0.35f, speed: new Vector2(8f, 14f), size: new Vector2(0.3f, 0.45f)), volume: 0.6f),
+                // 번개는 파티클 대신 선으로 그린다 (Position → Target)
+                new EffectPresenter.EffectEntry
+                {
+                    Type = EffectType.Lightning,
+                    Line = CreateLinePrefab(effectsDir, "LightningBolt", material, width: 0.08f),
+                    Volume = 0.35f,
+                    MaxPerFrame = 20,
+                },
             };
 
             Scene mainScene = SceneManager.GetActiveScene();
@@ -321,6 +329,22 @@ namespace MergeBullet.Editor
             var material = new Material(source);
             AssetDatabase.CreateAsset(material, path);
             return material;
+        }
+
+        // 번개 등 선 연출용. 점 위치는 EffectPresenter가 매번 정한다
+        static LineRenderer CreateLinePrefab(string dir, string name, Material material, float width)
+        {
+            var go = new GameObject(name);
+            var line = go.AddComponent<LineRenderer>();
+            line.useWorldSpace = true;
+            line.widthMultiplier = width;
+            line.numCapVertices = 2;
+            line.sharedMaterial = material;
+            line.enabled = false;
+
+            GameObject prefab = PrefabUtility.SaveAsPrefabAsset(go, $"{dir}/{name}.prefab");
+            Object.DestroyImmediate(go);
+            return prefab.GetComponent<LineRenderer>();
         }
 
         // 한 번 터지고 끝나는 파티클. 원(XY 평면)에서 사방으로 퍼지며, 점점 작아지고 투명해진다

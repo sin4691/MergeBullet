@@ -15,6 +15,18 @@ namespace MergeBullet.Meta
         public int BestKills;
         /// <summary>영구 강화 단계. 인덱스 = PermanentUpgradeType. 예전 저장 파일엔 없을 수 있어 길이를 맞춰 쓴다.</summary>
         public int[] UpgradeLevels = new int[PermanentUpgrades.Count];
+        /// <summary>선택한 캐릭터 (CharacterType).</summary>
+        public int SelectedCharacter;
+        /// <summary>해금한 캐릭터 비트 (1 &lt;&lt; CharacterType). 기본 캐릭터(Blaster)는 처음부터 해금.</summary>
+        public int UnlockedCharacters = 1;
+
+        public bool IsUnlocked(CharacterType type) => (UnlockedCharacters & (1 << (int)type)) != 0;
+
+        // 저장 파일이 손상돼 잘못된 값이 들어 있어도 해금된 캐릭터만 고르게 한다
+        public CharacterType Selected
+            => SelectedCharacter >= 0 && SelectedCharacter < Characters.Count && IsUnlocked((CharacterType)SelectedCharacter)
+                ? (CharacterType)SelectedCharacter
+                : CharacterType.Blaster;
 
         public int GetUpgradeLevel(PermanentUpgradeType type)
             => UpgradeLevels != null && (int)type < UpgradeLevels.Length ? UpgradeLevels[(int)type] : 0;
@@ -93,6 +105,29 @@ namespace MergeBullet.Meta
             data.SetUpgradeLevel(type, level + 1);
             Save();
             return true;
+        }
+
+        /// <summary>코인이 충분하면 캐릭터를 해금하고 바로 선택한 뒤 저장한다.</summary>
+        public static bool TryUnlockCharacter(CharacterType type)
+        {
+            SaveData data = Current;
+            if (data.IsUnlocked(type)) return false;
+
+            int cost = Characters.Get(type).UnlockCost;
+            if (data.Coins < cost) return false;
+
+            data.Coins -= cost;
+            data.UnlockedCharacters |= 1 << (int)type;
+            data.SelectedCharacter = (int)type;
+            Save();
+            return true;
+        }
+
+        public static void SelectCharacter(CharacterType type)
+        {
+            if (!Current.IsUnlocked(type)) return;
+            Current.SelectedCharacter = (int)type;
+            Save();
         }
 
         public static void Save()

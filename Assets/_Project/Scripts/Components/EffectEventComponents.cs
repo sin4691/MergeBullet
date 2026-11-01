@@ -10,6 +10,8 @@ namespace MergeBullet.Components
         EnemyKilled,
         Explosion,
         PlayerHit,
+        /// <summary>번개 한 마디 (Position → Target).</summary>
+        Lightning,
     }
 
     /// <summary>
@@ -27,6 +29,8 @@ namespace MergeBullet.Components
     {
         public EffectType Type;
         public float2 Position;
+        /// <summary>선으로 그리는 연출(번개)의 끝점. 나머지 종류는 쓰지 않는다.</summary>
+        public float2 Target;
         /// <summary>연출 크기 기준 (보통 대상의 반지름).</summary>
         public float Size;
         /// <summary>선형 색공간 색. 파티클 색에 쓴다.</summary>

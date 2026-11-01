@@ -584,27 +584,43 @@ MonoBehaviour:
   Effects:
   - Type: 0
     Prefab: {fileID: 8815735784754927443, guid: 32cf9c32829df684496c3b79d60729b3, type: 3}
+    Line: {fileID: 0}
+    LineDuration: 0.15
     Clip: {fileID: 0}
     Volume: 0.25
     MaxPerFrame: 6
     PoolSize: 24
   - Type: 1
     Prefab: {fileID: 4408696207009573824, guid: fe5eeb937519c5c4bafa3c21376570fa, type: 3}
+    Line: {fileID: 0}
+    LineDuration: 0.15
     Clip: {fileID: 0}
     Volume: 0.35
     MaxPerFrame: 6
     PoolSize: 24
   - Type: 2
     Prefab: {fileID: 8896360944288412564, guid: fcd6970ed667c83449e92f4aefdac591, type: 3}
+    Line: {fileID: 0}
+    LineDuration: 0.15
     Clip: {fileID: 0}
     Volume: 0.6
     MaxPerFrame: 6
     PoolSize: 24
   - Type: 3
     Prefab: {fileID: 4339105522532878470, guid: 349195596508cd8469ca82ff8af51ec2, type: 3}
+    Line: {fileID: 0}
+    LineDuration: 0.15
     Clip: {fileID: 0}
     Volume: 0.6
     MaxPerFrame: 6
+    PoolSize: 24
+  - Type: 4
+    Prefab: {fileID: 0}
+    Line: {fileID: 8781042470030573450, guid: eb9933a04d3af754b9c9e2f280daf40a, type: 3}
+    LineDuration: 0.15
+    Clip: {fileID: 0}
+    Volume: 0.35
+    MaxPerFrame: 20
     PoolSize: 24
 --- !u!4 &1396208249
 Transform:
