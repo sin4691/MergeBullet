@@ -50,9 +50,6 @@ namespace MergeBullet.Systems
             float distance = math.length(toPlayer);
             if (distance < 1e-4f) return;
 
-            // 닿아서 멈춘 상태에서도 계속 플레이어를 바라본다
-            transform.Rotation = quaternion.RotateZ(math.atan2(toPlayer.y, toPlayer.x));
-
             float gap = distance - (enemy.Radius + Players[PlayerEntity].Radius);
             if (gap <= 0f) return;
 

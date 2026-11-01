@@ -30,7 +30,9 @@ namespace MergeBullet.Systems
             const int level = 1;
             float radius = BulletLevelUtility.RadiusOf(level, levels);
             float4 color = BulletLevelUtility.ColorOf(level, levels);
-            float2 spawnHalf = SystemAPI.GetSingleton<ArenaBounds>().HalfSize - radius;
+            bool hasView = SystemAPI.TryGetSingleton(out CameraView view);
+            BulletArea.Get(SystemAPI.GetSingleton<ArenaBounds>().HalfSize, hasView, view, out float2 areaCenter, out float2 areaHalf);
+            float2 spawnHalf = areaHalf - radius;
 
             // 프리팹 복제는 구조 변경이라 메인 스레드에서 한 번에 처리한다 (시작 시 1회뿐이라 비용 무시 가능)
             NativeArray<Entity> bullets = state.EntityManager.Instantiate(spawner.Prefab, spawner.Count, Allocator.Temp);
@@ -38,7 +40,7 @@ namespace MergeBullet.Systems
 
             foreach (Entity bullet in bullets)
             {
-                float2 position = random.NextFloat2(-spawnHalf, spawnHalf);
+                float2 position = areaCenter + random.NextFloat2(-spawnHalf, spawnHalf);
                 math.sincos(random.NextFloat(0f, 2f * math.PI), out float sin, out float cos);
 
                 SystemAPI.SetComponent(bullet, LocalTransform.FromPositionRotationScale(

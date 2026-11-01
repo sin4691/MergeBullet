@@ -649,6 +649,91 @@ namespace MergeBullet.Editor
             cam.orthographicSize = Mathf.Max(arenaSize.y * 0.5f + margin, (arenaSize.x * 0.5f + margin) / aspect);
         }
 
+        /// <summary>
+        /// Arena의 Arena Size(Inspector 값)에 맞춰 벽·바닥 격자를 다시 만들고, 카메라가 플레이어를 따라가게 한다.
+        /// 맵 크기를 바꿔 보려면 Arena Size를 고친 뒤 이 메뉴를 다시 실행한다.
+        /// </summary>
+        [MenuItem("MergeBullet/Rebuild Arena For Size")]
+        static void RebuildArenaForSize()
+        {
+            Scene gameScene = SceneManager.GetActiveScene();
+            if (gameScene.path != GameScenePath)
+            {
+                Debug.LogError($"{GameScenePath} 씬을 연 상태에서 실행하세요 (카메라를 설정해야 해서).");
+                return;
+            }
+
+            Material wallMaterial = CreateMaterial("Wall", new Color(0.35f, 0.4f, 0.5f));
+            Material floorMaterial = CreateFloorMaterial();
+            Vector2 arenaSize = Vector2.zero;
+
+            EditArenaSubScene((scene, arena) =>
+            {
+                arenaSize = arena.ArenaSize;
+
+                // 벽·바닥을 새 크기로 다시 만든다 (다시 실행해도 겹치지 않게 기존 것은 지운다)
+                for (int i = arena.transform.childCount - 1; i >= 0; i--)
+                {
+                    GameObject child = arena.transform.GetChild(i).gameObject;
+                    if (child.name.StartsWith("Wall_") || child.name == "Floor") Object.DestroyImmediate(child);
+                }
+                BuildWalls(arena.transform, arenaSize, wallMaterial);
+                CreateFloor(arena.transform, arenaSize, floorMaterial);
+            });
+
+            // 카메라는 ECS의 CameraView를 따라간다
+            Camera cam = Camera.main;
+            if (cam != null && cam.GetComponent<GameCamera>() == null) Undo.AddComponent<GameCamera>(cam.gameObject);
+
+            EditorSceneManager.MarkSceneDirty(gameScene);
+            EditorSceneManager.SaveScene(gameScene);
+            Debug.Log($"아레나 다시 만들기 완료: {arenaSize.x}x{arenaSize.y}. Lobby 씬에서 Play해 확인하세요.");
+        }
+
+        // 바닥: 검은 배경에서도 카메라가 움직이는 게 보이도록 격자 무늬. 격자 한 칸 = 2 유닛
+        const float FloorCellSize = 2f;
+
+        static void CreateFloor(Transform parent, Vector2 arenaSize, Material material)
+        {
+            GameObject floor = CreatePrimitiveWithoutCollider(PrimitiveType.Quad, "Floor", material);
+            floor.transform.SetParent(parent, false);
+            // 총알·적(z = 0)보다 뒤에 (카메라는 z = -10에서 +z 방향을 본다)
+            floor.transform.localPosition = new Vector3(0f, 0f, 0.5f);
+            floor.transform.localScale = new Vector3(arenaSize.x, arenaSize.y, 1f);
+            // 칸 수만큼 텍스처를 반복 (같은 머티리얼을 쓰므로 아레나 크기가 바뀌면 이 메뉴를 다시 실행)
+            material.SetTextureScale("_BaseMap", arenaSize / FloorCellSize);
+            EditorUtility.SetDirty(material);
+        }
+
+        static Material CreateFloorMaterial()
+        {
+            const string texturePath = MaterialsDir + "/FloorGrid.png";
+            if (AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath) == null)
+            {
+                // 칸 테두리에만 옅은 선이 있는 64x64 타일. 반복하면 격자가 된다
+                const int size = 64;
+                var background = new Color32(14, 16, 22, 255);
+                var line = new Color32(34, 38, 50, 255);
+                var texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
+                for (int y = 0; y < size; y++)
+                for (int x = 0; x < size; x++)
+                    texture.SetPixel(x, y, x < 2 || y < 2 ? line : background);
+                System.IO.File.WriteAllBytes(texturePath, texture.EncodeToPNG());
+                Object.DestroyImmediate(texture);
+                AssetDatabase.ImportAsset(texturePath);
+
+                var importer = (TextureImporter)AssetImporter.GetAtPath(texturePath);
+                importer.wrapMode = TextureWrapMode.Repeat;
+                importer.filterMode = FilterMode.Bilinear;
+                importer.SaveAndReimport();
+            }
+
+            Material material = CreateMaterial("Floor", Color.white);
+            material.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath));
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
         static void EnsureFolder(string path)
         {
             if (AssetDatabase.IsValidFolder(path)) return;

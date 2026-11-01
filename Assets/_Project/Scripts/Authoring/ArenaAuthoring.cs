@@ -14,12 +14,22 @@ namespace MergeBullet.Authoring
     /// </summary>
     public class ArenaAuthoring : MonoBehaviour
     {
-        public Vector2 ArenaSize = new Vector2(16f, 9f);
+        // 맵 전체 크기. 화면(ViewSize)보다 크면 카메라가 플레이어를 따라간다.
+        // 48x27은 총알이 멀리 흩어져 합성이 너무 드물어서, 총알이 금방 돌아오는 1.5배로 둔다
+        public Vector2 ArenaSize = new Vector2(24f, 13.5f);
         public GameObject BulletPrefab;
         [Min(1)] public int BulletCount = 100;
         [Min(0.01f)] public float BulletRadius = 0.12f;
         public float BulletSpeed = 5f;
         public uint Seed = 12345;
+
+        [Header("Camera")]
+        // 어떤 기기에서도 이만큼은 보인다 (화면비가 다르면 한쪽이 더 보임). 화면 모드일 때 총알 벽도 이 크기
+        public Vector2 ViewSize = new Vector2(16f, 9f);
+        [Min(0.1f)] public float CameraFollowSharpness = 8f;
+        // 켜면 총알이 화면 가장자리에서, 끄면 아레나 벽에서 튕긴다.
+        // 화면 벽은 합성·폭발이 화면 끝에 몰려서, 적이 벽이 되는 느낌이 안 나 기본은 끈다
+        public bool BulletsBounceOnView;
 
         [Header("Merge")]
         [Range(2, 4)] public int MaxLevel = 4;
@@ -88,6 +98,12 @@ namespace MergeBullet.Authoring
             {
                 Entity entity = GetEntity(TransformUsageFlags.None);
                 AddComponent(entity, new ArenaBounds { HalfSize = authoring.ArenaSize * 0.5f });
+                AddComponent(entity, new CameraView
+                {
+                    HalfSize = authoring.ViewSize * 0.5f,
+                    FollowSharpness = authoring.CameraFollowSharpness,
+                    BulletsBounceOnView = authoring.BulletsBounceOnView,
+                });
                 AddComponent(entity, new GameState());
                 AddComponent(entity, new GameStats());
                 // 연출 이벤트 큐: 로직 시스템이 쓰고 EffectPresenter가 읽는다

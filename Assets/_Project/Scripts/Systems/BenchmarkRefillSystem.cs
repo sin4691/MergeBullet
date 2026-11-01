@@ -41,7 +41,9 @@ namespace MergeBullet.Systems
             const int level = 1;
             float radius = BulletLevelUtility.RadiusOf(level, levels);
             float4 color = BulletLevelUtility.ColorOf(level, levels);
-            float2 spawnHalf = SystemAPI.GetSingleton<ArenaBounds>().HalfSize - radius;
+            bool hasView = SystemAPI.TryGetSingleton(out CameraView view);
+            BulletArea.Get(SystemAPI.GetSingleton<ArenaBounds>().HalfSize, hasView, view, out float2 areaCenter, out float2 areaHalf);
+            float2 spawnHalf = areaHalf - radius;
 
             // 생성은 다음 프레임 시작(BeginSimulation)에 재생 → 위치 계산 전에 만들어져 원점에 한 프레임 그려지지 않는다
             EntityCommandBuffer ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
@@ -53,7 +55,7 @@ namespace MergeBullet.Systems
             int count = math.min(missing, MaxSpawnPerFrame);
             for (int i = 0; i < count; i++)
             {
-                float2 position = random.NextFloat2(-spawnHalf, spawnHalf);
+                float2 position = areaCenter + random.NextFloat2(-spawnHalf, spawnHalf);
                 math.sincos(random.NextFloat(0f, 2f * math.PI), out float sin, out float cos);
 
                 Entity bullet = ecb.Instantiate(prefab);
