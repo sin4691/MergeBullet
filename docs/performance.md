@@ -5,7 +5,7 @@
 ## 측정 방법 (벤치마크 모드)
 
 1. **Scene 뷰가 화면에 보이지 않게 한다** (Game 뷰 탭만 보이게). Scene 뷰가 보이면 에디터가 매 프레임 그것까지 그려서 프레임 시간이 약 2배가 된다.
-2. Hierarchy에서 `SampleScene > ArenaSubScene > Arena`(정육면체 아이콘)를 선택한다.
+2. Hierarchy에서 `Game > ArenaSubScene > Arena` (`Assets/_Project/Scenes/Game.unity`)(정육면체 아이콘)를 선택한다.
 3. Inspector `Arena Authoring > Benchmark`에서 **Benchmark Mode**를 켠다. 기본 조건은 그대로 둔다. (씬에 저장하지 않는다)
 4. Play. 워밍업이 지나고 적이 최대 수까지 차면 측정을 시작한다 (오래 걸리면 워밍업의 3배 시점에 시작).
 5. 측정이 끝나면 Console에 요약이 찍힌다.
@@ -32,7 +32,7 @@
 
 에디터 비용(Scene·Game 뷰 다시 그리기, 안전 검사)이 빠진 실제 수치는 빌드에서 잰다. 빌드 하나로 평소 게임과 측정을 모두 돌린다.
 
-1. `File > Build Profiles` → Windows → Scene List에 `SampleScene`이 있는지 확인, **Development Build 끔** → Build
+1. `File > Build Profiles` → Windows → Scene List가 Lobby → Game 순인지 확인, **Development Build 끔** → Build
    - 출력 폴더: `Builds/Windows/` (git에서 제외됨)
 2. 실행 인자 `-benchmark`로 실행한다. 창 크기를 고정해야 비교가 된다.
    ```
