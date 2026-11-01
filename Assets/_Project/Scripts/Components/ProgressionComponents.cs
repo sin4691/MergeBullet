@@ -49,7 +49,7 @@ namespace MergeBullet.Components
     }
 
     /// <summary>
-    /// 업그레이드 전 원래 능력치. 첫 프레임에 한 번 기록해 두고, 재시작하면 이 값으로 되돌린다.
+    /// 이번 판의 기본 능력치 (베이킹 값 × 로비에서 산 영구 강화). 첫 프레임에 한 번 기록해 두고, 재시작하면 이 값으로 되돌린다.
     /// 업그레이드 증가량도 이 값 기준이라 여러 번 골라도 일정하게 오른다.
     /// </summary>
     public struct BaseStats : IComponentData

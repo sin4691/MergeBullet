@@ -203,6 +203,50 @@
     color: rgb(255, 214, 77);
 }
 
+/* ---------- 로비 상점 ---------- */
+
+.shop {
+    width: 820px;
+    margin-bottom: 32px;
+    padding: 16px 24px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.shop-title {
+    margin-bottom: 8px;
+    font-size: 24px;
+    -unity-font-style: bold;
+    color: rgb(160, 160, 170);
+}
+
+.shop-row {
+    flex-direction: row;
+    align-items: center;
+    height: 56px;
+}
+
+.shop-name {
+    width: 200px;
+    font-size: 26px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+}
+
+.shop-effect {
+    flex-grow: 1;
+    font-size: 22px;
+    color: rgb(210, 210, 220);
+}
+
+.shop-buy {
+    width: 120px;
+    height: 44px;
+    font-size: 22px;
+    -unity-font-style: bold;
+    color: rgb(255, 214, 77);
+}
+
 .button-row {
     flex-direction: row;
 }
