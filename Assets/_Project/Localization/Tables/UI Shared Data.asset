@@ -255,6 +255,26 @@ MonoBehaviour:
     m_Key: common.back
     m_Metadata:
       m_Items: []
+  - m_Id: 179637850484736
+    m_Key: levelup.hint.touch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 179637934370816
+    m_Key: gameover.retry.touch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 179637934370817
+    m_Key: gameover.lobby.touch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 179637934370818
+    m_Key: lobby.start.touch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 179637934370819
+    m_Key: common.back.touch
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -258,6 +258,26 @@ MonoBehaviour:
     m_Localized: Volver (Esc)
     m_Metadata:
       m_Items: []
+  - m_Id: 179637850484736
+    m_Localized: Elige una mejora
+    m_Metadata:
+      m_Items: []
+  - m_Id: 179637934370816
+    m_Localized: Reintentar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 179637934370817
+    m_Localized: Lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 179637934370818
+    m_Localized: Jugar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 179637934370819
+    m_Localized: Volver
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
