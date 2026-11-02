@@ -84,6 +84,7 @@ namespace MergeBullet.UI
             _background = new TitleBackground();
             _background.AddToClassList("title-background");
             root.Q("lobby").Insert(0, _background);
+            SafeArea.Fit(root.Q("lobby"));
 
             _wallet = root.Q("wallet");
             _titleLogo = root.Q<Label>("title-logo");
@@ -328,9 +329,9 @@ namespace MergeBullet.UI
         {
             L10n.ApplyFont(_root);
             foreach ((string element, string key) in StaticTexts)
-                _root.Q<TextElement>(element).text = L10n.Get(key);
+                _root.Q<TextElement>(element).text = L10n.ForInput(key);
             // 휴대폰에는 키보드가 없으니 "화면을 터치하세요"
-            _titlePress.text = L10n.Get(Application.isMobilePlatform ? "title.tap" : "title.press");
+            _titlePress.text = L10n.Get(L10n.IsTouch ? "title.tap" : "title.press");
 
             int language = L10n.CurrentLanguageIndex;
             if (language >= 0 && language < _languageDropdown.choices.Count)

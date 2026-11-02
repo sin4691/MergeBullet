@@ -226,6 +226,37 @@
     color: rgb(230, 230, 230);
 }
 
+/* ---------- 휴대폰 가상 조이스틱 (TouchJoystick) ---------- */
+
+/* HUD 맨 뒤에 화면 전체로 깔려 터치를 받는다. 버튼·카드가 위에 있으면 그쪽이 먼저 받는다 */
+.joystick-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* 누른 자리에 나타나는 받침. 크기 = 2 x TouchJoystick.Radius */
+.joystick-base {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 110px;
+    border-width: 3px;
+    border-color: rgba(255, 255, 255, 0.35);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.joystick-knob {
+    width: 96px;
+    height: 96px;
+    border-radius: 48px;
+    background-color: rgba(255, 255, 255, 0.45);
+}
+
 /* ---------- 로비: 타이틀 · 메뉴 · 하위 화면 ---------- */
 
 .lobby {

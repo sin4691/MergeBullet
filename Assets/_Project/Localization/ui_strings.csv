@@ -59,3 +59,8 @@ menu.quit,Quit,종료,終了,退出,退出,Beenden,Quitter,Salir,Sair,Выход
 settings.title,SETTINGS,설정,設定,设置,設定,EINSTELLUNGEN,PARAMÈTRES,AJUSTES,CONFIGURAÇÕES,НАСТРОЙКИ,IMPOSTAZIONI,USTAWIENIA
 settings.language,Language,언어,言語,语言,語言,Sprache,Langue,Idioma,Idioma,Язык,Lingua,Język
 common.back,Back (Esc),뒤로 (Esc),戻る (Esc),返回 (Esc),返回 (Esc),Zurück (Esc),Retour (Échap),Volver (Esc),Voltar (Esc),Назад (Esc),Indietro (Esc),Wstecz (Esc)
+levelup.hint.touch,Tap an upgrade,강화를 고르세요,強化を選んでください,选择强化,選擇強化,Wähle ein Upgrade,Choisissez une amélioration,Elige una mejora,Escolha uma melhoria,Выберите улучшение,Scegli un potenziamento,Wybierz ulepszenie
+gameover.retry.touch,Retry,다시 하기,リトライ,重试,重試,Nochmal,Rejouer,Reintentar,Tentar de novo,Заново,Riprova,Jeszcze raz
+gameover.lobby.touch,Lobby,로비,ロビー,大厅,大廳,Lobby,Lobby,Lobby,Lobby,Лобби,Lobby,Lobby
+lobby.start.touch,Start,시작,スタート,开始,開始,Start,Jouer,Jugar,Jogar,Играть,Gioca,Graj
+common.back.touch,Back,뒤로,戻る,返回,返回,Zurück,Retour,Volver,Voltar,Назад,Indietro,Wstecz

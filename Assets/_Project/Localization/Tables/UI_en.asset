@@ -258,6 +258,26 @@ MonoBehaviour:
     m_Localized: Back (Esc)
     m_Metadata:
       m_Items: []
+  - m_Id: 179637850484736
+    m_Localized: Tap an upgrade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 179637934370816
+    m_Localized: Retry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 179637934370817
+    m_Localized: Lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 179637934370818
+    m_Localized: Start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 179637934370819
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -79,7 +79,16 @@ namespace MergeBullet.UI
             VisualElement root = GetComponent<UIDocument>().rootVisualElement;
             L10n.ApplyFont(root);
             foreach ((string element, string key) in StaticTexts)
-                root.Q<TextElement>(element).text = L10n.Get(key);
+                root.Q<TextElement>(element).text = L10n.ForInput(key);
+
+            VisualElement hud = root.Q("hud");
+            SafeArea.Fit(hud);
+            // 휴대폰(과 에디터 시험)에서만 가상 조이스틱. 맨 앞(index 0)에 넣어야 다른 UI 뒤에 깔린다
+            if (Application.isMobilePlatform || Application.isEditor)
+                hud.Insert(0, new TouchJoystick());
+            // 레벨업 카드의 1/2/3 키 표시는 키보드가 없는 휴대폰에서 숨긴다
+            if (L10n.IsTouch)
+                root.Query<Label>(className: "choice-key").ForEach(label => label.style.display = DisplayStyle.None);
 
             _hpFill = root.Q("hp-fill");
             _hpText = root.Q<Label>("hp-text");

@@ -48,6 +48,24 @@ namespace MergeBullet.UI
             return LocalizationSettings.StringDatabase.GetLocalizedString(Table, key, args);
         }
 
+        /// <summary>터치 기기인가 (휴대폰, 에디터의 Device Simulator 포함). 키 안내 문구를 바꾸는 데 쓴다.</summary>
+        public static bool IsTouch => Application.isMobilePlatform;
+
+        /// <summary>
+        /// 입력 방식에 맞는 문구. 터치 기기에서는 "키.touch" 문구가 표에 있으면 그걸 쓴다
+        /// ("Retry (R)" → "Retry"처럼 키보드 안내를 뺀 판). 없으면 보통 문구.
+        /// </summary>
+        public static string ForInput(string key)
+        {
+            if (IsTouch && LocalizationSettings.HasSettings)
+            {
+                string touchKey = key + ".touch";
+                var table = LocalizationSettings.StringDatabase.GetTable(Table);
+                if (table != null && table.GetEntry(touchKey) != null) return Get(touchKey);
+            }
+            return Get(key);
+        }
+
         /// <summary>0.15 → "15%"</summary>
         public static string Percent(float value) => $"{Mathf.RoundToInt(value * 100f)}%";
 
