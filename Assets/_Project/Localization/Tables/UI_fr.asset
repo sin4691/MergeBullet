@@ -278,6 +278,30 @@ MonoBehaviour:
     m_Localized: Retour
     m_Metadata:
       m_Items: []
+  - m_Id: 649227898466304
+    m_Localized: PAUSE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992256
+    m_Localized: "Reprendre (\xC9chap)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992257
+    m_Localized: Reprendre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992258
+    m_Localized: Retour au lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992259
+    m_Localized: Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992260
+    m_Localized: "Plein \xE9cran"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

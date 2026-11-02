@@ -5,11 +5,13 @@ namespace MergeBullet.Components
     /// <summary>
     /// 게임 진행 상태 싱글톤. 플레이어 체력이 0이 되면 IsGameOver,
     /// HUD에서 재시작을 누르면 RestartRequested가 켜지고 GameFlowSystem이 처리한다.
+    /// Paused는 HUD의 일시정지(Esc·버튼·앱이 백그라운드로 갈 때)가 켜고 끈다. 재시작하면 새 상태라 풀린다.
     /// </summary>
     public struct GameState : IComponentData
     {
         public bool IsGameOver;
         public bool RestartRequested;
+        public bool Paused;
     }
 
     /// <summary>이번 판 기록 싱글톤. HUD가 표시하고, 재시작하면 0으로 돌아간다.</summary>

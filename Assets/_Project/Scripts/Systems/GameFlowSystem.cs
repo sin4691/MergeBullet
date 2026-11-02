@@ -47,9 +47,9 @@ namespace MergeBullet.Systems
                 return;
             }
 
-            // 게임 오버, 레벨업 선택 중에는 멈춘다
+            // 게임 오버, 레벨업 선택 중, 일시정지 중에는 멈춘다
             bool choosingUpgrade = SystemAPI.TryGetSingleton(out LevelUpOffer offer) && offer.Active;
-            UnityEngine.Time.timeScale = game.IsGameOver || choosingUpgrade ? 0f : 1f;
+            UnityEngine.Time.timeScale = game.IsGameOver || choosingUpgrade || game.Paused ? 0f : 1f;
             SystemAPI.GetSingletonRW<GameStats>().ValueRW.SurvivalTime += SystemAPI.Time.DeltaTime;
         }
 

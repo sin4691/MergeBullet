@@ -49,6 +49,7 @@ namespace MergeBullet.UI
         Label _coinsText;
         Label _bestText;
         DropdownField _languageDropdown;
+        SettingsPanel _settings;
         Page _page;
         VisualElement[] _pages;
 
@@ -114,6 +115,7 @@ namespace MergeBullet.UI
 
             BuildCharacters(root.Q("character-list"));
             BuildShop(root.Q("shop-list"));
+            _settings = new SettingsPanel(root.Q("settings-panel"));
             L10n.Changed += Refresh;
             Refresh();
 
@@ -336,6 +338,7 @@ namespace MergeBullet.UI
             int language = L10n.CurrentLanguageIndex;
             if (language >= 0 && language < _languageDropdown.choices.Count)
                 _languageDropdown.SetValueWithoutNotify(_languageDropdown.choices[language]);
+            _settings?.Refresh();
 
             SaveData save = SaveSystem.Current;
             _coinsText.text = L10n.Get("lobby.coins", save.Coins);

@@ -441,6 +441,27 @@
     font-size: 24px;
 }
 
+.settings-slider {
+    flex-grow: 1;
+}
+
+.settings-toggle {
+    flex-grow: 1;
+}
+
+/* 오른쪽 위 일시정지 버튼 (휴대폰에서 누르기 쉽게 큼직하게) */
+.pause-button {
+    width: 64px;
+    height: 56px;
+    margin-left: 28px;
+    font-size: 26px;
+    -unity-font-style: bold;
+}
+
+#pause .settings-panel {
+    margin: 12px 0 28px 0;
+}
+
 .coin-text {
     margin: 4px 0 28px 0;
     font-size: 34px;

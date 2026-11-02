@@ -33,6 +33,9 @@ namespace MergeBullet.UI
             ("gameover-title", "gameover.title"),
             ("restart-button", "gameover.retry"),
             ("lobby-button", "gameover.lobby"),
+            ("pause-title", "pause.title"),
+            ("resume-button", "pause.resume"),
+            ("pause-lobby-button", "pause.lobby"),
         };
 
         World _world;
@@ -60,6 +63,8 @@ namespace MergeBullet.UI
         Label _rewardText;
         Button _restartButton;
         Button _lobbyButton;
+        VisualElement _pause;
+        SettingsPanel _settings;
 
         // 값이 바뀔 때만 문자열을 새로 만든다 (매 프레임 문자열 할당 → GC 방지)
         int _shownHealth = -1;
@@ -68,6 +73,7 @@ namespace MergeBullet.UI
         int _shownKills = -1;
         int _shownLevel = -1;
         bool _shownGameOver;
+        bool _shownPaused;
         // 이번 판 보상을 이미 받았는지 (게임 오버 화면이 떠 있는 동안 한 번만 지급)
         bool _rewarded;
         RunReward _reward;
@@ -107,6 +113,12 @@ namespace MergeBullet.UI
             _lobbyButton = root.Q<Button>("lobby-button");
             _lobbyButton.clicked += GoToLobby;
 
+            _pause = root.Q("pause");
+            _settings = new SettingsPanel(root.Q("pause-settings"));
+            root.Q<Button>("pause-button").clicked += () => SetPaused(true);
+            root.Q<Button>("resume-button").clicked += () => SetPaused(false);
+            root.Q<Button>("pause-lobby-button").clicked += GoToLobby;
+
             for (int i = 0; i < ChoiceCount; i++)
             {
                 int index = i; // 람다가 반복 변수 대신 이 복사본을 잡도록
@@ -119,6 +131,7 @@ namespace MergeBullet.UI
             // UIDocument가 다시 켜지면 화면이 새로 만들어지므로 다음 Update에서 전부 다시 그리게 한다
             _shownHealth = _shownMaxHealth = _shownSeconds = _shownKills = _shownLevel = -1;
             _shownGameOver = true;
+            _shownPaused = true;
             _shownOfferLevel = int.MinValue;
         }
 
@@ -168,6 +181,7 @@ namespace MergeBullet.UI
             }
 
             ShowGameOver(game.IsGameOver, stats);
+            ShowPause(game.Paused && !game.IsGameOver);
 
             HandleKeys(game, offer);
         }
@@ -181,7 +195,16 @@ namespace MergeBullet.UI
             {
                 if (keyboard.rKey.wasPressedThisFrame) RequestRestart();
                 else if (keyboard.escapeKey.wasPressedThisFrame) GoToLobby();
+                return;
             }
+
+            // Esc(안드로이드 뒤로 가기도 Esc로 들어온다): 일시정지 켜고 끄기. 레벨업 선택 중에는 무시
+            if (keyboard.escapeKey.wasPressedThisFrame && !offer.Active)
+            {
+                SetPaused(!game.Paused);
+                return;
+            }
+            if (game.Paused) return;
 
             if (!offer.Active || offer.Selected >= 0) return;
             if (keyboard.digit1Key.wasPressedThisFrame || keyboard.numpad1Key.wasPressedThisFrame) SelectUpgrade(0);
@@ -322,6 +345,34 @@ namespace MergeBullet.UI
             if (!offer.Active || offer.Selected >= 0) return;
             offer.Selected = index;
             _world.EntityManager.SetComponentData(entity, offer);
+        }
+
+        void ShowPause(bool paused)
+        {
+            if (paused == _shownPaused) return;
+            _shownPaused = paused;
+            _pause.style.display = paused ? DisplayStyle.Flex : DisplayStyle.None;
+            if (paused) _settings.Refresh();
+            // 닫을 때 설정을 저장한다 (슬라이더를 키보드 등으로 바꿔 손을 떼는 이벤트가 없었던 경우까지)
+            else GameSettings.Save();
+        }
+
+        // 게임 오버·레벨업 선택 중에는 일시정지하지 않는다 (이미 멈춰 있고 각자의 화면이 떠 있음)
+        void SetPaused(bool paused)
+        {
+            if (_world == null || !_world.IsCreated || !_gameQuery.TryGetSingletonEntity<GameState>(out Entity entity)) return;
+
+            GameState game = _world.EntityManager.GetComponentData<GameState>(entity);
+            if (game.IsGameOver || game.Paused == paused) return;
+            if (paused && _offerQuery.TryGetSingleton(out LevelUpOffer offer) && offer.Active) return;
+            game.Paused = paused;
+            _world.EntityManager.SetComponentData(entity, game);
+        }
+
+        // 휴대폰에서 홈 버튼·전화 등으로 앱이 백그라운드로 가면 자동으로 일시정지 (돌아왔을 때 이미 죽어 있지 않게)
+        void OnApplicationPause(bool pausing)
+        {
+            if (pausing) SetPaused(true);
         }
 
         void RequestRestart()
