@@ -51,7 +51,7 @@ namespace MergeBullet.Editor
             _ => "UI-Latin",
         };
 
-        [MenuItem("MergeBullet/Setup Localization")]
+        [MenuItem("MergeBullet/Update/Localization From CSV", priority = 101)]
         static void SetupLocalization()
         {
             (string[] codes, List<(string Key, string[] Values)> rows) = ReadCsv();

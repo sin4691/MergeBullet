@@ -14,7 +14,7 @@ namespace MergeBullet.Editor
         const string PackageName = "com.sinaki.mergebullet";
         const string CompanyName = "sinaki";
 
-        [MenuItem("MergeBullet/Setup Android Player Settings")]
+        [MenuItem("MergeBullet/Setup/Android Player Settings", priority = 30)]
         static void Setup()
         {
             PlayerSettings.companyName = CompanyName;
