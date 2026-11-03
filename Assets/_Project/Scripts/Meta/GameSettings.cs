@@ -3,7 +3,7 @@ using UnityEngine;
 namespace MergeBullet.Meta
 {
     /// <summary>
-    /// 플레이어 설정(음량·전체 화면). 음량은 저장 데이터에 남기고 게임을 켤 때 다시 적용한다.
+    /// 플레이어 설정(전체 음량·배경음악 음량·전체 화면). 음량은 저장 데이터에 남기고 게임을 켤 때 다시 적용한다.
     /// 전체 화면은 Unity가 스스로 기억하므로(다음 실행에도 유지) 따로 저장하지 않는다.
     /// 로비 설정 화면과 게임 중 일시정지 화면이 같은 값을 쓴다.
     /// </summary>
@@ -18,6 +18,13 @@ namespace MergeBullet.Meta
                 SaveSystem.Current.Volume = Mathf.Clamp01(value);
                 AudioListener.volume = SaveSystem.Current.Volume;
             }
+        }
+
+        /// <summary>배경음악 음량 0~1. MusicPlayer가 매 프레임 읽어 쓴다 (전체 음량은 AudioListener가 따로 곱함).</summary>
+        public static float MusicVolume
+        {
+            get => Mathf.Clamp01(SaveSystem.Current.MusicVolume);
+            set => SaveSystem.Current.MusicVolume = Mathf.Clamp01(value);
         }
 
         /// <summary>PC 전용. 휴대폰은 항상 전체 화면이다.</summary>
