@@ -199,6 +199,7 @@ MonoBehaviour:
   BenchmarkEnemies: 300
   BenchmarkWarmupSeconds: 8
   BenchmarkSampleSeconds: 10
+  RunDurationSeconds: 1800
   FirstLevelUpXp: 5
   LevelUpXpGrowth: 3
 --- !u!4 &304486843

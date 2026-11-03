@@ -71,3 +71,5 @@ pause.lobby,Quit to lobby,로비로 나가기,ロビーに戻る,返回大厅,�
 settings.volume,Volume,음량,音量,音量,音量,Lautstärke,Volume,Volumen,Volume,Громкость,Volume,Głośność
 settings.fullscreen,Fullscreen,전체 화면,フルスクリーン,全屏,全螢幕,Vollbild,Plein écran,Pantalla completa,Tela cheia,Полноэкранный режим,Schermo intero,Pełny ekran
 settings.music,Music,배경음악,BGM,音乐,音樂,Musik,Musique,Música,Música,Музыка,Musica,Muzyka
+gameover.clear,CLEAR!,클리어!,クリア！,通关！,通關！,GESCHAFFT!,VICTOIRE !,¡VICTORIA!,VITÓRIA!,ПОБЕДА!,VITTORIA!,ZWYCIĘSTWO!
+gameover.clearbonus,Clear bonus +{0},클리어 보너스 +{0},クリアボーナス +{0},通关奖励 +{0},通關獎勵 +{0},Abschlussbonus +{0},Bonus de victoire +{0},Bonus de victoria +{0},Bônus de vitória +{0},Бонус за победу +{0},Bonus vittoria +{0},Premia za zwycięstwo +{0}

@@ -50,7 +50,18 @@ namespace MergeBullet.Systems
             // 게임 오버, 레벨업 선택 중, 일시정지 중에는 멈춘다
             bool choosingUpgrade = SystemAPI.TryGetSingleton(out LevelUpOffer offer) && offer.Active;
             UnityEngine.Time.timeScale = game.IsGameOver || choosingUpgrade || game.Paused ? 0f : 1f;
-            SystemAPI.GetSingletonRW<GameStats>().ValueRW.SurvivalTime += SystemAPI.Time.DeltaTime;
+            RefRW<GameStats> stats = SystemAPI.GetSingletonRW<GameStats>();
+            stats.ValueRW.SurvivalTime += SystemAPI.Time.DeltaTime;
+
+            // 제한 시간까지 버티면 클리어로 판을 끝낸다 (게임 오버와 같은 경로라 멈춤·보상·결과 화면을 그대로 쓴다)
+            if (!game.IsGameOver && SystemAPI.TryGetSingleton(out RunRules rules) && rules.DurationSeconds > 0f
+                && stats.ValueRO.SurvivalTime >= rules.DurationSeconds)
+            {
+                stats.ValueRW.SurvivalTime = rules.DurationSeconds;
+                game.IsGameOver = true;
+                game.Cleared = true;
+                SystemAPI.SetSingleton(game);
+            }
         }
 
         void Restart(ref SystemState state)

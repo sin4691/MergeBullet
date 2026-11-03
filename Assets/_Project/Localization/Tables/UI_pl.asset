@@ -306,6 +306,14 @@ MonoBehaviour:
     m_Localized: Muzyka
     m_Metadata:
       m_Items: []
+  - m_Id: 841285720354816
+    m_Localized: "ZWYCI\u0118STWO!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 841285770686464
+    m_Localized: "Premia za zwyci\u0119stwo +{0}"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

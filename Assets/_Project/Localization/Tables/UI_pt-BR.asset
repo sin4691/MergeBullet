@@ -306,6 +306,14 @@ MonoBehaviour:
     m_Localized: "M\xFAsica"
     m_Metadata:
       m_Items: []
+  - m_Id: 841285720354816
+    m_Localized: "VIT\xD3RIA!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 841285770686464
+    m_Localized: "B\xF4nus de vit\xF3ria +{0}"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

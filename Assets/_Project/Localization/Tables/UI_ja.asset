@@ -306,6 +306,14 @@ MonoBehaviour:
     m_Localized: BGM
     m_Metadata:
       m_Items: []
+  - m_Id: 841285720354816
+    m_Localized: "\u30AF\u30EA\u30A2\uFF01"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 841285770686464
+    m_Localized: "\u30AF\u30EA\u30A2\u30DC\u30FC\u30CA\u30B9 +{0}"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

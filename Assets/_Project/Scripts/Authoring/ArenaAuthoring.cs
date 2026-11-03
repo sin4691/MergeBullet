@@ -91,6 +91,10 @@ namespace MergeBullet.Authoring
         [Min(0f)] public float BenchmarkWarmupSeconds = 8f;
         [Min(1f)] public float BenchmarkSampleSeconds = 10f;
 
+        [Header("Run")]
+        // 30분 버티면 클리어. 끝이 있어야 판마다 보상을 받고 다음 판으로 넘어간다
+        [Min(0f)] public float RunDurationSeconds = 1800f;
+
         [Header("Progression")]
         [Min(1)] public int FirstLevelUpXp = 5;
         [Min(0)] public int LevelUpXpGrowth = 3;
@@ -111,6 +115,7 @@ namespace MergeBullet.Authoring
                 });
                 AddComponent(entity, new GameState());
                 AddComponent(entity, new GameStats());
+                AddComponent(entity, new RunRules { DurationSeconds = authoring.RunDurationSeconds });
                 // 연출 이벤트 큐: 로직 시스템이 쓰고 EffectPresenter가 읽는다
                 AddComponent(entity, new EffectQueue());
                 AddBuffer<EffectEvent>(entity);
