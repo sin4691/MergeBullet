@@ -13,7 +13,7 @@ namespace MergeBullet.Systems
         public const float DamageBonus = 0.25f;            // 원래 피해의 +25%
         public const float MoveSpeedBonus = 0.10f;         // 원래 이동 속도의 +10%
         public const float BulletSpeedBonus = 0.15f;       // 원래 총알 속도의 +15%
-        public const float MaxHealthBonus = 2f;            // 최대 체력 +2, 같은 양 회복
+        public const float MaxHealthBonus = 20f;           // 최대 체력 +20, 같은 양 회복
         public const float ExplosionRadiusBonus = 0.20f;   // 원래 폭발 반경의 +20%
         public const float MagnetRadiusBonus = 0.30f;      // 원래 젬 자석 범위의 +30%
     }

@@ -106,7 +106,7 @@ MonoBehaviour:
   MoveSpeed: 1.2
   Radius: 0.6
   MaxHealth: 12
-  ContactDamage: 2
+  ContactDamage: 20
   HitFlashDuration: 0.12
   XpGemPrefab: {fileID: 1943350708540551345, guid: c2887015638d4024db05a133ac292085, type: 3}
   XpValue: 4

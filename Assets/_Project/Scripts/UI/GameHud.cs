@@ -18,6 +18,8 @@ namespace MergeBullet.UI
     /// 메인 씬(SubScene 밖)에 둔다.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
+    // 체력바를 플레이어 화면 위치에 맞추려면 카메라(GameCamera.LateUpdate)가 먼저 움직여야 한다
+    [DefaultExecutionOrder(100)]
     public class GameHud : MonoBehaviour
     {
         const int ChoiceCount = 3;
@@ -46,8 +48,11 @@ namespace MergeBullet.UI
         EntityQuery _offerQuery;
         EntityQuery _bossQuery;
 
+        // 플레이어 발밑에서 따라가는 체력바: 머리 위보다 아래가 총알·적에 덜 가려진다
+        const float HpBarGap = 0.08f;
+
+        VisualElement _hpBar;
         VisualElement _hpFill;
-        Label _hpText;
         Label _levelText;
         VisualElement _xpFill;
         Label _timeText;
@@ -68,8 +73,6 @@ namespace MergeBullet.UI
         SettingsPanel _settings;
 
         // 값이 바뀔 때만 문자열을 새로 만든다 (매 프레임 문자열 할당 → GC 방지)
-        int _shownHealth = -1;
-        int _shownMaxHealth = -1;
         int _shownSeconds = -1;
         int _shownKills = -1;
         int _shownLevel = -1;
@@ -97,8 +100,8 @@ namespace MergeBullet.UI
             if (L10n.IsTouch)
                 root.Query<Label>(className: "choice-key").ForEach(label => label.style.display = DisplayStyle.None);
 
+            _hpBar = root.Q("hp-bar");
             _hpFill = root.Q("hp-fill");
-            _hpText = root.Q<Label>("hp-text");
             _levelText = root.Q<Label>("level-text");
             _xpFill = root.Q("xp-fill");
             _timeText = root.Q<Label>("time-text");
@@ -131,7 +134,7 @@ namespace MergeBullet.UI
             }
 
             // UIDocument가 다시 켜지면 화면이 새로 만들어지므로 다음 Update에서 전부 다시 그리게 한다
-            _shownHealth = _shownMaxHealth = _shownSeconds = _shownKills = _shownLevel = -1;
+            _shownSeconds = _shownKills = _shownLevel = -1;
             _shownGameOver = true;
             _shownPaused = true;
             _shownOfferLevel = int.MinValue;
@@ -223,7 +226,7 @@ namespace MergeBullet.UI
 
             _world = world;
             EntityManager em = world.EntityManager;
-            _playerQuery = em.CreateEntityQuery(typeof(PlayerHealth));
+            _playerQuery = em.CreateEntityQuery(typeof(PlayerHealth), typeof(PlayerPosition), typeof(Player));
             _gameQuery = em.CreateEntityQuery(typeof(GameState));
             _statsQuery = em.CreateEntityQuery(typeof(GameStats));
             _progressQuery = em.CreateEntityQuery(typeof(PlayerProgress));
@@ -237,13 +240,24 @@ namespace MergeBullet.UI
             float ratio = health.Max > 0f ? Mathf.Clamp01(health.Value / health.Max) : 0f;
             _hpFill.style.width = Length.Percent(ratio * 100f);
             _hpFill.style.backgroundColor = Color.Lerp(HealthLowColor, HealthFullColor, ratio);
+        }
 
-            int value = Mathf.CeilToInt(health.Value);
-            int max = Mathf.CeilToInt(health.Max);
-            if (value == _shownHealth && max == _shownMaxHealth) return;
-            _shownHealth = value;
-            _shownMaxHealth = max;
-            _hpText.text = L10n.Get("hud.hp", value, max);
+        // 체력바를 플레이어 바로 아래에 둔다. 카메라가 이번 프레임 위치로 옮겨진 뒤(LateUpdate)라야 어긋나지 않는다
+        void LateUpdate()
+        {
+            Camera cam = Camera.main;
+            if (cam == null || _hpBar?.panel == null || _world == null || !_world.IsCreated) return;
+
+            _playerQuery.CompleteDependency();
+            if (!_playerQuery.TryGetSingleton(out PlayerPosition position) || !_playerQuery.TryGetSingleton(out Player player))
+                return;
+
+            var feet = new Vector3(position.Value.x, position.Value.y - player.Radius - HpBarGap, 0f);
+            Vector2 onPanel = RuntimePanelUtils.CameraTransformWorldToPanel(_hpBar.panel, feet, cam);
+            // 패널 좌표 → 부모(안전 영역만큼 들어간 HUD) 기준 좌표
+            Vector2 local = onPanel - _hpBar.parent.worldBound.position;
+            _hpBar.style.left = local.x;
+            _hpBar.style.top = local.y;
         }
 
         void ShowLevel(PlayerProgress progress)
