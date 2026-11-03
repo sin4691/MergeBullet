@@ -40,10 +40,12 @@ namespace MergeBullet.Systems
         {
             Entity enemy = ecb.Instantiate(prefab);
 
-            // 회전하지 않는 정사각형, 한 변 = 2 * 반지름. 총알은 이 상자 면에서 튕긴다 (BulletEnemyCollisionSystem).
-            // 적이 모이면 반듯한 면들이 이어져 벽처럼 보이고, 실제로도 벽처럼 반사한다
+            // 정사각형, 한 변 = 2 * 반지름. 총알은 이 상자 면에서 튕긴다 (BulletEnemyCollisionSystem, 회전 반영).
+            // 적이 모이면 반듯한 면들이 이어져 벽처럼 보이고, 실제로도 벽처럼 반사한다.
+            // 플레이어를 향해 돌아서(EnemyChaseSystem) 다가오는 느낌을 준다. 첫 프레임은 아레나 중앙을 바라본다
+            float facing = math.atan2(-position.y, -position.x);
             ecb.SetComponent(enemy, LocalTransform.FromPositionRotationScale(
-                new float3(position, 0f), quaternion.identity, stats.Radius * 2f));
+                new float3(position, 0f), quaternion.RotateZ(facing), stats.Radius * 2f));
 
             ecb.SetComponent(enemy, stats);
             ecb.SetComponent(enemy, new EnemyHealth { Value = stats.MaxHealth });

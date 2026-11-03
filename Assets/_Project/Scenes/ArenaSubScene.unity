@@ -154,7 +154,8 @@ MonoBehaviour:
   BulletRadius: 0.12
   BulletSpeed: 5
   Seed: 12345
-  ViewSize: {x: 16, y: 9}
+  ViewSize: {x: 14, y: 7.875}
+  LateViewSize: {x: 21, y: 11.8125}
   CameraFollowSharpness: 8
   BulletsBounceOnView: 0
   MaxLevel: 4
