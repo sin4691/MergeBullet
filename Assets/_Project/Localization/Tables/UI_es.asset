@@ -302,6 +302,10 @@ MonoBehaviour:
     m_Localized: Pantalla completa
     m_Metadata:
       m_Items: []
+  - m_Id: 716130704699392
+    m_Localized: "M\xFAsica"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

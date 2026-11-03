@@ -23,6 +23,8 @@ namespace MergeBullet.Meta
         public string Language = "";
         /// <summary>전체 음량 0~1 (GameSettings). 예전 저장 파일에는 없어서 기본값 1로 시작한다.</summary>
         public float Volume = 1f;
+        /// <summary>배경음악 음량 0~1 (전체 음량에 곱해진다). 효과음이 묻히지 않게 기본은 조금 낮게.</summary>
+        public float MusicVolume = 0.6f;
 
         public bool IsUnlocked(CharacterType type) => (UnlockedCharacters & (1 << (int)type)) != 0;
 
