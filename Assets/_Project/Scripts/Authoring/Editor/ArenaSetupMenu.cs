@@ -314,6 +314,36 @@ namespace MergeBullet.Editor
             Debug.Log("Effects 생성 완료. Play를 눌러 확인하세요.");
         }
 
+        [MenuItem("MergeBullet/Create Boss Telegraph")]
+        static void CreateBossTelegraph()
+        {
+            EffectPresenter presenter = Object.FindAnyObjectByType<EffectPresenter>();
+            if (presenter == null)
+            {
+                Debug.LogError("게임 씬에 Effects(EffectPresenter)가 없습니다. Game 씬을 열고 Create Effects를 먼저 실행하세요.");
+                return;
+            }
+
+            // 파티클 머티리얼(정점 색·반투명 지원)을 복사하되 텍스처를 빼서 끝까지 고른 굵기의 선이 되게 한다
+            string path = MaterialsDir + "/Telegraph.mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                material = new Material(CreateParticleMaterial());
+                material.SetTexture("_BaseMap", null);
+                AssetDatabase.CreateAsset(material, path);
+            }
+
+            BossTelegraph telegraph = presenter.GetComponent<BossTelegraph>();
+            if (telegraph == null) telegraph = Undo.AddComponent<BossTelegraph>(presenter.gameObject);
+            Undo.RecordObject(telegraph, "Setup Boss Telegraph");
+            telegraph.LineMaterial = material;
+            EditorUtility.SetDirty(telegraph);
+            EditorSceneManager.MarkSceneDirty(presenter.gameObject.scene);
+            EditorSceneManager.SaveScene(presenter.gameObject.scene);
+            Debug.Log("보스 돌진 예고선 설정 완료.");
+        }
+
         static EffectPresenter.EffectEntry EffectEntry(EffectType type, ParticleSystem prefab, float volume)
             => new EffectPresenter.EffectEntry { Type = type, Prefab = prefab, Volume = volume };
 
