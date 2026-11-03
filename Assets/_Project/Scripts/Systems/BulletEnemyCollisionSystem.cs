@@ -46,6 +46,7 @@ namespace MergeBullet.Systems
             var enemies = new NativeArray<Entity>(count, Allocator.TempJob);
             var positions = new NativeArray<float2>(count, Allocator.TempJob);
             var radii = new NativeArray<float>(count, Allocator.TempJob);
+            var axes = new NativeArray<float2>(count, Allocator.TempJob);
             var grid = new NativeParallelMultiHashMap<int, int>(count, Allocator.TempJob);
             var hits = new NativeQueue<EnemyHit>(Allocator.TempJob);
 
@@ -55,6 +56,7 @@ namespace MergeBullet.Systems
                 Entities = enemies,
                 Positions = positions,
                 Radii = radii,
+                Axes = axes,
                 Grid = grid.AsParallelWriter(),
             }.ScheduleParallel(_enemyQuery, state.Dependency);
 
@@ -64,6 +66,7 @@ namespace MergeBullet.Systems
                 Levels = levels,
                 EnemyPositions = positions,
                 EnemyRadii = radii,
+                EnemyAxes = axes,
                 Grid = grid,
                 Hits = hits.AsParallelWriter(),
             }.ScheduleParallel(collect);
@@ -79,6 +82,7 @@ namespace MergeBullet.Systems
             enemies.Dispose(damage);
             positions.Dispose(damage);
             radii.Dispose(damage);
+            axes.Dispose(damage);
             grid.Dispose(damage);
             hits.Dispose(damage);
 
@@ -101,6 +105,8 @@ namespace MergeBullet.Systems
         [NativeDisableParallelForRestriction] public NativeArray<Entity> Entities;
         [NativeDisableParallelForRestriction] public NativeArray<float2> Positions;
         [NativeDisableParallelForRestriction] public NativeArray<float> Radii;
+        // 적이 바라보는 방향(로컬 x축)의 단위 벡터. 회전한 상자 판정에 쓴다
+        [NativeDisableParallelForRestriction] public NativeArray<float2> Axes;
         public NativeParallelMultiHashMap<int, int>.ParallelWriter Grid;
 
         void Execute(Entity entity, [EntityIndexInQuery] int index, in LocalTransform transform, in Enemy enemy)
@@ -109,6 +115,7 @@ namespace MergeBullet.Systems
             Entities[index] = entity;
             Positions[index] = position;
             Radii[index] = enemy.Radius;
+            Axes[index] = math.normalizesafe(math.mul(transform.Rotation, new float3(1f, 0f, 0f)).xy, new float2(1f, 0f));
             Grid.Add(SpatialHash.KeyOf(SpatialHash.CellOf(position, CellSize)), index);
         }
     }
@@ -120,6 +127,7 @@ namespace MergeBullet.Systems
         public BulletLevelSettings Levels;
         [ReadOnly] public NativeArray<float2> EnemyPositions;
         [ReadOnly] public NativeArray<float> EnemyRadii;
+        [ReadOnly] public NativeArray<float2> EnemyAxes;
         [ReadOnly] public NativeParallelMultiHashMap<int, int> Grid;
         public NativeQueue<EnemyHit>.ParallelWriter Hits;
 
@@ -140,7 +148,7 @@ namespace MergeBullet.Systems
                 if (!Grid.TryGetFirstValue(key, out int j, out var it)) continue;
                 do
                 {
-                    float2 relative = position - EnemyPositions[j];
+                    float2 relative = ToLocal(position - EnemyPositions[j], EnemyAxes[j]);
                     float2 closest = math.clamp(relative, -EnemyRadii[j], EnemyRadii[j]);
                     float distSq = math.distancesq(relative, closest);
                     if (distSq < radiusSq && distSq < bestDistSq)
@@ -152,17 +160,20 @@ namespace MergeBullet.Systems
             }
             if (hit < 0) return;
 
+            // 적이 회전해 있으므로 총알 위치를 적 기준(로컬) 좌표로 돌려서 축 정렬 상자처럼 계산하고,
+            // 구한 법선·위치를 다시 월드 좌표로 돌린다
             float2 v = velocity.Value;
             float2 center = EnemyPositions[hit];
             float half = EnemyRadii[hit];
-            float2 rel = position - center;
+            float2 axis = EnemyAxes[hit];
+            float2 rel = ToLocal(position - center, axis);
             float2 nearest = math.clamp(rel, -half, half);
             float2 normal;
             if (math.distancesq(rel, nearest) > 1e-8f)
             {
                 // 면에 닿으면 법선이 축 방향(벽처럼 반듯한 반사), 모서리에 닿으면 모서리 → 총알 방향
                 normal = math.normalize(rel - nearest);
-                position = center + nearest + normal * bullet.Radius;
+                rel = nearest + normal * bullet.Radius;
             }
             else
             {
@@ -173,8 +184,9 @@ namespace MergeBullet.Systems
                     : new float2(0f, rel.y >= 0f ? 1f : -1f);
                 if (depth.x < depth.y) rel.x = normal.x * (half + bullet.Radius);
                 else rel.y = normal.y * (half + bullet.Radius);
-                position = center + rel;
             }
+            normal = ToWorld(normal, axis);
+            position = center + ToWorld(rel, axis);
 
             // 다음 프레임에 같은 적과 또 겹치지 않게 표면 밖으로 밀어낸 위치
             transform.Position = new float3(position, transform.Position.z);
@@ -186,6 +198,10 @@ namespace MergeBullet.Systems
             velocity.Value = v - 2f * approach * normal;
             Hits.Enqueue(new EnemyHit { EnemyIndex = hit, Damage = BulletLevelUtility.DamageOf(bullet.Level, Levels) });
         }
+
+        // axis = 적의 로컬 x축(바라보는 방향). 로컬 y축은 그 왼쪽 수직
+        static float2 ToLocal(float2 world, float2 axis) => new float2(math.dot(world, axis), world.y * axis.x - world.x * axis.y);
+        static float2 ToWorld(float2 local, float2 axis) => local.x * axis + local.y * new float2(-axis.y, axis.x);
     }
 
     [BurstCompile]

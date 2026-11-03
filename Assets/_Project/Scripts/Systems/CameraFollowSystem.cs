@@ -7,7 +7,7 @@ using Unity.Mathematics;
 namespace MergeBullet.Systems
 {
     /// <summary>
-    /// 카메라 범위(CameraView)를 플레이어 쪽으로 부드럽게 옮긴다. 아레나 밖이 보이지 않게 가장자리에서 멈추고,
+    /// 카메라 범위(CameraView)를 플레이어 쪽으로 부드럽게 옮기고, 난이도 진행도만큼 넓힌다. 아레나 밖이 보이지 않게 가장자리에서 멈추고,
     /// 아레나가 화면보다 작으면 가운데에 고정된다. 총알이 이 범위에서 튕기므로 총알 이동보다 먼저 돈다.
     /// 플레이어 위치는 잡(PlayerMove)이 쓰므로 메인 스레드에서 읽지 않고, 이 계산도 잡으로 이어 붙인다 (기다림 없음).
     /// </summary>
@@ -33,6 +33,8 @@ namespace MergeBullet.Systems
                 Player = SystemAPI.GetSingletonEntity<PlayerPosition>(),
                 ArenaHalfSize = SystemAPI.GetSingleton<ArenaBounds>().HalfSize,
                 DeltaTime = SystemAPI.Time.DeltaTime,
+                // 난이도 진행도(0 → 1, RampSeconds 동안)는 DifficultySystem이 메인 스레드에서 쓰는 값이라 바로 읽어도 기다림이 없다
+                Progress = SystemAPI.TryGetSingleton(out EnemySpawner spawner) ? spawner.Progress : 0f,
             }.Schedule();
         }
     }
@@ -44,9 +46,13 @@ namespace MergeBullet.Systems
         public Entity Player;
         public float2 ArenaHalfSize;
         public float DeltaTime;
+        public float Progress;
 
         void Execute(ref CameraView view)
         {
+            // 진행도는 몇 분에 걸쳐 조금씩 오르므로 화면도 눈치채지 못할 만큼 천천히 넓어진다
+            view.HalfSize = math.lerp(view.StartHalfSize, view.LateHalfSize, math.saturate(Progress));
+
             float2 target = PlayerPositions[Player].Value;
             if (!view.Snapped)
             {

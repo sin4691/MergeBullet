@@ -68,7 +68,8 @@ namespace MergeBullet.Systems
                     return;
 
                 case BossPhase.Windup:
-                    // 멈춘 채 하얗게 깜빡여 돌진을 예고한다 (피격 번쩍임을 재사용). 적은 상자 충돌이라 회전하지 않는다
+                    // 멈춘 채 플레이어를 노려보며 하얗게 깜빡여 돌진을 예고한다 (피격 번쩍임을 재사용)
+                    transform.Rotation = quaternion.RotateZ(math.atan2(toPlayer.y, toPlayer.x));
                     if (math.frac(boss.Timer * WindupBlinkRate) < 0.5f) flash.Timer = flash.Duration;
 
                     // 예고 동안 조준 방향을 계속 갱신한다 → BossTelegraph(연출)가 이 방향으로 돌진 경로를 그린다.
