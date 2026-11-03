@@ -112,3 +112,7 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# Addressables가 플랫폼별 빌드 상태(.bin, 위에서 무시)를 넣는 폴더. 폴더 meta도 빌드할 때마다 생겨서 무시
+/[Aa]ssets/AddressableAssetsData/Android.meta
+/[Aa]ssets/AddressableAssetsData/Windows.meta

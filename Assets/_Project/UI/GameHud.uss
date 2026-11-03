@@ -1,7 +1,7 @@
 /* 기준 해상도 1920x1080 (PanelSettings: Scale With Screen Size) */
 
 /* UI 전체 기본 폰트 (하위 요소가 상속). UI-Latin은 한중일 폰트를 대체 폰트로 갖고 있어 어떤 글자도 깨지지 않는다.
-   화면별로 L10n.ApplyFont가 지금 언어에 맞는 폰트로 덮어쓴다. 폰트 에셋은 Setup Localization 메뉴가 만든다 */
+   화면별로 L10n.ApplyFont가 지금 언어에 맞는 폰트로 덮어쓴다. 폰트 에셋은 Localization From CSV 메뉴가 만든다 */
 :root {
     -unity-font-definition: url("/Assets/_Project/Fonts/Assets/UI-Latin.asset");
 }

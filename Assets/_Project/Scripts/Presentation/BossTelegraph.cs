@@ -11,7 +11,7 @@ namespace MergeBullet.Presentation
     /// <summary>
     /// 보스 돌진 예고. 보스가 예고(Windup) 중이면 지금 조준 방향(Boss.DashDirection)으로 돌진할 때 맞는 범위를 띠로 그리고,
     /// 예고 시간만큼 진한 띠가 차올라 "곧 온다"를 알려 준다. 게임 로직은 바꾸지 않고 ECS 데이터를 읽어 그리기만 한다.
-    /// 게임 씬의 Effects 오브젝트에 붙인다 (MergeBullet > Create Boss Telegraph).
+    /// 게임 씬의 Effects 오브젝트에 붙인다 (MergeBullet > Setup > Boss Telegraph).
     /// </summary>
     public class BossTelegraph : MonoBehaviour
     {

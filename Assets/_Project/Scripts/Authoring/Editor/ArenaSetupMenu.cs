@@ -12,8 +12,9 @@ using UnityEngine.UIElements;
 namespace MergeBullet.Editor
 {
     /// <summary>
-    /// 메뉴 한 번으로 아레나 SubScene, 총알 프리팹, 머티리얼을 만들고 현재 씬에 연결한다.
-    /// SubScene은 에디터에서만 만들 수 있어서 코드로 자동화했다.
+    /// 프로젝트를 처음 구성하는 메뉴(MergeBullet/Setup)와 값을 바꾼 뒤 다시 돌리는 메뉴(MergeBullet/Update).
+    /// SubScene·프리팹·머티리얼·씬 연결을 코드로 만들어서, 무엇을 어떻게 구성했는지 코드에 남고 다시 만들 수 있다.
+    /// 메뉴 목록과 순서는 docs/editor-menus.md.
     /// </summary>
     static class ArenaSetupMenu
     {
@@ -31,7 +32,7 @@ namespace MergeBullet.Editor
         const string LobbyScenePath = ScenesDir + "/Lobby.unity";
         const float WallThickness = 0.2f;
 
-        [MenuItem("MergeBullet/Create Arena SubScene")]
+        [MenuItem("MergeBullet/Setup/Arena SubScene", priority = 1)]
         static void CreateArenaSubScene()
         {
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath) != null)
@@ -78,12 +79,12 @@ namespace MergeBullet.Editor
             Debug.Log("Arena SubScene 생성 완료. Play를 눌러 확인하세요.");
         }
 
-        [MenuItem("MergeBullet/Create Max Level Effect")]
+        [MenuItem("MergeBullet/Setup/Max Level Effect", priority = 7)]
         static void CreateMaxLevelEffect()
         {
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath) == null)
             {
-                Debug.LogError("먼저 MergeBullet/Create Arena SubScene 을 실행하세요.");
+                Debug.LogError("먼저 MergeBullet/Setup/Arena SubScene 을 실행하세요.");
                 return;
             }
 
@@ -106,12 +107,12 @@ namespace MergeBullet.Editor
             Debug.Log("Max Level Effect 생성 완료. Play를 눌러 확인하세요.");
         }
 
-        [MenuItem("MergeBullet/Create Player")]
+        [MenuItem("MergeBullet/Setup/Player", priority = 2)]
         static void CreatePlayer()
         {
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath) == null)
             {
-                Debug.LogError("먼저 MergeBullet/Create Arena SubScene 을 실행하세요.");
+                Debug.LogError("먼저 MergeBullet/Setup/Arena SubScene 을 실행하세요.");
                 return;
             }
 
@@ -142,12 +143,12 @@ namespace MergeBullet.Editor
             Debug.Log("Player 생성 완료. Play 후 WASD로 움직여 보세요.");
         }
 
-        [MenuItem("MergeBullet/Create Enemy")]
+        [MenuItem("MergeBullet/Setup/Enemy", priority = 3)]
         static void CreateEnemy()
         {
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath) == null)
             {
-                Debug.LogError("먼저 MergeBullet/Create Arena SubScene 을 실행하세요.");
+                Debug.LogError("먼저 MergeBullet/Setup/Arena SubScene 을 실행하세요.");
                 return;
             }
 
@@ -172,12 +173,12 @@ namespace MergeBullet.Editor
 
         // 러너(작고 빠르고 약함)와 탱커(크고 느리고 단단함)를 만들어 스폰 테이블에 넣는다.
         // 둘 다 시작 가중치 0이라 처음엔 안 나오고, 난이도가 오를수록 섞여 나온다. 색은 모두 빨간 계열(= 적)
-        [MenuItem("MergeBullet/Create Enemy Variants")]
+        [MenuItem("MergeBullet/Setup/Enemy Variants", priority = 4)]
         static void CreateEnemyVariants()
         {
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath) == null)
             {
-                Debug.LogError("먼저 MergeBullet/Create Arena SubScene 을 실행하세요.");
+                Debug.LogError("먼저 MergeBullet/Setup/Arena SubScene 을 실행하세요.");
                 return;
             }
 
@@ -231,13 +232,13 @@ namespace MergeBullet.Editor
         }
 
         // 젬 프리팹을 만들고 적 프리팹의 드롭으로 연결한다 (드롭은 적마다 다를 수 있어서 적 프리팹이 갖는다)
-        [MenuItem("MergeBullet/Create XP Gem")]
+        [MenuItem("MergeBullet/Setup/XP Gem", priority = 5)]
         static void CreateXpGem()
         {
             const string enemyPrefabPath = PrefabsDir + "/Enemy.prefab";
             if (AssetDatabase.LoadAssetAtPath<GameObject>(enemyPrefabPath) == null)
             {
-                Debug.LogError("먼저 MergeBullet/Create Enemy 를 실행하세요.");
+                Debug.LogError("먼저 MergeBullet/Setup/Enemy 를 실행하세요.");
                 return;
             }
 
@@ -267,7 +268,7 @@ namespace MergeBullet.Editor
 
         // 연출용 파티클 프리팹 4종을 만들고, 메인 씬에 EffectPresenter를 두어 연결한다.
         // 프리팹은 "반지름 1" 기준 크기라 EffectPresenter가 대상 크기만큼 늘려서 쓴다 (Scaling Mode: Hierarchy)
-        [MenuItem("MergeBullet/Create Effects")]
+        [MenuItem("MergeBullet/Setup/Effects", priority = 8)]
         static void CreateEffects()
         {
             const string effectsDir = PrefabsDir + "/Effects";
@@ -314,13 +315,13 @@ namespace MergeBullet.Editor
             Debug.Log("Effects 생성 완료. Play를 눌러 확인하세요.");
         }
 
-        [MenuItem("MergeBullet/Create Boss Telegraph")]
+        [MenuItem("MergeBullet/Setup/Boss Telegraph", priority = 9)]
         static void CreateBossTelegraph()
         {
             EffectPresenter presenter = Object.FindAnyObjectByType<EffectPresenter>();
             if (presenter == null)
             {
-                Debug.LogError("게임 씬에 Effects(EffectPresenter)가 없습니다. Game 씬을 열고 Create Effects를 먼저 실행하세요.");
+                Debug.LogError("게임 씬에 Effects(EffectPresenter)가 없습니다. Game 씬을 열고 MergeBullet/Setup/Effects를 먼저 실행하세요.");
                 return;
             }
 
@@ -424,27 +425,12 @@ namespace MergeBullet.Editor
             return prefab.GetComponent<ParticleSystem>();
         }
 
-        // 로비 씬과 게임 씬으로 나눈다.
-        // 1) 기존 게임 씬(SampleScene)을 _Project/Scenes/Game으로 옮긴다 (MoveAsset은 GUID를 유지해 참조가 안 깨진다)
-        // 2) 로비 씬을 만든다 (카메라 + 로비 화면)
-        // 3) 빌드 씬 목록을 로비 → 게임 순으로 (첫 화면이 로비)
-        [MenuItem("MergeBullet/Setup Lobby And Game Scenes")]
-        static void SetupLobbyAndGameScenes()
+        // 로비 씬(카메라 + 로비 화면)을 만들고, 빌드 씬 목록을 로비 → 게임 순으로 (첫 화면이 로비)
+        [MenuItem("MergeBullet/Setup/Lobby Scene And Build List", priority = 11)]
+        static void SetupLobbyScene()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
             EnsureFolder(ScenesDir);
-
-            const string oldGameScenePath = "Assets/Scenes/SampleScene.unity";
-            if (AssetDatabase.LoadAssetAtPath<SceneAsset>(GameScenePath) == null &&
-                AssetDatabase.LoadAssetAtPath<SceneAsset>(oldGameScenePath) != null)
-            {
-                string error = AssetDatabase.MoveAsset(oldGameScenePath, GameScenePath);
-                if (!string.IsNullOrEmpty(error))
-                {
-                    Debug.LogError($"게임 씬을 옮기지 못했습니다: {error}");
-                    return;
-                }
-            }
 
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(LobbyScenePath) == null && !CreateLobbyScene()) return;
 
@@ -490,12 +476,12 @@ namespace MergeBullet.Editor
         }
 
         // 보스 프리팹(크고 단단한 적 + 돌진 패턴)을 만들고 Arena의 보스 스포너에 연결한다
-        [MenuItem("MergeBullet/Create Boss")]
+        [MenuItem("MergeBullet/Setup/Boss", priority = 6)]
         static void CreateBoss()
         {
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath) == null)
             {
-                Debug.LogError("먼저 MergeBullet/Create Arena SubScene 을 실행하세요.");
+                Debug.LogError("먼저 MergeBullet/Setup/Arena SubScene 을 실행하세요.");
                 return;
             }
 
@@ -528,7 +514,7 @@ namespace MergeBullet.Editor
 
         // HUD는 MonoBehaviour로 남아 있어야 하므로 SubScene이 아니라 메인 씬에 둔다.
         // 이미 GameHud가 있으면(예전 IMGUI 버전) 새로 만들지 않고 UIDocument만 설정한다.
-        [MenuItem("MergeBullet/Create HUD")]
+        [MenuItem("MergeBullet/Setup/HUD", priority = 10)]
         static void CreateHud()
         {
             var theme = AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(ThemePath);
@@ -683,7 +669,7 @@ namespace MergeBullet.Editor
         /// Arena의 Arena Size(Inspector 값)에 맞춰 벽·바닥 격자를 다시 만들고, 카메라가 플레이어를 따라가게 한다.
         /// 맵 크기를 바꿔 보려면 Arena Size를 고친 뒤 이 메뉴를 다시 실행한다.
         /// </summary>
-        [MenuItem("MergeBullet/Rebuild Arena For Size")]
+        [MenuItem("MergeBullet/Update/Arena Walls And Floor", priority = 100)]
         static void RebuildArenaForSize()
         {
             Scene gameScene = SceneManager.GetActiveScene();

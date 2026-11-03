@@ -9,7 +9,7 @@
 | NotoSansTC-Regular.otf | Noto Sans TC | 중국어 번체 | SIL OFL 1.1 |
 
 - 출처: Noto Sans는 github.com/notofonts/notofonts.github.io, Noto Sans JP/SC/TC는 github.com/notofonts/noto-cjk (SubsetOTF). 라이선스 전문은 `OFL-Noto.txt`.
-- `Assets/` 폴더의 UI-*.asset은 UI Toolkit용 폰트 에셋(SDF)으로, `MergeBullet > Setup Localization` 메뉴가 만든다.
+- `Assets/` 폴더의 UI-*.asset은 UI Toolkit용 폰트 에셋(SDF)으로, `MergeBullet > Update > Localization From CSV` 메뉴가 만든다.
   - 언어마다 폰트를 바꾸는 이유: 한자는 일본어·간체·번체마다 글자 모양이 달라서 한 폰트로 섞어 쓰면 어색하다.
   - UI-Latin은 나머지 폰트를 대체(fallback)로 갖고 있어서, 언어 목록처럼 여러 언어가 섞인 글자도 깨지지 않는다.
   - 동적(Dynamic) 모드라 실행 중에 쓰는 글자만 아틀라스에 굽는다. 에디터에서 Play하면 .asset 파일이 바뀔 수 있다.
