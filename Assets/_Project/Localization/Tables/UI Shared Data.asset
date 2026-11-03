@@ -303,6 +303,14 @@ MonoBehaviour:
     m_Key: settings.music
     m_Metadata:
       m_Items: []
+  - m_Id: 841285720354816
+    m_Key: gameover.clear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 841285770686464
+    m_Key: gameover.clearbonus
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

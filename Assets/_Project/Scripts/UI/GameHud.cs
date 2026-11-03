@@ -61,6 +61,7 @@ namespace MergeBullet.UI
         VisualElement _gameOver;
         Label _finalText;
         Label _rewardText;
+        Label _gameOverTitle;
         Button _restartButton;
         Button _lobbyButton;
         VisualElement _pause;
@@ -106,6 +107,7 @@ namespace MergeBullet.UI
             _bossFill = root.Q("boss-fill");
             _levelUp = root.Q("level-up");
             _gameOver = root.Q("game-over");
+            _gameOverTitle = root.Q<Label>("gameover-title");
             _finalText = root.Q<Label>("final-text");
             _rewardText = root.Q<Label>("reward-text");
             _restartButton = root.Q<Button>("restart-button");
@@ -117,7 +119,7 @@ namespace MergeBullet.UI
             _settings = new SettingsPanel(root.Q("pause-settings"));
             root.Q<Button>("pause-button").clicked += () => SetPaused(true);
             root.Q<Button>("resume-button").clicked += () => SetPaused(false);
-            root.Q<Button>("pause-lobby-button").clicked += GoToLobby;
+            root.Q<Button>("pause-lobby-button").clicked += QuitRunToLobby;
 
             for (int i = 0; i < ChoiceCount; i++)
             {
@@ -172,7 +174,7 @@ namespace MergeBullet.UI
             // 판이 끝난 순간 한 번만 코인을 지급·저장한다 (게임 오버 화면을 그리기 전에)
             if (game.IsGameOver && !_rewarded)
             {
-                _reward = SaveSystem.AwardRun(stats);
+                _reward = SaveSystem.AwardRun(stats, game.Cleared);
                 _rewarded = true;
             }
             else if (!game.IsGameOver)
@@ -180,7 +182,7 @@ namespace MergeBullet.UI
                 _rewarded = false;
             }
 
-            ShowGameOver(game.IsGameOver, stats);
+            ShowGameOver(game, stats);
             ShowPause(game.Paused && !game.IsGameOver);
 
             HandleKeys(game, offer);
@@ -321,17 +323,33 @@ namespace MergeBullet.UI
             return (L10n.Get($"upgrade.{type}.name"), L10n.Get($"upgrade.{type}.desc", amount));
         }
 
-        void ShowGameOver(bool isGameOver, GameStats stats)
+        void ShowGameOver(GameState game, GameStats stats)
         {
+            bool isGameOver = game.IsGameOver;
             if (isGameOver == _shownGameOver) return;
             _shownGameOver = isGameOver;
 
             _gameOver.style.display = isGameOver ? DisplayStyle.Flex : DisplayStyle.None;
             if (!isGameOver) return;
 
+            // 같은 결과 화면을 쓰되, 버텨서 끝났으면 제목과 보너스만 다르게
+            _gameOverTitle.text = L10n.Get(game.Cleared ? "gameover.clear" : "gameover.title");
             _finalText.text = L10n.Get("gameover.summary", FormatTime(Mathf.FloorToInt(stats.SurvivalTime)), stats.Kills);
+            string bonus = _reward.ClearBonus > 0 ? "   " + L10n.Get("gameover.clearbonus", _reward.ClearBonus) : "";
             string best = _reward.NewBestTime || _reward.NewBestKills ? "   " + L10n.Get("gameover.newbest") : "";
-            _rewardText.text = L10n.Get("gameover.reward", _reward.Coins, SaveSystem.Current.Coins) + best;
+            _rewardText.text = L10n.Get("gameover.reward", _reward.Coins, SaveSystem.Current.Coins) + bonus + best;
+        }
+
+        // 일시정지에서 로비로 나가도 지금까지 번 코인은 받는다 (게임 오버 화면에서 나갈 땐 이미 받았으므로 다시 주지 않음)
+        void QuitRunToLobby()
+        {
+            if (_world != null && _world.IsCreated) _statsQuery.CompleteDependency(); // 처치 수는 잡(EnemyDeath)이 쓴다
+            if (!_rewarded && _world != null && _world.IsCreated && _statsQuery.TryGetSingleton(out GameStats stats))
+            {
+                SaveSystem.AwardRun(stats, cleared: false);
+                _rewarded = true;
+            }
+            GoToLobby();
         }
 
         public static string FormatTime(int totalSeconds) => $"{totalSeconds / 60:00}:{totalSeconds % 60:00}";

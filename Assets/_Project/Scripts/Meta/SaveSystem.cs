@@ -25,6 +25,8 @@ namespace MergeBullet.Meta
         public float Volume = 1f;
         /// <summary>배경음악 음량 0~1 (전체 음량에 곱해진다). 효과음이 묻히지 않게 기본은 조금 낮게.</summary>
         public float MusicVolume = 0.6f;
+        /// <summary>제한 시간까지 버틴 판 수.</summary>
+        public int RunsCleared;
 
         public bool IsUnlocked(CharacterType type) => (UnlockedCharacters & (1 << (int)type)) != 0;
 
@@ -48,13 +50,16 @@ namespace MergeBullet.Meta
     /// <summary>한 판이 끝났을 때 받은 보상과 갱신된 기록.</summary>
     public readonly struct RunReward
     {
+        /// <summary>받은 코인 전부 (클리어 보너스 포함).</summary>
         public readonly int Coins;
+        public readonly int ClearBonus;
         public readonly bool NewBestTime;
         public readonly bool NewBestKills;
 
-        public RunReward(int coins, bool newBestTime, bool newBestKills)
+        public RunReward(int coins, int clearBonus, bool newBestTime, bool newBestKills)
         {
             Coins = coins;
+            ClearBonus = clearBonus;
             NewBestTime = newBestTime;
             NewBestKills = newBestKills;
         }
@@ -70,6 +75,8 @@ namespace MergeBullet.Meta
         public const float SecondsPerCoin = 5f;
         // 보스 1마리당 추가 코인
         public const int CoinsPerBoss = 20;
+        // 제한 시간까지 버티면 추가 코인 (30분 생존만으로 약 360개라 그 절반 남짓)
+        public const int ClearBonus = 200;
 
         static SaveData _current;
 
@@ -80,21 +87,26 @@ namespace MergeBullet.Meta
         public static int CoinsFor(GameStats stats)
             => stats.Kills + Mathf.FloorToInt(stats.SurvivalTime / SecondsPerCoin) + stats.BossKills * CoinsPerBoss;
 
-        /// <summary>끝난 판의 코인을 더하고 최고 기록을 갱신한 뒤 저장한다.</summary>
-        public static RunReward AwardRun(GameStats stats)
+        /// <summary>
+        /// 끝난 판의 코인을 더하고 최고 기록을 갱신한 뒤 저장한다. 죽었을 때·클리어했을 때·도중에 로비로 나갈 때 모두
+        /// 지금까지 번 만큼 받는다 (클리어면 보너스 추가).
+        /// </summary>
+        public static RunReward AwardRun(GameStats stats, bool cleared)
         {
             SaveData data = Current;
-            int coins = CoinsFor(stats);
+            int bonus = cleared ? ClearBonus : 0;
+            int coins = CoinsFor(stats) + bonus;
             bool newBestTime = stats.SurvivalTime > data.BestSurvivalTime;
             bool newBestKills = stats.Kills > data.BestKills;
 
             data.Coins += coins;
             data.RunsPlayed++;
+            if (cleared) data.RunsCleared++;
             if (newBestTime) data.BestSurvivalTime = stats.SurvivalTime;
             if (newBestKills) data.BestKills = stats.Kills;
             Save();
 
-            return new RunReward(coins, newBestTime, newBestKills);
+            return new RunReward(coins, bonus, newBestTime, newBestKills);
         }
 
         /// <summary>코인이 충분하고 최대 단계가 아니면 한 단계 사고 저장한다.</summary>

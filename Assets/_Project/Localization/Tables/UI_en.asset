@@ -306,6 +306,14 @@ MonoBehaviour:
     m_Localized: Music
     m_Metadata:
       m_Items: []
+  - m_Id: 841285720354816
+    m_Localized: CLEAR!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 841285770686464
+    m_Localized: Clear bonus +{0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
