@@ -275,6 +275,30 @@ MonoBehaviour:
     m_Key: common.back.touch
     m_Metadata:
       m_Items: []
+  - m_Id: 649227898466304
+    m_Key: pause.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992256
+    m_Key: pause.resume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992257
+    m_Key: pause.resume.touch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992258
+    m_Key: pause.lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992259
+    m_Key: settings.volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992260
+    m_Key: settings.fullscreen
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

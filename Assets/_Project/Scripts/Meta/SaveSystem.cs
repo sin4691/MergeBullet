@@ -21,6 +21,8 @@ namespace MergeBullet.Meta
         public int UnlockedCharacters = 1;
         /// <summary>고른 언어 코드 (en, ko). 비어 있으면 OS 언어로 시작한다.</summary>
         public string Language = "";
+        /// <summary>전체 음량 0~1 (GameSettings). 예전 저장 파일에는 없어서 기본값 1로 시작한다.</summary>
+        public float Volume = 1f;
 
         public bool IsUnlocked(CharacterType type) => (UnlockedCharacters & (1 << (int)type)) != 0;
 

@@ -43,7 +43,8 @@
 
         <ui:VisualElement name="settings-page" class="page sub-page">
             <ui:Label name="settings-title" class="page-title" text="SETTINGS" />
-            <ui:VisualElement class="shop settings-panel">
+            <!-- 언어 줄 아래에 음량·전체 화면 줄을 SettingsPanel이 붙인다 -->
+            <ui:VisualElement name="settings-panel" class="shop settings-panel">
                 <ui:VisualElement class="settings-row">
                     <ui:Label name="language-label" class="shop-name" text="Language" />
                     <!-- 언어 목록은 LobbyScreen.cs가 각 언어 자신의 이름으로 채운다 -->

@@ -278,6 +278,30 @@ MonoBehaviour:
     m_Localized: Volver
     m_Metadata:
       m_Items: []
+  - m_Id: 649227898466304
+    m_Localized: PAUSA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992256
+    m_Localized: Continuar (Esc)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992257
+    m_Localized: Continuar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992258
+    m_Localized: Volver al lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992259
+    m_Localized: Volumen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 649227952992260
+    m_Localized: Pantalla completa
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
