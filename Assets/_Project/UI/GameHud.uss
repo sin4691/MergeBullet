@@ -27,10 +27,17 @@
     width: 420px;
 }
 
+/* 플레이어를 따라다니는 작은 체력바. left/top은 GameHud.cs가 플레이어 화면 위치로 매 프레임 넣고,
+   음수 margin으로 그 점을 가운데에 둔다. 숫자는 표시하지 않는다 (막대만으로 충분히 읽힘) */
 .hp-bar {
-    height: 36px;
+    position: absolute;
+    width: 84px;
+    height: 10px;
+    margin-left: -42px;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.6);
-    border-radius: 8px;
     overflow: hidden;
 }
 
@@ -44,24 +51,9 @@
     background-color: rgb(77, 217, 102);
 }
 
-.hp-text {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    margin: 0;
-    padding: 0;
-    -unity-text-align: middle-center;
-    -unity-font-style: bold;
-    font-size: 20px;
-    color: rgb(255, 255, 255);
-}
-
 .level-row {
     flex-direction: row;
     align-items: center;
-    margin-top: 10px;
 }
 
 .level-text {

@@ -11,7 +11,7 @@ namespace MergeBullet.Authoring
     {
         [Min(0f)] public float MoveSpeed = 6f;
         [Min(0.01f)] public float Radius = 0.3f;
-        [Min(1f)] public float MaxHealth = 10f;
+        [Min(1f)] public float MaxHealth = 100f; // 사람들에게 익숙한 100 단위 (적 접촉 피해도 같은 비율)
         [Min(0f)] public float InvulnerableDuration = 0.8f;
 
         [Header("Gem Pickup")]

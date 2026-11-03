@@ -187,9 +187,9 @@ namespace MergeBullet.Editor
             var gem = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabsDir + "/XpGem.prefab");
 
             GameObject runner = CreateEnemyVariantPrefab("Runner", new Color(1f, 0.4f, 0.45f), gem,
-                moveSpeed: 3.5f, radius: 0.25f, maxHealth: 1f, contactDamage: 1f, xp: 1);
+                moveSpeed: 3.5f, radius: 0.25f, maxHealth: 1f, contactDamage: 10f, xp: 1);
             GameObject tank = CreateEnemyVariantPrefab("Tank", new Color(0.55f, 0.08f, 0.15f), gem,
-                moveSpeed: 1.2f, radius: 0.6f, maxHealth: 12f, contactDamage: 2f, xp: 4);
+                moveSpeed: 1.2f, radius: 0.6f, maxHealth: 12f, contactDamage: 20f, xp: 4);
 
             EditArenaSubScene((subScene, arena) =>
             {
@@ -491,7 +491,7 @@ namespace MergeBullet.Editor
 
             // 빨간 계열(= 적)이지만 일반 적보다 진하고 크게
             GameObject boss = CreateEnemyVariantPrefab("Boss", new Color(0.75f, 0.05f, 0.25f), gem,
-                moveSpeed: 1.4f, radius: 1f, maxHealth: 300f, contactDamage: 3f, xp: 20);
+                moveSpeed: 1.4f, radius: 1f, maxHealth: 300f, contactDamage: 30f, xp: 20);
             GameObject contents = PrefabUtility.LoadPrefabContents(PrefabsDir + "/Boss.prefab");
             try
             {

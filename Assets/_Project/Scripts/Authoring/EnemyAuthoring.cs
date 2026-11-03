@@ -12,7 +12,7 @@ namespace MergeBullet.Authoring
         [Min(0f)] public float MoveSpeed = 2f;
         [Min(0.01f)] public float Radius = 0.35f;
         [Min(0.1f)] public float MaxHealth = 3f;
-        [Min(0f)] public float ContactDamage = 1f;
+        [Min(0f)] public float ContactDamage = 10f; // 플레이어 체력 100 기준
         [Min(0.01f)] public float HitFlashDuration = 0.12f;
 
         [Header("Drop")]

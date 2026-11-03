@@ -42,7 +42,7 @@ namespace MergeBullet.Meta
         static readonly PermanentUpgradeInfo[] Table =
         {
             new PermanentUpgradeInfo(perLevel: 0.05f, maxLevel: 10, baseCost: 20), // 발사 간격 -5%
-            new PermanentUpgradeInfo(perLevel: 2f, maxLevel: 10, baseCost: 15),      // 최대 체력 +2
+            new PermanentUpgradeInfo(perLevel: 20f, maxLevel: 10, baseCost: 15),     // 최대 체력 +20
             new PermanentUpgradeInfo(perLevel: 0.10f, maxLevel: 10, baseCost: 25),      // 피해 +10%
             new PermanentUpgradeInfo(perLevel: 0.05f, maxLevel: 5, baseCost: 20),     // 이동 속도 +5%
             new PermanentUpgradeInfo(perLevel: 0.15f, maxLevel: 5, baseCost: 10),      // 줍기 범위 +15%

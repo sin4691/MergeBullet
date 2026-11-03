@@ -525,7 +525,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Authoring.PlayerAuthoring
   MoveSpeed: 6
   Radius: 0.3
-  MaxHealth: 10
+  MaxHealth: 100
   InvulnerableDuration: 0.8
   MagnetRadius: 2.5
   PickupRadius: 0.5
