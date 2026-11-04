@@ -9,8 +9,8 @@ using Unity.Transforms;
 namespace MergeBullet.Systems
 {
     /// <summary>
-    /// 적에게 닿으면 플레이어가 한 대 맞고, 무적 시간 동안은 다시 맞지 않는다. 체력이 0이 되면 게임 오버로 표시한다.
-    /// 1) 탐색: 플레이어에 닿은 적 중 가장 센 접촉 피해를 찾는다 (단일 스레드, 플레이어 하나에 여러 적이 쓰는 충돌을 피함)
+    /// 적이나 보스 충격파에 닿으면 플레이어가 한 대 맞고, 무적 시간 동안은 다시 맞지 않는다. 체력이 0이 되면 게임 오버로 표시한다.
+    /// 1) 탐색: 플레이어에 닿은 적·충격파 중 가장 센 피해를 찾는다 (단일 스레드, 플레이어 하나에 여러 적이 쓰는 충돌을 피함)
     /// 2) 반영: 무적 시간이 끝났으면 그 피해를 한 번 적용하고 무적 시간을 다시 건다
     /// </summary>
     [UpdateAfter(typeof(EnemyChaseSystem))]
@@ -42,6 +42,14 @@ namespace MergeBullet.Systems
                 PlayerPositions = SystemAPI.GetComponentLookup<PlayerPosition>(true),
                 StrongestHit = strongestHit,
             }.Schedule(state.Dependency);
+
+            find = new FindShockwaveHitJob
+            {
+                PlayerEntity = player,
+                Players = SystemAPI.GetComponentLookup<Player>(true),
+                PlayerPositions = SystemAPI.GetComponentLookup<PlayerPosition>(true),
+                StrongestHit = strongestHit,
+            }.Schedule(find);
 
             JobHandle apply = new ApplyPlayerDamageJob
             {
@@ -81,6 +89,27 @@ namespace MergeBullet.Systems
 
             // 여러 적에게 동시에 닿아도 한 대만 맞는다 (가장 센 피해 기준)
             StrongestHit.Value = math.max(StrongestHit.Value, enemy.ContactDamage);
+        }
+    }
+
+    // 충격파 고리(반지름 ± 두께/2)에 플레이어 몸이 걸치면 맞는다. 한 고리는 한 번만 때린다
+    [BurstCompile]
+    partial struct FindShockwaveHitJob : IJobEntity
+    {
+        public Entity PlayerEntity;
+        [ReadOnly] public ComponentLookup<Player> Players;
+        [ReadOnly] public ComponentLookup<PlayerPosition> PlayerPositions;
+        public NativeReference<float> StrongestHit;
+
+        void Execute(ref Shockwave wave)
+        {
+            if (wave.HitPlayer) return;
+            float distance = math.distance(PlayerPositions[PlayerEntity].Value, wave.Center);
+            float reach = wave.Width * 0.5f + Players[PlayerEntity].Radius;
+            if (math.abs(distance - wave.Radius) > reach) return;
+
+            wave.HitPlayer = true;
+            StrongestHit.Value = math.max(StrongestHit.Value, wave.Damage);
         }
     }
 

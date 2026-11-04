@@ -13,6 +13,16 @@ namespace MergeBullet.Components
         Dash,
     }
 
+    /// <summary>예고(Windup) 끝에 하는 공격. 돌진 → 소환 → 돌진 → 충격파 순서로 돌아가며 쓴다.</summary>
+    public enum BossAttack : byte
+    {
+        Dash,
+        /// <summary>자기 주위에 부하(삼각형)를 동그랗게 소환한다. 부하가 벽이 되어 총알이 잘 튕긴다.</summary>
+        Summon,
+        /// <summary>보스를 중심으로 퍼지는 고리. 고리에 닿으면 피해.</summary>
+        Shockwave,
+    }
+
     /// <summary>
     /// 보스 패턴 상태. 보스도 Enemy라서 충돌·피해·밀어내기·처치·드롭은 일반 적과 같고, 움직임 패턴만 BossBehaviorSystem이 더한다.
     /// </summary>
@@ -26,6 +36,39 @@ namespace MergeBullet.Components
         public float WindupSeconds;
         public float DashSeconds;
         public float DashSpeed;
+
+        /// <summary>이번 예고 끝에 할 공격과, 공격 순서에서 다음 차례.</summary>
+        public BossAttack Attack;
+        public int AttackIndex;
+        /// <summary>이번 예고의 길이 (공격마다 다르다: 충격파는 피할 시간을 더 준다).</summary>
+        public float WindupDuration;
+
+        // 소환
+        public Entity SummonPrefab;
+        public int SummonCount;
+        /// <summary>보스 몸에서 이만큼 떨어진 원 위에 소환한다.</summary>
+        public float SummonDistance;
+
+        // 충격파
+        public float ShockwaveMaxRadius;
+        public float ShockwaveSpeed;
+        public float ShockwaveWidth;
+        public float ShockwaveDamage;
+    }
+
+    /// <summary>
+    /// 퍼지는 충격파 고리. 중심에서 Radius만큼 떨어진 곳에 두께 Width의 고리가 있고, 플레이어가 고리에 닿으면
+    /// 한 번 피해를 준다 (PlayerDamageSystem). MaxRadius까지 퍼지면 사라진다 (ShockwaveSystem). 그림은 BossTelegraph.
+    /// </summary>
+    public struct Shockwave : IComponentData
+    {
+        public float2 Center;
+        public float Radius;
+        public float MaxRadius;
+        public float Speed;
+        public float Width;
+        public float Damage;
+        public bool HitPlayer;
     }
 
     /// <summary>

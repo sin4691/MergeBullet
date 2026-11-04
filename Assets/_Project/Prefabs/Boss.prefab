@@ -128,3 +128,10 @@ MonoBehaviour:
   WindupSeconds: 0.8
   DashSeconds: 0.6
   DashSpeed: 10
+  SummonPrefab: {fileID: 2622438832363275273, guid: d46576c97d912644ba3f0eb4c167d37f, type: 3}
+  SummonCount: 6
+  SummonDistance: 1.2
+  ShockwaveMaxRadius: 7
+  ShockwaveSpeed: 5
+  ShockwaveWidth: 0.6
+  ShockwaveDamage: 25

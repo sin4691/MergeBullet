@@ -201,7 +201,7 @@ namespace MergeBullet.Editor
 
             var prefabs = new GameObject[Tiers.Length];
             for (int i = 0; i < Tiers.Length; i++) prefabs[i] = CreateTierPrefab(Tiers[i], gem);
-            UpdateBossShape();
+            UpdateBoss(prefabs[0]);
 
             EditArenaSubScene((subScene, arena) =>
             {
@@ -228,8 +228,8 @@ namespace MergeBullet.Editor
                 float StartWeight, float EndWeight) tier, GameObject gem)
             => CreateEnemyVariantPrefab(tier.Name, tier.Color, gem, tier.Speed, tier.Radius, tier.Health, tier.Damage, tier.Xp, tier.Sides);
 
-        // 이미 있는 보스 프리팹의 모양만 정다각형으로 바꾼다 (능력치·보스 패턴은 그대로)
-        static void UpdateBossShape()
+        // 이미 있는 보스 프리팹의 모양을 정다각형으로 바꾸고, 소환할 부하(가장 약한 등급)를 연결한다 (능력치는 그대로)
+        static void UpdateBoss(GameObject summon)
         {
             string path = PrefabsDir + "/Boss.prefab";
             if (AssetDatabase.LoadAssetAtPath<GameObject>(path) == null) return;
@@ -239,6 +239,8 @@ namespace MergeBullet.Editor
             {
                 contents.GetComponent<EnemyAuthoring>().Sides = BossSides;
                 contents.GetComponent<MeshFilter>().sharedMesh = LoadOrCreatePolygonMesh(BossSides);
+                BossAuthoring bossAuthoring = contents.GetComponent<BossAuthoring>();
+                if (bossAuthoring != null) bossAuthoring.SummonPrefab = summon;
                 PrefabUtility.SaveAsPrefabAsset(contents, path);
             }
             finally
