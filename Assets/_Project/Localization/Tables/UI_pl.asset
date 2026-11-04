@@ -115,7 +115,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1438920724
-    m_Localized: "Zasi\u0119g wybuchu +{0}"
+    m_Localized: "Zasi\u0119g efektu maks. poziomu +{0}"
     m_Metadata:
       m_Items: []
   - m_Id: 1438920725
@@ -436,6 +436,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1178985124081674
     m_Localized: "Pr\u0119dko\u015B\u0107 pocisk\xF3w -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1207944842850304
+    m_Localized: "Trwa\u0142e pociski"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1207944901570560
+    m_Localized: "Czas \u017Cycia pocisk\xF3w +{0}"
     m_Metadata:
       m_Items: []
   references:

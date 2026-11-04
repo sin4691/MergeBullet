@@ -13,8 +13,12 @@ namespace MergeBullet.Meta
         public int RunsPlayed;
         public float BestSurvivalTime;
         public int BestKills;
-        /// <summary>영구 강화 단계. 인덱스 = PermanentUpgradeType. 예전 저장 파일엔 없을 수 있어 길이를 맞춰 쓴다.</summary>
-        public int[] UpgradeLevels = new int[PermanentUpgrades.Count];
+        /// <summary>저장 형식 버전. 형식이 바뀌면 올리고, 불러올 때 예전 형식을 옮긴다 (SaveSystem.Migrate).</summary>
+        public int Version = SaveSystem.CurrentVersion;
+        /// <summary>영구 강화 단계. 인덱스 = UpgradeType. 길이가 모자라면(강화 종류가 늘었을 때) 늘려 쓴다.</summary>
+        public int[] Upgrades = new int[PermanentUpgrades.Count];
+        /// <summary>버전 1의 영구 강화 단계 (순서: 연사·체력·피해·이동·자석). 불러올 때 Upgrades로 옮기고 비운다.</summary>
+        public int[] UpgradeLevels;
         /// <summary>선택한 캐릭터 (CharacterType).</summary>
         public int SelectedCharacter;
         /// <summary>해금한 캐릭터 비트 (1 &lt;&lt; CharacterType). 기본 캐릭터(Blaster)는 처음부터 해금.</summary>
@@ -36,14 +40,14 @@ namespace MergeBullet.Meta
                 ? (CharacterType)SelectedCharacter
                 : CharacterType.Blaster;
 
-        public int GetUpgradeLevel(PermanentUpgradeType type)
-            => UpgradeLevels != null && (int)type < UpgradeLevels.Length ? UpgradeLevels[(int)type] : 0;
+        public int GetUpgradeLevel(UpgradeType type)
+            => Upgrades != null && (int)type < Upgrades.Length ? Upgrades[(int)type] : 0;
 
-        public void SetUpgradeLevel(PermanentUpgradeType type, int level)
+        public void SetUpgradeLevel(UpgradeType type, int level)
         {
-            if (UpgradeLevels == null || UpgradeLevels.Length < PermanentUpgrades.Count)
-                Array.Resize(ref UpgradeLevels, PermanentUpgrades.Count);
-            UpgradeLevels[(int)type] = level;
+            if (Upgrades == null || Upgrades.Length < PermanentUpgrades.Count)
+                Array.Resize(ref Upgrades, PermanentUpgrades.Count);
+            Upgrades[(int)type] = level;
         }
     }
 
@@ -71,6 +75,34 @@ namespace MergeBullet.Meta
     /// </summary>
     public static class SaveSystem
     {
+        /// <summary>저장 형식 버전. 2: 영구 강화를 판 안 강화와 같은 목록(UpgradeType)으로 통일</summary>
+        public const int CurrentVersion = 2;
+
+        // 버전 1의 영구 강화 배열 순서 → 지금의 UpgradeType
+        static readonly UpgradeType[] Version1UpgradeOrder =
+        {
+            UpgradeType.FireRate, UpgradeType.MaxHealth, UpgradeType.Damage, UpgradeType.MoveSpeed, UpgradeType.Magnet,
+        };
+
+        /// <summary>예전 형식을 지금 형식으로 옮긴다. 옮겼으면 true (바로 다시 저장).</summary>
+        static bool Migrate(SaveData data)
+        {
+            if (data.Version >= CurrentVersion) return false;
+
+            if (data.Version < 2)
+            {
+                // 산 강화 단계를 새 순서의 같은 강화로 옮긴다 (코인을 쓴 만큼 그대로 남게)
+                data.Upgrades = new int[PermanentUpgrades.Count];
+                if (data.UpgradeLevels != null)
+                    for (int i = 0; i < data.UpgradeLevels.Length && i < Version1UpgradeOrder.Length; i++)
+                        data.Upgrades[(int)Version1UpgradeOrder[i]] = data.UpgradeLevels[i];
+                data.UpgradeLevels = null;
+            }
+
+            data.Version = CurrentVersion;
+            return true;
+        }
+
         // 생존 시간 이 초마다 코인 1개 (+ 처치 1마리당 코인 1개)
         public const float SecondsPerCoin = 5f;
         // 보스 1마리당 추가 코인
@@ -110,7 +142,7 @@ namespace MergeBullet.Meta
         }
 
         /// <summary>코인이 충분하고 최대 단계가 아니면 한 단계 사고 저장한다.</summary>
-        public static bool TryBuyUpgrade(PermanentUpgradeType type)
+        public static bool TryBuyUpgrade(UpgradeType type)
         {
             SaveData data = Current;
             int level = data.GetUpgradeLevel(type);
@@ -148,11 +180,13 @@ namespace MergeBullet.Meta
             Save();
         }
 
-        public static void Save()
+        public static void Save() => Write(Current);
+
+        static void Write(SaveData data)
         {
             try
             {
-                File.WriteAllText(FilePath, JsonUtility.ToJson(Current, true));
+                File.WriteAllText(FilePath, JsonUtility.ToJson(data, true));
             }
             catch (IOException e)
             {
@@ -166,7 +200,14 @@ namespace MergeBullet.Meta
             try
             {
                 if (File.Exists(FilePath))
-                    return JsonUtility.FromJson<SaveData>(File.ReadAllText(FilePath)) ?? new SaveData();
+                {
+                    // 버전 필드가 없는 예전 파일은 0으로 남도록, 0으로 둔 객체 위에 덮어쓴다
+                    // (FromJson은 새 객체의 기본값(최신 버전)을 그대로 남겨서 예전 파일을 구분할 수 없다)
+                    var data = new SaveData { Version = 0 };
+                    JsonUtility.FromJsonOverwrite(File.ReadAllText(FilePath), data);
+                    if (Migrate(data)) Write(data);
+                    return data;
+                }
             }
             catch (Exception e) when (e is IOException || e is ArgumentException)
             {

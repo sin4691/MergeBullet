@@ -115,7 +115,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1438920724
-    m_Localized: "Radio de explosi\xF3n +{0}"
+    m_Localized: "Tama\xF1o del efecto de nivel m\xE1x. +{0}"
     m_Metadata:
       m_Items: []
   - m_Id: 1438920725
@@ -436,6 +436,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1178985124081674
     m_Localized: Velocidad de bala -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1207944842850304
+    m_Localized: Balas duraderas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1207944901570560
+    m_Localized: "Duraci\xF3n de bala +{0}"
     m_Metadata:
       m_Items: []
   references:

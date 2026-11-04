@@ -23,7 +23,7 @@ upgrade.Damage.desc,Bullet damage +{0},총알 피해 +{0},弾のダメージ +{0
 upgrade.MoveSpeed.desc,Move speed +{0},이동 속도 +{0},移動速度 +{0},移动速度 +{0},移動速度 +{0},Bewegungstempo +{0},Vitesse de déplacement +{0},Velocidad de movimiento +{0},Velocidade de movimento +{0},Скорость передвижения +{0},Velocità di movimento +{0},Szybkość ruchu +{0}
 upgrade.BulletSpeed.desc,Bullet speed +{0},총알 속도 +{0},弾速 +{0},子弹速度 +{0},子彈速度 +{0},Geschosstempo +{0},Vitesse des balles +{0},Velocidad de bala +{0},Velocidade da bala +{0},Скорость пуль +{0},Velocità proiettili +{0},Prędkość pocisków +{0}
 upgrade.MaxHealth.desc,Max HP +{0} and heal {0},"최대 체력 +{0}, {0} 회복",最大HP +{0}、{0} 回復,最大HP +{0}，回复 {0},最大HP +{0}，回復 {0},"Max. HP +{0}, heilt {0}",PV max +{0} et soigne {0},PV máx. +{0} y cura {0},PV máx. +{0} e cura {0},Макс. ОЗ +{0} и лечение {0},PS max +{0} e cura {0},Maks. PŻ +{0} i leczy {0}
-upgrade.ExplosionRadius.desc,Explosion radius +{0},폭발 범위 +{0},爆発範囲 +{0},爆炸范围 +{0},爆炸範圍 +{0},Explosionsradius +{0},Rayon d'explosion +{0},Radio de explosión +{0},Raio de explosão +{0},Радиус взрыва +{0},Raggio esplosione +{0},Zasięg wybuchu +{0}
+upgrade.ExplosionRadius.desc,Max-level effect size +{0},최대 레벨 효과 범위 +{0},最大レベル効果の範囲 +{0},满级效果范围 +{0},滿級效果範圍 +{0},Max-Stufen-Effekt Größe +{0},Taille de l'effet niveau max +{0},Tamaño del efecto de nivel máx. +{0},Tamanho do efeito de nível máx. +{0},Размер эффекта макс. уровня +{0},Dimensione effetto livello max +{0},Zasięg efektu maks. poziomu +{0}
 upgrade.Magnet.desc,Gem pickup range +{0},젬 줍기 범위 +{0},ジェム回収範囲 +{0},宝石拾取范围 +{0},寶石拾取範圍 +{0},Edelstein-Sammelradius +{0},Portée de collecte +{0},Alcance de recogida +{0},Alcance de coleta +{0},Радиус сбора кристаллов +{0},Raggio di raccolta +{0},Zasięg zbierania +{0}
 lobby.coins,{0} coins,{0} 코인,{0} コイン,{0} 金币,{0} 金幣,{0} Münzen,{0} pièces,{0} monedas,{0} moedas,Монеты: {0},{0} monete,Monety: {0}
 lobby.best,Best  {0}   ·   {1} kills,최고  {0}   ·   처치 {1},ベスト  {0}   ·   撃破 {1},最佳  {0}   ·   击杀 {1},最佳  {0}   ·   擊殺 {1},Rekord  {0}   ·   {1} Abschüsse,Record  {0}   ·   {1} éliminations,Récord  {0}   ·   {1} bajas,Recorde  {0}   ·   {1} abates,Рекорд  {0}   ·   убийств: {1},Record  {0}   ·   {1} uccisioni,Rekord  {0}   ·   zabójstwa: {1}
@@ -36,16 +36,7 @@ lobby.unlock,Unlock {0},해금 {0},解放 {0},解锁 {0},解鎖 {0},Freischalten
 lobby.max,MAX,최대,MAX,已满,已滿,MAX,MAX,MÁX.,MÁX.,МАКС.,MAX,MAKS.
 lobby.level,Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1},Lv {0}/{1}
 lobby.language,English,한국어,日本語,简体中文,繁體中文,Deutsch,Français,Español,Português (Brasil),Русский,Italiano,Polski
-perm.FireRate.name,Rapid Fire,속사,速射,速射,速射,Schnellfeuer,Tir rapide,Fuego rápido,Tiro rápido,Скорострельность,Fuoco rapido,Szybki ogień
-perm.MaxHealth.name,Vitality,활력,活力,活力,活力,Vitalität,Vitalité,Vitalidad,Vitalidade,Живучесть,Vitalità,Witalność
-perm.Damage.name,Power,파워,パワー,力量,力量,Kraft,Puissance,Poder,Poder,Мощь,Potenza,Moc
-perm.MoveSpeed.name,Agility,민첩,敏捷,敏捷,敏捷,Wendigkeit,Agilité,Agilidad,Agilidade,Ловкость,Agilità,Zwinność
-perm.Magnet.name,Magnet,자석,マグネット,磁铁,磁鐵,Magnet,Aimant,Imán,Ímã,Магнит,Magnete,Magnes
-perm.FireRate.desc,Fire interval -{0},발사 간격 -{0},発射間隔 -{0},射击间隔 -{0},射擊間隔 -{0},Feuerintervall -{0},Intervalle de tir -{0},Intervalo de disparo -{0},Intervalo de disparo -{0},Интервал стрельбы -{0},Intervallo di fuoco -{0},Odstęp strzałów -{0}
 perm.MaxHealth.desc,Max HP +{0},최대 체력 +{0},最大HP +{0},最大HP +{0},最大HP +{0},Max. HP +{0},PV max +{0},PV máx. +{0},PV máx. +{0},Макс. ОЗ +{0},PS max +{0},Maks. PŻ +{0}
-perm.Damage.desc,Bullet damage +{0},총알 피해 +{0},弾のダメージ +{0},子弹伤害 +{0},子彈傷害 +{0},Geschossschaden +{0},Dégâts des balles +{0},Daño de bala +{0},Dano da bala +{0},Урон пуль +{0},Danno proiettili +{0},Obrażenia pocisków +{0}
-perm.MoveSpeed.desc,Move speed +{0},이동 속도 +{0},移動速度 +{0},移动速度 +{0},移動速度 +{0},Bewegungstempo +{0},Vitesse de déplacement +{0},Velocidad de movimiento +{0},Velocidade de movimento +{0},Скорость передвижения +{0},Velocità di movimento +{0},Szybkość ruchu +{0}
-perm.Magnet.desc,Gem pickup range +{0},젬 줍기 범위 +{0},ジェム回収範囲 +{0},宝石拾取范围 +{0},寶石拾取範圍 +{0},Edelstein-Sammelradius +{0},Portée de collecte +{0},Alcance de recogida +{0},Alcance de coleta +{0},Радиус сбора кристаллов +{0},Raggio di raccolta +{0},Zasięg zbierania +{0}
 character.Blaster.name,Blaster,블래스터,ブラスター,爆破手,爆破手,Blaster,Blaster,Blaster,Blaster,Бластер,Blaster,Blaster
 character.Storm.name,Storm,스톰,ストーム,风暴,風暴,Sturm,Tempête,Tormenta,Tempestade,Шторм,Tempesta,Burza
 character.Blaster.desc,Level 4 bullets explode,레벨 4 총알이 폭발,レベル4の弾が爆発,4级子弹会爆炸,4級子彈會爆炸,Stufe-4-Geschosse explodieren,Les balles de niveau 4 explosent,Las balas de nivel 4 explotan,Balas de nível 4 explodem,Пули 4-го уровня взрываются,I proiettili di livello 4 esplodono,Pociski 4. poziomu wybuchają
@@ -96,3 +87,5 @@ augment.Endurance.gain,Bullets last {0}× longer before fading,총알이 사라�
 augment.cost.damage,Bullet damage -{0},총알 피해 {0} 감소,弾のダメージ -{0},子弹伤害 -{0},子彈傷害 -{0},Geschossschaden -{0},Dégâts des balles -{0},Daño de bala -{0},Dano da bala -{0},Урон пуль -{0},Danno proiettili -{0},Obrażenia pocisków -{0}
 augment.cost.firerate,Fire rate -{0},발사 속도 {0} 감소,連射速度 -{0},射速 -{0},射速 -{0},Feuerrate -{0},Cadence de tir -{0},Cadencia -{0},Cadência -{0},Скорострельность -{0},Cadenza di fuoco -{0},Szybkostrzelność -{0}
 augment.cost.speed,Bullet speed -{0},총알 속도 {0} 감소,弾速 -{0},子弹速度 -{0},子彈速度 -{0},Geschosstempo -{0},Vitesse des balles -{0},Velocidad de bala -{0},Velocidade da bala -{0},Скорость пуль -{0},Velocità proiettili -{0},Prędkość pocisków -{0}
+upgrade.Duration.name,Lasting Rounds,지속탄,持続弾,持久弹,持久彈,Langlebige Munition,Balles durables,Balas duraderas,Balas duradouras,Долгие пули,Proiettili duraturi,Trwałe pociski
+upgrade.Duration.desc,Bullet lifetime +{0},총알 지속 시간 +{0},弾の持続時間 +{0},子弹持续时间 +{0},子彈持續時間 +{0},Geschossdauer +{0},Durée des balles +{0},Duración de bala +{0},Duração da bala +{0},Время жизни пуль +{0},Durata proiettili +{0},Czas życia pocisków +{0}

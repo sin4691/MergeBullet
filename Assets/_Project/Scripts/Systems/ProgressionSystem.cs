@@ -16,6 +16,7 @@ namespace MergeBullet.Systems
         public const float MaxHealthBonus = 20f;           // 최대 체력 +20, 같은 양 회복
         public const float ExplosionRadiusBonus = 0.20f;   // 원래 폭발 반경의 +20%
         public const float MagnetRadiusBonus = 0.30f;      // 원래 젬 자석 범위의 +30%
+        public const float DurationBonus = 0.20f;          // 원래 총알 지속 시간의 +20%
     }
 
     /// <summary>
@@ -183,6 +184,7 @@ namespace MergeBullet.Systems
                 UpgradeType.Magnet,
             };
             if (hasExplosion) pool.Add(UpgradeType.ExplosionRadius);
+            pool.Add(UpgradeType.Duration);
 
             for (int i = 0; i < 3; i++)
             {
@@ -210,17 +212,18 @@ namespace MergeBullet.Systems
             stats.MoveSpeed = SystemAPI.GetSingleton<Player>().MoveSpeed * bonus.MoveSpeedMultiplier;
             stats.MaxHealth = SystemAPI.GetSingleton<PlayerHealth>().Max + bonus.BonusMaxHealth;
             stats.FireInterval = weapon.Interval * bonus.FireIntervalMultiplier;
-            stats.BulletSpeed = weapon.BulletSpeed;
+            stats.BulletSpeed = weapon.BulletSpeed * bonus.BulletSpeedMultiplier;
             stats.BulletDamage = SystemAPI.GetSingleton<BulletLevelSettings>().BaseDamage * bonus.DamageMultiplier;
-            stats.ExplosionRadius = SystemAPI.TryGetSingleton(out MaxLevelEffect effect) ? effect.Radius : 0f;
+            bool hasEffect = SystemAPI.TryGetSingleton(out MaxLevelEffect effect);
+            stats.ExplosionRadius = hasEffect ? effect.Radius * bonus.EffectRadiusMultiplier : 0f;
             stats.MagnetRadius = SystemAPI.TryGetSingleton(out GemCollector collector)
                 ? collector.MagnetRadius * bonus.MagnetRadiusMultiplier
                 : 0f;
             stats.MaxLevel = SystemAPI.GetSingleton<BulletLevelSettings>().MaxLevel;
             stats.EffectDamage = effect.Damage;
-            stats.ChainRange = effect.ChainRange;
+            stats.ChainRange = effect.ChainRange * bonus.EffectRadiusMultiplier;
             stats.ChainDamage = effect.ChainDamage;
-            stats.IdleLifetime = SystemAPI.TryGetSingleton(out BulletIdleSettings idle) ? idle.Lifetime : 0f;
+            stats.IdleLifetime = SystemAPI.TryGetSingleton(out BulletIdleSettings idle) ? idle.Lifetime * bonus.DurationMultiplier : 0f;
             stats.Captured = true;
 
             RestoreBaseStats(ref state, stats);
@@ -345,14 +348,23 @@ namespace MergeBullet.Systems
                     health.ValueRW.Value = math.min(health.ValueRO.Value + UpgradeTuning.MaxHealthBonus, health.ValueRO.Max);
                     break;
                 case UpgradeType.ExplosionRadius:
+                    // 폭발은 반경, 번개는 튀는 거리 (캐릭터와 상관없이 같은 강화가 쓸모 있게)
                     if (SystemAPI.HasSingleton<MaxLevelEffect>())
-                        SystemAPI.GetSingletonRW<MaxLevelEffect>().ValueRW.Radius +=
-                            stats.ExplosionRadius * UpgradeTuning.ExplosionRadiusBonus;
+                    {
+                        RefRW<MaxLevelEffect> effect = SystemAPI.GetSingletonRW<MaxLevelEffect>();
+                        effect.ValueRW.Radius += stats.ExplosionRadius * UpgradeTuning.ExplosionRadiusBonus;
+                        effect.ValueRW.ChainRange += stats.ChainRange * UpgradeTuning.ExplosionRadiusBonus;
+                    }
                     break;
                 case UpgradeType.Magnet:
                     if (SystemAPI.HasSingleton<GemCollector>())
                         SystemAPI.GetSingletonRW<GemCollector>().ValueRW.MagnetRadius +=
                             stats.MagnetRadius * UpgradeTuning.MagnetRadiusBonus;
+                    break;
+                case UpgradeType.Duration:
+                    if (SystemAPI.HasSingleton<BulletIdleSettings>())
+                        SystemAPI.GetSingletonRW<BulletIdleSettings>().ValueRW.Lifetime +=
+                            stats.IdleLifetime * UpgradeTuning.DurationBonus;
                     break;
             }
         }
