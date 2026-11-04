@@ -19,7 +19,7 @@ namespace MergeBullet.Systems
         public void OnCreate(ref SystemState state)
         {
             _leftoverQuery = new EntityQueryBuilder(Unity.Collections.Allocator.Temp)
-                .WithAny<Bullet, Enemy, XpGem, Explosion>()
+                .WithAny<Bullet, Enemy, XpGem, Explosion, Shockwave>()
                 .Build(ref state);
         }
 

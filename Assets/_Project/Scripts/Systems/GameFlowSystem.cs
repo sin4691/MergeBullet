@@ -19,6 +19,7 @@ namespace MergeBullet.Systems
         EntityQuery _enemyQuery;
         EntityQuery _explosionQuery;
         EntityQuery _gemQuery;
+        EntityQuery _shockwaveQuery;
 
         public void OnCreate(ref SystemState state)
         {
@@ -26,6 +27,7 @@ namespace MergeBullet.Systems
             _enemyQuery = SystemAPI.QueryBuilder().WithAll<Enemy>().Build();
             _explosionQuery = SystemAPI.QueryBuilder().WithAll<Explosion>().Build();
             _gemQuery = SystemAPI.QueryBuilder().WithAll<XpGem>().Build();
+            _shockwaveQuery = SystemAPI.QueryBuilder().WithAll<Shockwave>().Build();
             state.RequireForUpdate<GameState>();
             state.RequireForUpdate<GameStats>();
 
@@ -70,6 +72,7 @@ namespace MergeBullet.Systems
             state.EntityManager.DestroyEntity(_enemyQuery);
             state.EntityManager.DestroyEntity(_explosionQuery);
             state.EntityManager.DestroyEntity(_gemQuery);
+            state.EntityManager.DestroyEntity(_shockwaveQuery);
 
             foreach (var (health, transform, position, facing) in SystemAPI
                          .Query<RefRW<PlayerHealth>, RefRW<LocalTransform>, RefRW<PlayerPosition>, RefRW<FacingDirection>>())
