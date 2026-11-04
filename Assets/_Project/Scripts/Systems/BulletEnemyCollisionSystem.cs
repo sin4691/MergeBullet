@@ -47,6 +47,7 @@ namespace MergeBullet.Systems
             var positions = new NativeArray<float2>(count, Allocator.TempJob);
             var radii = new NativeArray<float>(count, Allocator.TempJob);
             var axes = new NativeArray<float2>(count, Allocator.TempJob);
+            var sides = new NativeArray<int>(count, Allocator.TempJob);
             var grid = new NativeParallelMultiHashMap<int, int>(count, Allocator.TempJob);
             var hits = new NativeQueue<EnemyHit>(Allocator.TempJob);
 
@@ -57,6 +58,7 @@ namespace MergeBullet.Systems
                 Positions = positions,
                 Radii = radii,
                 Axes = axes,
+                Sides = sides,
                 Grid = grid.AsParallelWriter(),
             }.ScheduleParallel(_enemyQuery, state.Dependency);
 
@@ -67,6 +69,7 @@ namespace MergeBullet.Systems
                 EnemyPositions = positions,
                 EnemyRadii = radii,
                 EnemyAxes = axes,
+                EnemySides = sides,
                 Grid = grid,
                 Hits = hits.AsParallelWriter(),
             }.ScheduleParallel(collect);
@@ -83,6 +86,7 @@ namespace MergeBullet.Systems
             positions.Dispose(damage);
             radii.Dispose(damage);
             axes.Dispose(damage);
+            sides.Dispose(damage);
             grid.Dispose(damage);
             hits.Dispose(damage);
 
@@ -107,6 +111,7 @@ namespace MergeBullet.Systems
         [NativeDisableParallelForRestriction] public NativeArray<float> Radii;
         // 적이 바라보는 방향(로컬 x축)의 단위 벡터. 회전한 상자 판정에 쓴다
         [NativeDisableParallelForRestriction] public NativeArray<float2> Axes;
+        [NativeDisableParallelForRestriction] public NativeArray<int> Sides;
         public NativeParallelMultiHashMap<int, int>.ParallelWriter Grid;
 
         void Execute(Entity entity, [EntityIndexInQuery] int index, in LocalTransform transform, in Enemy enemy)
@@ -116,6 +121,7 @@ namespace MergeBullet.Systems
             Positions[index] = position;
             Radii[index] = enemy.Radius;
             Axes[index] = math.normalizesafe(math.mul(transform.Rotation, new float3(1f, 0f, 0f)).xy, new float2(1f, 0f));
+            Sides[index] = enemy.Sides >= 3 ? enemy.Sides : 4;
             Grid.Add(SpatialHash.KeyOf(SpatialHash.CellOf(position, CellSize)), index);
         }
     }
@@ -128,6 +134,7 @@ namespace MergeBullet.Systems
         [ReadOnly] public NativeArray<float2> EnemyPositions;
         [ReadOnly] public NativeArray<float> EnemyRadii;
         [ReadOnly] public NativeArray<float2> EnemyAxes;
+        [ReadOnly] public NativeArray<int> EnemySides;
         [ReadOnly] public NativeParallelMultiHashMap<int, int> Grid;
         public NativeQueue<EnemyHit>.ParallelWriter Hits;
 
@@ -149,8 +156,9 @@ namespace MergeBullet.Systems
                 do
                 {
                     float2 relative = ToLocal(position - EnemyPositions[j], EnemyAxes[j]);
-                    float2 closest = math.clamp(relative, -EnemyRadii[j], EnemyRadii[j]);
-                    float distSq = math.distancesq(relative, closest);
+                    float2 closest = ClosestOnPolygon(relative, EnemyRadii[j], EnemySides[j], out _, out bool inside);
+                    // 안에 들어와 있으면 가장 깊은 겹침(0)으로 친다
+                    float distSq = inside ? 0f : math.distancesq(relative, closest);
                     if (distSq < radiusSq && distSq < bestDistSq)
                     {
                         bestDistSq = distSq;
@@ -160,30 +168,25 @@ namespace MergeBullet.Systems
             }
             if (hit < 0) return;
 
-            // 적이 회전해 있으므로 총알 위치를 적 기준(로컬) 좌표로 돌려서 축 정렬 상자처럼 계산하고,
-            // 구한 법선·위치를 다시 월드 좌표로 돌린다
+            // 적이 회전해 있으므로 총알 위치를 적 기준(로컬) 좌표로 돌려서 계산하고, 구한 법선·위치를 다시 월드 좌표로 돌린다
             float2 v = velocity.Value;
             float2 center = EnemyPositions[hit];
-            float half = EnemyRadii[hit];
+            float apothem = EnemyRadii[hit];
             float2 axis = EnemyAxes[hit];
             float2 rel = ToLocal(position - center, axis);
-            float2 nearest = math.clamp(rel, -half, half);
+            float2 nearest = ClosestOnPolygon(rel, apothem, EnemySides[hit], out float2 faceNormal, out bool isInside);
             float2 normal;
-            if (math.distancesq(rel, nearest) > 1e-8f)
+            if (!isInside && math.distancesq(rel, nearest) > 1e-8f)
             {
-                // 면에 닿으면 법선이 축 방향(벽처럼 반듯한 반사), 모서리에 닿으면 모서리 → 총알 방향
+                // 면에 닿으면 법선이 그 면의 방향(벽처럼 반듯한 반사), 꼭짓점에 닿으면 꼭짓점 → 총알 방향
                 normal = math.normalize(rel - nearest);
                 rel = nearest + normal * bullet.Radius;
             }
             else
             {
-                // 총알 중심이 상자 안까지 들어왔으면 덜 파고든 축 쪽 면으로 꺼낸다
-                float2 depth = half - math.abs(rel);
-                normal = depth.x < depth.y
-                    ? new float2(rel.x >= 0f ? 1f : -1f, 0f)
-                    : new float2(0f, rel.y >= 0f ? 1f : -1f);
-                if (depth.x < depth.y) rel.x = normal.x * (half + bullet.Radius);
-                else rel.y = normal.y * (half + bullet.Radius);
+                // 총알 중심이 다각형 안까지 들어왔으면 가장 가까운 면 밖으로 꺼낸다
+                normal = faceNormal;
+                rel += normal * (apothem + bullet.Radius - math.dot(rel, normal));
             }
             normal = ToWorld(normal, axis);
             position = center + ToWorld(rel, axis);
@@ -199,6 +202,26 @@ namespace MergeBullet.Systems
             // 피해는 이번 튕김 전 횟수로 계산하고 횟수를 올린다 (탄성 증강이면 다음 타격부터 세짐)
             Hits.Enqueue(new EnemyHit { EnemyIndex = hit, Damage = BulletLevelUtility.DamageOf(bullet, Levels) });
             bullet.Bounces++;
+        }
+
+        /// <summary>
+        /// 정다각형(중심 원점, 변까지 거리 apothem, 변 sides개, 정면 배치는 EnemyShape.FacingOffset) 둘레에서 p와 가장 가까운 점.
+        /// p의 각도에 가장 가까운 변이 p와 가장 가까운 변이라, 그 변 하나만 보면 된다 (정다각형이라 가능).
+        /// 사각형이면 예전 상자 판정과 같다.
+        /// </summary>
+        static float2 ClosestOnPolygon(float2 p, float apothem, int sides, out float2 faceNormal, out bool inside)
+        {
+            float step = 2f * math.PI / sides;
+            float offset = EnemyShape.FacingOffset(sides);
+            float faceAngle = math.round((math.atan2(p.y, p.x) - offset) / step) * step + offset;
+            math.sincos(faceAngle, out float sin, out float cos);
+            faceNormal = new float2(cos, sin);
+            var tangent = new float2(-sin, cos);
+
+            float halfEdge = apothem * math.tan(math.PI / sides);
+            float along = math.clamp(math.dot(p, tangent), -halfEdge, halfEdge);
+            inside = math.dot(p, faceNormal) <= apothem;
+            return faceNormal * apothem + tangent * along;
         }
 
         // axis = 적의 로컬 x축(바라보는 방향). 로컬 y축은 그 왼쪽 수직

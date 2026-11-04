@@ -2,11 +2,16 @@ using Unity.Entities;
 
 namespace MergeBullet.Components
 {
-    /// <summary>적 태그 겸 이동 속도·몸통 반지름·접촉 피해.</summary>
+    /// <summary>
+    /// 적 태그 겸 이동 속도·몸통 크기·접촉 피해. 몸은 변이 Sides개인 정다각형이고, Radius는 중심에서 각 변까지의 거리
+    /// (내접원 반지름)라 변의 수와 상관없이 "변까지 거리"가 같다. 변이 많을수록 센 적 (삼각형 → 사각형 → 오각형 → 육각형).
+    /// </summary>
     public struct Enemy : IComponentData
     {
         public float MoveSpeed;
         public float Radius;
+        /// <summary>정다각형 변의 수 (3~8). 총알은 이 다각형의 면에서 튕긴다.</summary>
+        public int Sides;
         /// <summary>플레이어에 닿았을 때 한 번에 주는 피해. 이후 플레이어 무적 시간 동안은 다시 맞지 않는다.</summary>
         public float ContactDamage;
         /// <summary>
@@ -47,6 +52,13 @@ namespace MergeBullet.Components
         public float SafeDistance;
         /// <summary>스폰 위치용 난수 상태. 컴포넌트에 두어야 프레임마다 이어서 뽑힌다.</summary>
         public Unity.Mathematics.Random Random;
+
+        // 엘리트: EliteInterval초마다 스폰 테이블의 적 하나를 크고 단단하게 (최대 수와 상관없이). 0이면 없음
+        public float EliteInterval;
+        public float EliteCooldown;
+        public float EliteSize;
+        public float EliteHealth;
+        public int EliteXp;
     }
 
     /// <summary>

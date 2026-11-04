@@ -36,7 +36,7 @@ namespace MergeBullet.Systems
         /// 적 하나의 생성을 ECB에 기록한다. stats는 배율까지 곱한 최종 능력치이고, 체력은 MaxHealth로 채운다.
         /// 생성은 다음 프레임 시작(BeginSimulation) ECB로 넘겨야 원점에 한 프레임 그려지지 않는다.
         /// </summary>
-        public static void RecordSpawn(EntityCommandBuffer ecb, Entity prefab, Enemy stats, float2 position)
+        public static Entity RecordSpawn(EntityCommandBuffer ecb, Entity prefab, Enemy stats, float2 position)
         {
             Entity enemy = ecb.Instantiate(prefab);
 
@@ -49,6 +49,7 @@ namespace MergeBullet.Systems
 
             ecb.SetComponent(enemy, stats);
             ecb.SetComponent(enemy, new EnemyHealth { Value = stats.MaxHealth });
+            return enemy;
         }
 
         // 테두리(ringCenter ± ringHalf)에서 임의로 뽑되, 아레나 안이고 플레이어와 safeDistance 이상 떨어진 첫 자리를 쓴다.

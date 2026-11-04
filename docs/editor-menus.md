@@ -12,8 +12,7 @@
 |---|---|---|
 | Arena SubScene | 아레나 SubScene(ArenaAuthoring + 벽), 총알 프리팹·머티리얼 | Game |
 | Player | 플레이어 프리팹을 SubScene에 배치 | Game |
-| Enemy | 기본 적 프리팹을 Arena에 연결 | Game |
-| Enemy Variants | Runner·Tank 적 프리팹과 등장 가중치 | Game |
+| Enemy | 기본 적(사각형) 프리팹을 Arena에 연결 | Game |
 | XP Gem | 경험치 젬 프리팹을 적에 연결 | Game |
 | Boss | 보스 프리팹과 보스 스포너 연결 | Game |
 | Max Level Effect | 레벨 4 폭발 프리팹 | Game |
@@ -28,6 +27,7 @@
 | 메뉴 | 언제 | 하는 일 |
 |---|---|---|
 | Arena Walls And Floor | Arena의 Arena Size를 바꾼 뒤 (Game 씬에서) | 벽·바닥 격자를 새 크기로 다시 만들고 카메라 따라가기 연결 |
+| Enemy Tiers | 적 등급 수치(`ArenaSetupMenu.Tiers`)를 바꾼 뒤 | 삼각형·사각형·오각형·육각형 적 프리팹과 정다각형 메시를 만들고 스폰 테이블 교체, 보스는 8각형으로 |
 | Localization From CSV | `Localization/ui_strings.csv`를 고친 뒤 | 언어·문자열 표·언어별 폰트 표를 CSV에 맞추고 빠진 번역 검사 |
 
 ## 정리한 것
