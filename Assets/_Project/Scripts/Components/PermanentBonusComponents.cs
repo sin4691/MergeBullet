@@ -12,14 +12,20 @@ namespace MergeBullet.Components
         public float BonusMaxHealth;
         public float DamageMultiplier;
         public float MoveSpeedMultiplier;
+        public float BulletSpeedMultiplier;
+        public float EffectRadiusMultiplier;
         public float MagnetRadiusMultiplier;
+        public float DurationMultiplier;
 
         public static PermanentBonus None => new PermanentBonus
         {
             FireIntervalMultiplier = 1f,
             DamageMultiplier = 1f,
             MoveSpeedMultiplier = 1f,
+            BulletSpeedMultiplier = 1f,
+            EffectRadiusMultiplier = 1f,
             MagnetRadiusMultiplier = 1f,
+            DurationMultiplier = 1f,
         };
     }
 }

@@ -2,7 +2,11 @@ using Unity.Entities;
 
 namespace MergeBullet.Components
 {
-    /// <summary>레벨업 때 고를 수 있는 업그레이드 종류. 화면에 보일 이름·설명은 UI가 정한다.</summary>
+    /// <summary>
+    /// 강화 종류. 판 안 레벨업 강화와 로비 상점의 영구 강화가 같은 목록을 쓴다 (한 단계 효과만 다름).
+    /// 영구 강화 저장 데이터의 배열 인덱스이기도 해서 순서를 바꾸지 않고 끝에만 추가한다.
+    /// 화면에 보일 이름·설명은 UI가 정한다.
+    /// </summary>
     public enum UpgradeType : byte
     {
         FireRate,
@@ -10,8 +14,11 @@ namespace MergeBullet.Components
         MoveSpeed,
         BulletSpeed,
         MaxHealth,
+        /// <summary>최대 레벨 효과의 범위 (폭발 반경, 번개가 튀는 거리).</summary>
         ExplosionRadius,
         Magnet,
+        /// <summary>총알이 레벨 변화 없이 버티는 시간 (방치 소멸까지).</summary>
+        Duration,
     }
 
     /// <summary>

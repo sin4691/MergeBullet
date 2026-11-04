@@ -115,7 +115,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1438920724
-    m_Localized: Raggio esplosione +{0}
+    m_Localized: Dimensione effetto livello max +{0}
     m_Metadata:
       m_Items: []
   - m_Id: 1438920725
@@ -436,6 +436,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1178985124081674
     m_Localized: "Velocit\xE0 proiettili -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1207944842850304
+    m_Localized: Proiettili duraturi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1207944901570560
+    m_Localized: Durata proiettili +{0}
     m_Metadata:
       m_Items: []
   references:

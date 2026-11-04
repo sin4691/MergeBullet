@@ -435,6 +435,14 @@ MonoBehaviour:
     m_Key: augment.cost.speed
     m_Metadata:
       m_Items: []
+  - m_Id: 1207944842850304
+    m_Key: upgrade.Duration.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1207944901570560
+    m_Key: upgrade.Duration.desc
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

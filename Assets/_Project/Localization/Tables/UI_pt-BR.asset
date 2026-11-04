@@ -115,7 +115,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1438920724
-    m_Localized: "Raio de explos\xE3o +{0}"
+    m_Localized: "Tamanho do efeito de n\xEDvel m\xE1x. +{0}"
     m_Metadata:
       m_Items: []
   - m_Id: 1438920725
@@ -436,6 +436,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1178985124081674
     m_Localized: Velocidade da bala -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1207944842850304
+    m_Localized: Balas duradouras
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1207944901570560
+    m_Localized: "Dura\xE7\xE3o da bala +{0}"
     m_Metadata:
       m_Items: []
   references:

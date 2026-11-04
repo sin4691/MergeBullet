@@ -377,7 +377,8 @@ namespace MergeBullet.UI
                 UpgradeType.BulletSpeed => L10n.Percent(UpgradeTuning.BulletSpeedBonus),
                 UpgradeType.MaxHealth => UpgradeTuning.MaxHealthBonus.ToString("0"),
                 UpgradeType.ExplosionRadius => L10n.Percent(UpgradeTuning.ExplosionRadiusBonus),
-                _ => L10n.Percent(UpgradeTuning.MagnetRadiusBonus),
+                UpgradeType.Magnet => L10n.Percent(UpgradeTuning.MagnetRadiusBonus),
+                _ => L10n.Percent(UpgradeTuning.DurationBonus),
             };
             return (L10n.Get($"upgrade.{type}.name"), L10n.Get($"upgrade.{type}.desc", amount));
         }

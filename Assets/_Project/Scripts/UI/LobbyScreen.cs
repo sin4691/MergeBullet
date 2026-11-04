@@ -1,4 +1,5 @@
 using System;
+using MergeBullet.Components;
 using MergeBullet.Meta;
 using MergeBullet.Systems;
 using UnityEngine;
@@ -299,7 +300,7 @@ namespace MergeBullet.UI
             list.Clear();
             for (int i = 0; i < PermanentUpgrades.Count; i++)
             {
-                var type = (PermanentUpgradeType)i;
+                var type = (UpgradeType)i;
                 var row = new VisualElement();
                 row.AddToClassList("shop-row");
 
@@ -319,7 +320,7 @@ namespace MergeBullet.UI
             }
         }
 
-        void Buy(PermanentUpgradeType type)
+        void Buy(UpgradeType type)
         {
             if (SaveSystem.TryBuyUpgrade(type)) Refresh();
         }
@@ -369,12 +370,13 @@ namespace MergeBullet.UI
 
             for (int i = 0; i < _rows.Length; i++)
             {
-                var type = (PermanentUpgradeType)i;
+                var type = (UpgradeType)i;
                 int level = save.GetUpgradeLevel(type);
                 int maxLevel = PermanentUpgrades.Get(type).MaxLevel;
                 ShopRow row = _rows[i];
 
-                row.Name.text = L10n.Get($"perm.{type}.name");
+                // 이름은 판 안 강화와 같은 문구 (같은 강화라는 걸 한눈에)
+                row.Name.text = L10n.Get($"upgrade.{type}.name");
                 string progress = L10n.Get("lobby.level", level, maxLevel);
                 row.Effect.text = level == 0 ? progress : $"{progress}   {DescribePermanent(type, level)}";
 
@@ -394,12 +396,13 @@ namespace MergeBullet.UI
         // 목록 순서가 언어 순서와 같아서 고른 위치로 언어를 바꾼다 (이름 문자열로 찾지 않음)
         void OnLanguagePicked(ChangeEvent<string> evt) => L10n.SetLanguage(_languageDropdown.index);
 
-        // 체력은 수치(+4), 나머지는 비율(+15%)로 보여 준다
-        static string DescribePermanent(PermanentUpgradeType type, int level)
+        // 체력은 수치(+40), 나머지는 비율(+15%)로 보여 준다. 설명도 판 안 강화와 같은 문구를 쓰되,
+        // 체력만은 판 안 강화의 "회복" 문구가 맞지 않아 상점 전용 문구를 쓴다
+        static string DescribePermanent(UpgradeType type, int level)
         {
             float total = PermanentUpgrades.TotalEffect(type, level);
-            string amount = type == PermanentUpgradeType.MaxHealth ? total.ToString("0") : L10n.Percent(total);
-            return L10n.Get($"perm.{type}.desc", amount);
+            string amount = type == UpgradeType.MaxHealth ? total.ToString("0") : L10n.Percent(total);
+            return L10n.Get(type == UpgradeType.MaxHealth ? "perm.MaxHealth.desc" : $"upgrade.{type}.desc", amount);
         }
 
         static void StartGame() => SceneManager.LoadScene(SceneNames.Game);
