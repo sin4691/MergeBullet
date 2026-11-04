@@ -41,7 +41,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9211892432071304558}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: b9900ff33d0b53044b2d011ad1a64e08, type: 2}
 --- !u!23 &6104293562775628392
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -76,7 +76,7 @@ MeshRenderer:
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_ReceiveGI: 1
-  m_PreserveUVs: 1
+  m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_StitchLightmapSeams: 1
@@ -105,8 +105,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Authoring.EnemyAuthoring
   MoveSpeed: 2
   Radius: 0.35
+  Sides: 4
   MaxHealth: 3
   ContactDamage: 10
   HitFlashDuration: 0.12
   XpGemPrefab: {fileID: 1943350708540551345, guid: c2887015638d4024db05a133ac292085, type: 3}
-  XpValue: 1
+  XpValue: 2

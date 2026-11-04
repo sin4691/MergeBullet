@@ -75,6 +75,11 @@ namespace MergeBullet.Authoring
         [Min(0.05f)] public float EnemySpawnInterval = 1f;
         [Min(0)] public int MaxEnemies = 30;
         [Min(0f)] public float EnemySafeSpawnDistance = 4f;
+        // 엘리트(중간 보스): 이 간격마다 일반 적 하나를 크고 단단하게. 잡으면 경험치를 많이 준다
+        [Min(0f)] public float EliteInterval = 45f;
+        [Min(1f)] public float EliteSize = 1.7f;
+        [Min(1f)] public float EliteHealth = 6f;
+        [Min(1)] public int EliteXp = 5;
 
         [Header("Difficulty (위 스폰 값에서 시작해 RampSeconds 동안 아래 값까지 오른다)")]
         [Min(1f)] public float DifficultyRampSeconds = 300f;
@@ -160,6 +165,8 @@ namespace MergeBullet.Authoring
                         if (variant.Prefab == null) continue;
                         maxRadius = math.max(maxRadius, AddSpawnEntry(spawnTable, variant.Prefab, variant.StartWeight, variant.EndWeight));
                     }
+                    // 엘리트는 같은 적을 키워서 나오므로 공간 해시 기준 반지름에도 그 배율을 넣는다
+                    maxRadius *= math.max(authoring.EliteSize, 1f);
 
                     // 보스도 같은 공간 해시로 충돌하므로 가장 큰 반지름 계산에 넣어야 한다 (보스가 가장 크다)
                     if (authoring.BossPrefab != null)
@@ -178,6 +185,11 @@ namespace MergeBullet.Authoring
                     AddComponent(entity, new EnemySpawner
                     {
                         MaxEnemyRadius = maxRadius,
+                        EliteInterval = authoring.EliteInterval,
+                        EliteCooldown = authoring.EliteInterval,
+                        EliteSize = authoring.EliteSize,
+                        EliteHealth = authoring.EliteHealth,
+                        EliteXp = authoring.EliteXp,
                         Interval = authoring.EnemySpawnInterval,
                         MaxAlive = authoring.MaxEnemies,
                         Cooldown = authoring.EnemySpawnInterval,

@@ -1,6 +1,7 @@
 using MergeBullet.Authoring;
 using MergeBullet.Components;
 using MergeBullet.Presentation;
+using MergeBullet.Systems;
 using MergeBullet.UI;
 using Unity.Scenes;
 using UnityEditor;
@@ -21,6 +22,7 @@ namespace MergeBullet.Editor
         const string Root = "Assets/_Project";
         const string MaterialsDir = Root + "/Materials";
         const string PrefabsDir = Root + "/Prefabs";
+        const string MeshesDir = Root + "/Meshes";
         const string ScenesDir = Root + "/Scenes";
         const string SubScenePath = ScenesDir + "/ArenaSubScene.unity";
         const string UiDir = Root + "/UI";
@@ -155,12 +157,9 @@ namespace MergeBullet.Editor
             EnsureFolder(MaterialsDir);
             EnsureFolder(PrefabsDir);
 
-            // 적 프리팹: 정육면체 + EnemyAuthoring (스폰 시 45도 돌려 마름모로 보인다)
-            Material material = CreateMaterial("Enemy", new Color(0.85f, 0.2f, 0.35f));
-            GameObject go = CreatePrimitiveWithoutCollider(PrimitiveType.Cube, "Enemy", material);
-            go.AddComponent<EnemyAuthoring>();
-            GameObject prefab = PrefabUtility.SaveAsPrefabAsset(go, PrefabsDir + "/Enemy.prefab");
-            Object.DestroyImmediate(go);
+            // 기본 적 = 사각형 등급 (나머지 등급은 Update/Enemy Tiers가 만든다)
+            var gem = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabsDir + "/XpGem.prefab");
+            GameObject prefab = CreateTierPrefab(Tiers[BasicTierIndex], gem);
 
             EditArenaSubScene((subScene, arena) =>
             {
@@ -171,10 +170,24 @@ namespace MergeBullet.Editor
             Debug.Log("Enemy 생성 완료. Play를 눌러 확인하세요.");
         }
 
-        // 러너(작고 빠르고 약함)와 탱커(크고 느리고 단단함)를 만들어 스폰 테이블에 넣는다.
-        // 둘 다 시작 가중치 0이라 처음엔 안 나오고, 난이도가 오를수록 섞여 나온다. 색은 모두 빨간 계열(= 적)
-        [MenuItem("MergeBullet/Setup/Enemy Variants", priority = 4)]
-        static void CreateEnemyVariants()
+        // 적 등급: 변이 많을수록 세다 (삼각형 → 사각형 → 오각형 → 육각형). 색은 모두 빨간 계열(= 적)이고 셀수록 진하다.
+        // 이름, 변, 색, 이동 속도, 크기(변까지 거리), 체력, 접촉 피해, 경험치, 등장 가중치(처음 → 후반)
+        static readonly (string Name, int Sides, Color Color, float Speed, float Radius, float Health, float Damage, int Xp,
+            float StartWeight, float EndWeight)[] Tiers =
+        {
+            ("Triangle", 3, new Color(1f, 0.5f, 0.55f), 3.4f, 0.22f, 1f, 10f, 1, 1f, 0.6f),   // 작고 빠르고 약한 떼
+            ("Enemy", 4, new Color(0.9f, 0.22f, 0.35f), 2f, 0.35f, 3f, 10f, 2, 1f, 1f),       // 기본 적 (Arena의 EnemyPrefab, 가중치 1 고정)
+            ("Pentagon", 5, new Color(0.72f, 0.12f, 0.28f), 1.6f, 0.45f, 8f, 15f, 4, 0f, 0.6f), // 중간
+            ("Hexagon", 6, new Color(0.5f, 0.06f, 0.2f), 1.1f, 0.6f, 20f, 20f, 8, 0f, 0.4f),   // 크고 느리고 단단함
+        };
+        const int BasicTierIndex = 1;
+        const int BossSides = 8;
+        // 등급 도입 전의 적 프리팹. 스폰 테이블에서 빼고 지운다
+        static readonly string[] LegacyEnemyPrefabs = { "Runner", "Tank" };
+
+        // 등급별 적 프리팹을 (다시) 만들고 스폰 테이블을 바꾼다. 보스도 정다각형(8각)으로 맞춘다
+        [MenuItem("MergeBullet/Update/Enemy Tiers", priority = 102)]
+        static void BuildEnemyTiers()
         {
             if (AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath) == null)
             {
@@ -186,29 +199,65 @@ namespace MergeBullet.Editor
             EnsureFolder(PrefabsDir);
             var gem = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabsDir + "/XpGem.prefab");
 
-            GameObject runner = CreateEnemyVariantPrefab("Runner", new Color(1f, 0.4f, 0.45f), gem,
-                moveSpeed: 3.5f, radius: 0.25f, maxHealth: 1f, contactDamage: 10f, xp: 1);
-            GameObject tank = CreateEnemyVariantPrefab("Tank", new Color(0.55f, 0.08f, 0.15f), gem,
-                moveSpeed: 1.2f, radius: 0.6f, maxHealth: 12f, contactDamage: 20f, xp: 4);
+            var prefabs = new GameObject[Tiers.Length];
+            for (int i = 0; i < Tiers.Length; i++) prefabs[i] = CreateTierPrefab(Tiers[i], gem);
+            UpdateBossShape();
 
             EditArenaSubScene((subScene, arena) =>
             {
-                Undo.RecordObject(arena, "Add Enemy Variants");
-                SetVariant(arena, runner, startWeight: 0f, endWeight: 1f);
-                SetVariant(arena, tank, startWeight: 0f, endWeight: 0.4f);
+                Undo.RecordObject(arena, "Enemy Tiers");
+                arena.EnemyPrefab = prefabs[BasicTierIndex];
+                // 예전 Runner·Tank를 빼고 새 등급만 넣는다
+                arena.EnemyVariants.Clear();
+                for (int i = 0; i < Tiers.Length; i++)
+                    if (i != BasicTierIndex) SetVariant(arena, prefabs[i], Tiers[i].StartWeight, Tiers[i].EndWeight);
                 EditorUtility.SetDirty(arena);
             });
-            Debug.Log("Enemy Variants(Runner, Tank) 생성 완료. Play를 눌러 확인하세요.");
+
+            // 스폰 테이블에서 뺀 뒤에 지워야 참조가 깨지지 않는다
+            foreach (string legacy in LegacyEnemyPrefabs)
+            {
+                string path = $"{PrefabsDir}/{legacy}.prefab";
+                if (AssetDatabase.LoadAssetAtPath<GameObject>(path) != null) AssetDatabase.DeleteAsset(path);
+            }
+            Debug.Log("적 등급(삼각형·사각형·오각형·육각형) 생성 완료. Play를 눌러 확인하세요.");
+        }
+
+        static GameObject CreateTierPrefab(
+            (string Name, int Sides, Color Color, float Speed, float Radius, float Health, float Damage, int Xp,
+                float StartWeight, float EndWeight) tier, GameObject gem)
+            => CreateEnemyVariantPrefab(tier.Name, tier.Color, gem, tier.Speed, tier.Radius, tier.Health, tier.Damage, tier.Xp, tier.Sides);
+
+        // 이미 있는 보스 프리팹의 모양만 정다각형으로 바꾼다 (능력치·보스 패턴은 그대로)
+        static void UpdateBossShape()
+        {
+            string path = PrefabsDir + "/Boss.prefab";
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(path) == null) return;
+
+            GameObject contents = PrefabUtility.LoadPrefabContents(path);
+            try
+            {
+                contents.GetComponent<EnemyAuthoring>().Sides = BossSides;
+                contents.GetComponent<MeshFilter>().sharedMesh = LoadOrCreatePolygonMesh(BossSides);
+                PrefabUtility.SaveAsPrefabAsset(contents, path);
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(contents);
+            }
         }
 
         static GameObject CreateEnemyVariantPrefab(string name, Color color, GameObject gem,
-            float moveSpeed, float radius, float maxHealth, float contactDamage, int xp)
+            float moveSpeed, float radius, float maxHealth, float contactDamage, int xp, int sides)
         {
-            Material material = CreateMaterial(name, color);
-            GameObject go = CreatePrimitiveWithoutCollider(PrimitiveType.Cube, name, material);
+            // 정다각형 메시 + 단색 머티리얼. Unity Physics를 쓰지 않으니 콜라이더는 없다
+            var go = new GameObject(name);
+            go.AddComponent<MeshFilter>().sharedMesh = LoadOrCreatePolygonMesh(sides);
+            go.AddComponent<MeshRenderer>().sharedMaterial = CreateMaterial(name, color);
             var enemy = go.AddComponent<EnemyAuthoring>();
             enemy.MoveSpeed = moveSpeed;
             enemy.Radius = radius;
+            enemy.Sides = sides;
             enemy.MaxHealth = maxHealth;
             enemy.ContactDamage = contactDamage;
             enemy.XpGemPrefab = gem;
@@ -216,6 +265,47 @@ namespace MergeBullet.Editor
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(go, $"{PrefabsDir}/{name}.prefab");
             Object.DestroyImmediate(go);
             return prefab;
+        }
+
+        /// <summary>
+        /// 변이 sides개인 납작한 정다각형 메시. 중심에서 변까지 거리 0.5라 스폰할 때 2 × 반지름으로 키우면 변까지 거리 = 반지름이 된다
+        /// (총알 판정 BulletEnemyCollisionSystem.ClosestOnPolygon과 같은 모양). 정면(+x)에 무엇이 오는지는 EnemyShape.FacingOffset
+        /// (홀수 변은 꼭짓점, 짝수 변은 면). 이미 있으면 내용만 다시 써서 GUID(프리팹의 참조)를 유지한다.
+        /// </summary>
+        static Mesh LoadOrCreatePolygonMesh(int sides)
+        {
+            EnsureFolder(MeshesDir);
+            string path = $"{MeshesDir}/Polygon{sides}.asset";
+            var mesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            bool isNew = mesh == null;
+            if (isNew) mesh = new Mesh { name = $"Polygon{sides}" };
+            else mesh.Clear();
+
+            float step = 2f * Mathf.PI / sides;
+            float offset = EnemyShape.FacingOffset(sides);
+            float cornerDistance = 0.5f / Mathf.Cos(Mathf.PI / sides);
+            var vertices = new Vector3[sides + 1];
+            var normals = new Vector3[sides + 1];
+            var triangles = new int[sides * 3];
+            normals[0] = Vector3.back; // 카메라(-z 쪽)를 향한다
+            for (int k = 0; k < sides; k++)
+            {
+                float angle = (k + 0.5f) * step + offset;
+                vertices[k + 1] = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * cornerDistance;
+                normals[k + 1] = Vector3.back;
+                // 카메라에서 볼 때 시계 방향이어야 앞면 (중심 → 다음 꼭짓점 → 이번 꼭짓점)
+                triangles[k * 3] = 0;
+                triangles[k * 3 + 1] = (k + 1) % sides + 1;
+                triangles[k * 3 + 2] = k + 1;
+            }
+
+            mesh.vertices = vertices;
+            mesh.normals = normals;
+            mesh.triangles = triangles;
+            mesh.RecalculateBounds();
+            if (isNew) AssetDatabase.CreateAsset(mesh, path);
+            else EditorUtility.SetDirty(mesh);
+            return mesh;
         }
 
         // 같은 프리팹이 이미 테이블에 있으면 가중치만 고친다 (메뉴를 다시 실행해도 중복되지 않게)
@@ -491,7 +581,7 @@ namespace MergeBullet.Editor
 
             // 빨간 계열(= 적)이지만 일반 적보다 진하고 크게
             GameObject boss = CreateEnemyVariantPrefab("Boss", new Color(0.75f, 0.05f, 0.25f), gem,
-                moveSpeed: 1.4f, radius: 1f, maxHealth: 300f, contactDamage: 30f, xp: 20);
+                moveSpeed: 1.4f, radius: 1f, maxHealth: 300f, contactDamage: 30f, xp: 20, sides: BossSides);
             GameObject contents = PrefabUtility.LoadPrefabContents(PrefabsDir + "/Boss.prefab");
             try
             {

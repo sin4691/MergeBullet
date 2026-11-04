@@ -82,7 +82,10 @@ namespace MergeBullet.Systems
             }
 
             foreach (RefRW<EnemySpawner> spawner in SystemAPI.Query<RefRW<EnemySpawner>>())
+            {
                 spawner.ValueRW.Cooldown = spawner.ValueRO.Interval;
+                spawner.ValueRW.EliteCooldown = spawner.ValueRO.EliteInterval;
+            }
             // 보스 등장 횟수를 되돌려야 새 판에서도 3분에 첫 보스가 나온다 (보스 엔티티는 위의 적 삭제로 함께 지워짐)
             foreach (RefRW<BossSpawner> bossSpawner in SystemAPI.Query<RefRW<BossSpawner>>())
                 bossSpawner.ValueRW.Spawned = 0;

@@ -177,10 +177,13 @@ MonoBehaviour:
   IdleWarningTime: 1.5
   EnemyPrefab: {fileID: 9211892432071304558, guid: ff33f4f6bf4318b4089b4640fc73857c, type: 3}
   EnemyVariants:
-  - Prefab: {fileID: 9043063038586309262, guid: d7e7708a38c375f4a9a6d83ab469c5e6, type: 3}
+  - Prefab: {fileID: 2622438832363275273, guid: d46576c97d912644ba3f0eb4c167d37f, type: 3}
+    StartWeight: 1
+    EndWeight: 0.6
+  - Prefab: {fileID: 4093705494062496451, guid: 548e21201c418594fb51cec0ac7ebe7e, type: 3}
     StartWeight: 0
-    EndWeight: 1
-  - Prefab: {fileID: 4303522275096004051, guid: 413c81b4eca35de498e5a526375bca62, type: 3}
+    EndWeight: 0.6
+  - Prefab: {fileID: 1093106689848578616, guid: ba3167fd0c1ff1a4b8731fb148568a23, type: 3}
     StartWeight: 0
     EndWeight: 0.4
   BossPrefab: {fileID: 6302997230523232388, guid: 01936f16ffe6d734d86d797262e35458, type: 3}
@@ -189,6 +192,10 @@ MonoBehaviour:
   EnemySpawnInterval: 1
   MaxEnemies: 30
   EnemySafeSpawnDistance: 4
+  EliteInterval: 45
+  EliteSize: 1.7
+  EliteHealth: 6
+  EliteXp: 5
   DifficultyRampSeconds: 300
   LateSpawnInterval: 0.15
   LateMaxEnemies: 200

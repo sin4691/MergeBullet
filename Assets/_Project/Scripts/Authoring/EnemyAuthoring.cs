@@ -11,6 +11,8 @@ namespace MergeBullet.Authoring
     {
         [Min(0f)] public float MoveSpeed = 2f;
         [Min(0.01f)] public float Radius = 0.35f;
+        // 변의 수 = 등급 (3 삼각형 ~ 6 육각형, 보스 8). 메시도 같은 변 수의 정다각형이어야 보이는 모양과 판정이 맞다
+        [Range(3, 8)] public int Sides = 4;
         [Min(0.1f)] public float MaxHealth = 3f;
         [Min(0f)] public float ContactDamage = 10f; // 플레이어 체력 100 기준
         [Min(0.01f)] public float HitFlashDuration = 0.12f;
@@ -28,6 +30,7 @@ namespace MergeBullet.Authoring
                 {
                     MoveSpeed = authoring.MoveSpeed,
                     Radius = authoring.Radius,
+                    Sides = authoring.Sides,
                     ContactDamage = authoring.ContactDamage,
                     MaxHealth = authoring.MaxHealth,
                 });
