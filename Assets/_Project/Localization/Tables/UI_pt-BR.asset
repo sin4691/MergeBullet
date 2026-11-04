@@ -314,6 +314,130 @@ MonoBehaviour:
     m_Localized: "B\xF4nus de vit\xF3ria +{0}"
     m_Metadata:
       m_Items: []
+  - m_Id: 1175432657645568
+    m_Localized: AUMENTO!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365824
+    m_Localized: Escolha um aumento  (1 / 2 / 3)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365825
+    m_Localized: Escolha um aumento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365826
+    m_Localized: Cano duplo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365827
+    m_Localized: "{0} balas por disparo \xB7 Dano -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365828
+    m_Localized: Superaquecimento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365829
+    m_Localized: "Intervalo de disparo -{0} \xB7 Dano -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365830
+    m_Localized: Grosso calibre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365831
+    m_Localized: "Balas de n\xEDvel {0} \xB7 Intervalo de disparo \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365832
+    m_Localized: Ricochete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365833
+    m_Localized: "Cada ricochete: dano +{0} \xB7 Velocidade da bala -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365834
+    m_Localized: Sobrecarga
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365835
+    m_Localized: "Efeito de n\xEDvel m\xE1x. \xD7{0} \xB7 Intervalo de disparo \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365836
+    m_Localized: "Fus\xE3o em cadeia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365837
+    m_Localized: "Cada fus\xE3o explode \xB7 Dano -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365838
+    m_Localized: "N\xEDvel cinco"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365839
+    m_Localized: "N\xEDvel m\xE1x. {0} \xB7 Efeito de n\xEDvel m\xE1x. \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365840
+    m_Localized: "Resist\xEAncia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365841
+    m_Localized: "Dura\xE7\xE3o da bala \xD7{0} \xB7 Dano -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985082138624
+    m_Localized: Dispara {0} balas de uma vez
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081664
+    m_Localized: "Cad\xEAncia \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081665
+    m_Localized: "Dispara balas de n\xEDvel {0} desde o in\xEDcio"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081666
+    m_Localized: 'Cada ricochete: dano dessa bala +{0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081667
+    m_Localized: "Explos\xE3o/raio de n\xEDvel m\xE1x.: tamanho e dano \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081668
+    m_Localized: "Cada fus\xE3o causa uma pequena explos\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081669
+    m_Localized: "Funde at\xE9 o n\xEDvel {0} \xB7 efeito final \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081670
+    m_Localized: "O n\xEDvel 4 n\xE3o ativa mais: funda mais uma vez"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081671
+    m_Localized: "As balas duram {0}\xD7 mais"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081672
+    m_Localized: Dano da bala -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081673
+    m_Localized: "Cad\xEAncia -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081674
+    m_Localized: Velocidade da bala -{0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

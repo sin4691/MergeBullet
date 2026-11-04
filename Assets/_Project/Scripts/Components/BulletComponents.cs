@@ -8,6 +8,8 @@ namespace MergeBullet.Components
     {
         public int Level;
         public float Radius;
+        /// <summary>벽·적에 튕긴 횟수 (탄성 증강의 피해 보너스용). 합성되면 새 총알이라 0부터.</summary>
+        public int Bounces;
     }
 
     /// <summary>XY 평면 속도 (units/sec).</summary>

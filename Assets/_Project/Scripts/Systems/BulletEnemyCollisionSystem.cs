@@ -131,7 +131,7 @@ namespace MergeBullet.Systems
         [ReadOnly] public NativeParallelMultiHashMap<int, int> Grid;
         public NativeQueue<EnemyHit>.ParallelWriter Hits;
 
-        void Execute(ref LocalTransform transform, ref BulletVelocity velocity, in Bullet bullet)
+        void Execute(ref LocalTransform transform, ref BulletVelocity velocity, ref Bullet bullet)
         {
             float2 position = transform.Position.xy;
             int2 cell = SpatialHash.CellOf(position, CellSize);
@@ -196,7 +196,9 @@ namespace MergeBullet.Systems
             if (approach >= 0f) return;
 
             velocity.Value = v - 2f * approach * normal;
-            Hits.Enqueue(new EnemyHit { EnemyIndex = hit, Damage = BulletLevelUtility.DamageOf(bullet.Level, Levels) });
+            // 피해는 이번 튕김 전 횟수로 계산하고 횟수를 올린다 (탄성 증강이면 다음 타격부터 세짐)
+            Hits.Enqueue(new EnemyHit { EnemyIndex = hit, Damage = BulletLevelUtility.DamageOf(bullet, Levels) });
+            bullet.Bounces++;
         }
 
         // axis = 적의 로컬 x축(바라보는 방향). 로컬 y축은 그 왼쪽 수직

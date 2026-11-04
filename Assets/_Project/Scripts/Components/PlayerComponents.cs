@@ -52,5 +52,9 @@ namespace MergeBullet.Components
         public float BulletSpeed;
         /// <summary>다음 발사까지 남은 시간.</summary>
         public float Cooldown;
+        /// <summary>한 번에 쏘는 총알 수 (쌍둥이 총구 증강). 0·1이면 1발.</summary>
+        public int ShotsPerVolley;
+        /// <summary>쏘는 총알의 처음 레벨 (대구경 증강). 0·1이면 레벨 1.</summary>
+        public int StartLevel;
     }
 }

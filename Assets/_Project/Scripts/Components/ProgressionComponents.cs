@@ -46,6 +46,13 @@ namespace MergeBullet.Components
         public UpgradeType Choice0;
         public UpgradeType Choice1;
         public UpgradeType Choice2;
+        /// <summary>true면 일반 강화 대신 증강 선택지 (Augment0~2).</summary>
+        public bool IsAugment;
+        /// <summary>실제 선택지 수. 증강이 몇 개 안 남았으면 3보다 적다.</summary>
+        public int ChoiceCount;
+        public AugmentType Augment0;
+        public AugmentType Augment1;
+        public AugmentType Augment2;
     }
 
     /// <summary>
@@ -62,5 +69,11 @@ namespace MergeBullet.Components
         public float BulletDamage;
         public float ExplosionRadius;
         public float MagnetRadius;
+        // 증강이 바꾸는 값들. 재시작하면 이 값으로 되돌린다
+        public int MaxLevel;
+        public float EffectDamage;
+        public float ChainRange;
+        public float ChainDamage;
+        public float IdleLifetime;
     }
 }

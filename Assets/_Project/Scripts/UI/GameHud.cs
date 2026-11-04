@@ -60,6 +60,8 @@ namespace MergeBullet.UI
         VisualElement _bossBar;
         VisualElement _bossFill;
         VisualElement _levelUp;
+        Label _levelUpTitle;
+        Label _levelUpHint;
         readonly Button[] _choiceButtons = new Button[ChoiceCount];
         readonly Label[] _choiceTitles = new Label[ChoiceCount];
         readonly Label[] _choiceDescs = new Label[ChoiceCount];
@@ -109,6 +111,8 @@ namespace MergeBullet.UI
             _bossBar = root.Q("boss-bar");
             _bossFill = root.Q("boss-fill");
             _levelUp = root.Q("level-up");
+            _levelUpTitle = root.Q<Label>("levelup-title");
+            _levelUpHint = root.Q<Label>("levelup-hint");
             _gameOver = root.Q("game-over");
             _gameOverTitle = root.Q<Label>("gameover-title");
             _finalText = root.Q<Label>("final-text");
@@ -309,17 +313,58 @@ namespace MergeBullet.UI
             _levelUp.style.display = offer.Active ? DisplayStyle.Flex : DisplayStyle.None;
             if (!offer.Active) return;
 
-            SetChoice(0, offer.Choice0);
-            SetChoice(1, offer.Choice1);
-            SetChoice(2, offer.Choice2);
+            // 증강은 같은 화면을 황금색으로 바꿔 쓴다 (USS .augment)
+            _levelUp.EnableInClassList("augment", offer.IsAugment);
+            _levelUpTitle.text = L10n.Get(offer.IsAugment ? "augment.title" : "levelup.title");
+            _levelUpHint.text = L10n.ForInput(offer.IsAugment ? "augment.hint" : "levelup.hint");
+
+            for (int i = 0; i < ChoiceCount; i++)
+            {
+                // 남은 증강이 3개보다 적으면 빈 카드는 숨긴다
+                bool shown = i < offer.ChoiceCount;
+                _choiceButtons[i].style.display = shown ? DisplayStyle.Flex : DisplayStyle.None;
+                if (!shown) continue;
+
+                (string title, string description) = offer.IsAugment
+                    ? DescribeAugment(i == 0 ? offer.Augment0 : i == 1 ? offer.Augment1 : offer.Augment2)
+                    : Describe(i == 0 ? offer.Choice0 : i == 1 ? offer.Choice1 : offer.Choice2);
+                _choiceTitles[i].text = title;
+                _choiceDescs[i].text = description;
+            }
         }
 
-        void SetChoice(int index, UpgradeType type)
+        // 증강 설명: 첫 줄은 얻는 것, 둘째 줄(빨간색)은 잃는 것. 수치는 실제 적용 값(AugmentTuning)에서,
+        // "발사 간격 ×2"처럼 계산해야 아는 표현 대신 "발사 속도 50% 감소"처럼 체감하는 말로 바꿔 보여 준다
+        static (string title, string description) DescribeAugment(AugmentType type)
         {
-            (string title, string description) = Describe(type);
-            _choiceTitles[index].text = title;
-            _choiceDescs[index].text = description;
+            string key = $"augment.{type}";
+            string gain = type switch
+            {
+                AugmentType.TwinBarrel => L10n.Get(key + ".gain", AugmentTuning.TwinShots),
+                AugmentType.Overheat => L10n.Get(key + ".gain", Times(1f / AugmentTuning.OverheatInterval)),
+                AugmentType.HeavyCaliber => L10n.Get(key + ".gain", AugmentTuning.HeavyStartLevel),
+                AugmentType.Ricochet => L10n.Get(key + ".gain", L10n.Percent(AugmentTuning.RicochetBonus)),
+                AugmentType.Overload => L10n.Get(key + ".gain", Times(AugmentTuning.OverloadEffect)),
+                AugmentType.LevelFive => L10n.Get(key + ".gain", AugmentTuning.LevelFiveMaxLevel, Times(AugmentTuning.LevelFiveEffect)),
+                AugmentType.Endurance => L10n.Get(key + ".gain", Times(AugmentTuning.EnduranceLifetime)),
+                _ => L10n.Get(key + ".gain"),
+            };
+            string cost = type switch
+            {
+                AugmentType.TwinBarrel => L10n.Get("augment.cost.damage", L10n.Percent(1f - AugmentTuning.TwinDamage)),
+                AugmentType.Overheat => L10n.Get("augment.cost.damage", L10n.Percent(1f - AugmentTuning.OverheatDamage)),
+                AugmentType.HeavyCaliber => L10n.Get("augment.cost.firerate", L10n.Percent(1f - 1f / AugmentTuning.HeavyInterval)),
+                AugmentType.Ricochet => L10n.Get("augment.cost.speed", L10n.Percent(1f - AugmentTuning.RicochetSpeed)),
+                AugmentType.Overload => L10n.Get("augment.cost.firerate", L10n.Percent(1f - 1f / AugmentTuning.OverloadInterval)),
+                AugmentType.ChainMerge => L10n.Get("augment.cost.damage", L10n.Percent(1f - AugmentTuning.ChainMergeBulletDamage)),
+                AugmentType.LevelFive => L10n.Get(key + ".cost"),
+                _ => L10n.Get("augment.cost.damage", L10n.Percent(1f - AugmentTuning.EnduranceDamage)),
+            };
+            return (L10n.Get(key + ".name"), $"{gain}\n<color=#FF8C8C>{cost}</color>");
         }
+
+        // 2 → "2", 2.5 → "2.5"
+        static string Times(float value) => value.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
 
         // 이름·설명 문장은 문자열 표(upgrade.{종류}.name/desc)에, 수치는 실제 적용 값(UpgradeTuning)에서 가져온다
         static (string title, string description) Describe(UpgradeType type)
@@ -374,7 +419,7 @@ namespace MergeBullet.UI
             if (_world == null || !_world.IsCreated || !_offerQuery.TryGetSingletonEntity<LevelUpOffer>(out Entity entity)) return;
 
             LevelUpOffer offer = _world.EntityManager.GetComponentData<LevelUpOffer>(entity);
-            if (!offer.Active || offer.Selected >= 0) return;
+            if (!offer.Active || offer.Selected >= 0 || index >= offer.ChoiceCount) return;
             offer.Selected = index;
             _world.EntityManager.SetComponentData(entity, offer);
         }

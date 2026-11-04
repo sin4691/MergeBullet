@@ -184,6 +184,25 @@
     background-color: rgb(62, 68, 90);
 }
 
+/* 증강: 같은 레벨업 화면을 황금색으로 (일반 강화와 한눈에 구분되게) */
+.augment .overlay-title {
+    color: rgb(255, 200, 60);
+}
+
+.augment .choice {
+    border-width: 4px;
+    border-color: rgb(255, 190, 40);
+    background-color: rgb(58, 46, 20);
+}
+
+.augment .choice:hover {
+    background-color: rgb(84, 66, 26);
+}
+
+.augment .choice-title {
+    color: rgb(255, 215, 110);
+}
+
 .choice-key {
     font-size: 22px;
     color: rgb(160, 160, 170);

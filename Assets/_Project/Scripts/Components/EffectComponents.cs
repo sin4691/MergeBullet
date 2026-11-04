@@ -29,6 +29,10 @@ namespace MergeBullet.Components
         public int ChainCount;
         public float ChainRange;
         public float ChainDamage;
+
+        // 연쇄 합성 증강: 합성할 때마다 그 자리에 작은 폭발. 반경 0이면 없음
+        public float MergeBlastRadius;
+        public float MergeBlastDamage;
     }
 
     /// <summary>폭발 효과 엔티티. 생긴 다음 프레임에 범위 피해를 한 번 주고, Duration 동안 커졌다 줄어든 뒤 사라진다.</summary>

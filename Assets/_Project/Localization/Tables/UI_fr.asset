@@ -314,6 +314,130 @@ MonoBehaviour:
     m_Localized: Bonus de victoire +{0}
     m_Metadata:
       m_Items: []
+  - m_Id: 1175432657645568
+    m_Localized: AUGMENT !
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365824
+    m_Localized: Choisissez un augment  (1 / 2 / 3)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365825
+    m_Localized: Choisissez un augment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365826
+    m_Localized: Double canon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365827
+    m_Localized: "{0} balles par tir \xB7 D\xE9g\xE2ts -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365828
+    m_Localized: Surchauffe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365829
+    m_Localized: "Intervalle de tir -{0} \xB7 D\xE9g\xE2ts -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365830
+    m_Localized: Gros calibre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365831
+    m_Localized: "Balles de niveau {0} \xB7 Intervalle de tir \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365832
+    m_Localized: Ricochet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365833
+    m_Localized: "Chaque rebond : d\xE9g\xE2ts +{0} \xB7 Vitesse des balles -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365834
+    m_Localized: Surcharge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365835
+    m_Localized: "Effet niveau max \xD7{0} \xB7 Intervalle de tir \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365836
+    m_Localized: "Fusion en cha\xEEne"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365837
+    m_Localized: "Chaque fusion explose \xB7 D\xE9g\xE2ts -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365838
+    m_Localized: Niveau cinq
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365839
+    m_Localized: "Niveau max {0} \xB7 Effet niveau max \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365840
+    m_Localized: Endurance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365841
+    m_Localized: "Dur\xE9e des balles \xD7{0} \xB7 D\xE9g\xE2ts -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985082138624
+    m_Localized: "Tire {0} balles \xE0 la fois"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081664
+    m_Localized: "Cadence de tir \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081665
+    m_Localized: Tire directement des balles de niveau {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081666
+    m_Localized: "Chaque rebond : d\xE9g\xE2ts de cette balle +{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081667
+    m_Localized: "Explosion/\xE9clair niveau max : taille et d\xE9g\xE2ts \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081668
+    m_Localized: "Chaque fusion d\xE9clenche une petite explosion"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081669
+    m_Localized: "Fusion jusqu'au niveau {0} \xB7 effet final \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081670
+    m_Localized: "Le niveau 4 ne se d\xE9clenche plus : fusionnez encore une fois"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081671
+    m_Localized: "Les balles durent {0}\xD7 plus longtemps"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081672
+    m_Localized: "D\xE9g\xE2ts des balles -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081673
+    m_Localized: Cadence de tir -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081674
+    m_Localized: Vitesse des balles -{0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
