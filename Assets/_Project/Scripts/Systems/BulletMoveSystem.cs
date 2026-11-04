@@ -44,7 +44,7 @@ namespace MergeBullet.Systems
         public Entity ViewEntity;
         public bool HasView;
 
-        void Execute(ref LocalTransform transform, ref BulletVelocity velocity, in Bullet bullet)
+        void Execute(ref LocalTransform transform, ref BulletVelocity velocity, ref Bullet bullet)
         {
             CameraView view = HasView ? Views[ViewEntity] : default;
             BulletArea.Get(ArenaHalfSize, HasView, view, out float2 center, out float2 halfSize);
@@ -62,6 +62,8 @@ namespace MergeBullet.Systems
 
             if (p.y < min.y) { p.y = 2f * min.y - p.y; v.y = math.abs(v.y); }
             else if (p.y > max.y) { p.y = 2f * max.y - p.y; v.y = -math.abs(v.y); }
+
+            if (math.any(v != velocity.Value)) bullet.Bounces++; // 벽에 튕김 (탄성 증강)
 
             // 화면 벽은 카메라와 함께 움직여서 총알이 벽 밖에 한참 남겨질 수 있다. 접어 넣어도 밖이면 벽에 붙인다
             p = math.clamp(p, min, max);

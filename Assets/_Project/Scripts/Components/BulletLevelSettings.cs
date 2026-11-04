@@ -16,5 +16,9 @@ namespace MergeBullet.Components
         public float4 Level2Color;
         public float4 Level3Color;
         public float4 Level4Color;
+        /// <summary>레벨 5 증강을 골랐을 때만 쓰인다.</summary>
+        public float4 Level5Color;
+        /// <summary>튕길 때마다 더해지는 피해 비율 (탄성 증강). 0이면 없음.</summary>
+        public float BounceDamageBonus;
     }
 }

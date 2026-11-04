@@ -314,6 +314,130 @@ MonoBehaviour:
     m_Localized: Bonus vittoria +{0}
     m_Metadata:
       m_Items: []
+  - m_Id: 1175432657645568
+    m_Localized: AUGMENT!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365824
+    m_Localized: Scegli un augment  (1 / 2 / 3)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365825
+    m_Localized: Scegli un augment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365826
+    m_Localized: Doppia canna
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365827
+    m_Localized: "{0} proiettili per colpo \xB7 Danno -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365828
+    m_Localized: Surriscaldamento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365829
+    m_Localized: "Intervallo di fuoco -{0} \xB7 Danno -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365830
+    m_Localized: Grosso calibro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365831
+    m_Localized: "Proiettili di livello {0} \xB7 Intervallo di fuoco \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365832
+    m_Localized: Rimbalzo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365833
+    m_Localized: "Ogni rimbalzo: danno +{0} \xB7 Velocit\xE0 proiettili -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365834
+    m_Localized: Sovraccarico
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365835
+    m_Localized: "Effetto livello max \xD7{0} \xB7 Intervallo di fuoco \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365836
+    m_Localized: Fusione a catena
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365837
+    m_Localized: "Ogni fusione esplode \xB7 Danno -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365838
+    m_Localized: Livello cinque
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365839
+    m_Localized: "Livello max {0} \xB7 Effetto livello max \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365840
+    m_Localized: Resistenza
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365841
+    m_Localized: "Durata proiettili \xD7{0} \xB7 Danno -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985082138624
+    m_Localized: Spara {0} proiettili alla volta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081664
+    m_Localized: "Cadenza di fuoco \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081665
+    m_Localized: Spara subito proiettili di livello {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081666
+    m_Localized: 'Ogni rimbalzo: danno di quel proiettile +{0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081667
+    m_Localized: "Esplosione/fulmine livello max: dimensione e danno \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081668
+    m_Localized: Ogni fusione provoca una piccola esplosione
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081669
+    m_Localized: "Fusione fino al livello {0} \xB7 effetto finale \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081670
+    m_Localized: "Il livello 4 non si attiva pi\xF9: fondi ancora una volta"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081671
+    m_Localized: "I proiettili durano {0}\xD7 di pi\xF9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081672
+    m_Localized: Danno proiettili -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081673
+    m_Localized: Cadenza di fuoco -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081674
+    m_Localized: "Velocit\xE0 proiettili -{0}"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

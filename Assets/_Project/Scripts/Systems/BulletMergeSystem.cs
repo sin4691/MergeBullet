@@ -33,6 +33,7 @@ namespace MergeBullet.Systems
             state.RequireForUpdate(_bulletQuery);
             state.RequireForUpdate<BulletLevelSettings>();
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
+            state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
             state.RequireForUpdate<EffectQueue>();
         }
 
@@ -85,6 +86,12 @@ namespace MergeBullet.Systems
                 Ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
                     .CreateCommandBuffer(state.WorldUnmanaged),
                 EffectQueueEntity = SystemAPI.GetSingletonEntity<EffectQueue>(),
+                // 연쇄 합성 증강: 반경이 0보다 크면 합성할 때 폭발도 만든다
+                Effect = SystemAPI.TryGetSingleton(out MaxLevelEffect effect) ? effect : default,
+                // 새 엔티티는 다음 프레임 시작(BeginSimulation)에 만든다. 프레임 끝(EndSimulation)에 만들면 위치 계산이
+                // 끝난 뒤라 한 프레임 동안 프리팹 위치(맵 중앙)에 그려진다
+                SpawnEcb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
+                    .CreateCommandBuffer(state.WorldUnmanaged),
             }.Schedule(find);
 
             // 잡이 끝난 뒤 해제되도록 의존성에 묶는다
@@ -178,6 +185,8 @@ namespace MergeBullet.Systems
         [ReadOnly] public NativeArray<int> Partners;
         public EntityCommandBuffer Ecb;
         public Entity EffectQueueEntity;
+        public MaxLevelEffect Effect;
+        public EntityCommandBuffer SpawnEcb;
 
         public void Execute()
         {
@@ -221,6 +230,20 @@ namespace MergeBullet.Systems
                     Size = radius,
                     Color = BulletLevelUtility.ColorOf(level, Settings),
                 });
+
+                if (Effect.MergeBlastRadius > 0f && Effect.Prefab != Entity.Null)
+                {
+                    // 레벨 4 폭발과 같은 폭발 엔티티를 작게 만든다 (피해는 ExplosionSystem이 처리)
+                    Entity blast = SpawnEcb.Instantiate(Effect.Prefab);
+                    SpawnEcb.SetComponent(blast, LocalTransform.FromPositionRotationScale(
+                        new float3(position, 0f), quaternion.identity, 0f));
+                    SpawnEcb.SetComponent(blast, new Explosion
+                    {
+                        Duration = Effect.Duration,
+                        MaxRadius = Effect.MergeBlastRadius,
+                        Damage = Effect.MergeBlastDamage,
+                    });
+                }
             }
         }
     }

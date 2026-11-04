@@ -314,6 +314,130 @@ MonoBehaviour:
     m_Localized: "Premia za zwyci\u0119stwo +{0}"
     m_Metadata:
       m_Items: []
+  - m_Id: 1175432657645568
+    m_Localized: WZMOCNIENIE!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365824
+    m_Localized: Wybierz wzmocnienie  (1 / 2 / 3)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365825
+    m_Localized: Wybierz wzmocnienie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365826
+    m_Localized: "Podw\xF3jna lufa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365827
+    m_Localized: "{0} pociski na strza\u0142 \xB7 Obra\u017Cenia -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365828
+    m_Localized: Przegrzanie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365829
+    m_Localized: "Odst\u0119p strza\u0142\xF3w -{0} \xB7 Obra\u017Cenia -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365830
+    m_Localized: "Du\u017Cy kaliber"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365831
+    m_Localized: "Pociski {0}. poziomu \xB7 Odst\u0119p strza\u0142\xF3w \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365832
+    m_Localized: Rykoszet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365833
+    m_Localized: "Ka\u017Cde odbicie: obra\u017Cenia +{0} \xB7 Pr\u0119dko\u015B\u0107 pocisk\xF3w -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365834
+    m_Localized: "Przeci\u0105\u017Cenie"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365835
+    m_Localized: "Efekt maks. poziomu \xD7{0} \xB7 Odst\u0119p strza\u0142\xF3w \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365836
+    m_Localized: "\u0141a\u0144cuchowe \u0142\u0105czenie"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365837
+    m_Localized: "Ka\u017Cde \u0142\u0105czenie wybucha \xB7 Obra\u017Cenia -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365838
+    m_Localized: "Poziom pi\u0105ty"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365839
+    m_Localized: "Maks. poziom {0} \xB7 Efekt maks. poziomu \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365840
+    m_Localized: "Wytrwa\u0142o\u015B\u0107"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365841
+    m_Localized: "Czas \u017Cycia pocisk\xF3w \xD7{0} \xB7 Obra\u017Cenia -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985082138624
+    m_Localized: Strzela {0} pociskami naraz
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081664
+    m_Localized: "Szybkostrzelno\u015B\u0107 \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081665
+    m_Localized: Od razu strzela pociskami {0}. poziomu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081666
+    m_Localized: "Ka\u017Cde odbicie: obra\u017Cenia tego pocisku +{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081667
+    m_Localized: "Wybuch/piorun maks. poziomu: zasi\u0119g i obra\u017Cenia \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081668
+    m_Localized: "Ka\u017Cde \u0142\u0105czenie wywo\u0142uje ma\u0142y wybuch"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081669
+    m_Localized: "\u0141\u0105czenie do poziomu {0} \xB7 efekt ko\u0144cowy \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081670
+    m_Localized: "Poziom 4 ju\u017C nie wybucha \u2014 po\u0142\u0105cz jeszcze raz"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081671
+    m_Localized: "Pociski \u017Cyj\u0105 {0}\xD7 d\u0142u\u017Cej"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081672
+    m_Localized: "Obra\u017Cenia pocisk\xF3w -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081673
+    m_Localized: "Szybkostrzelno\u015B\u0107 -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081674
+    m_Localized: "Pr\u0119dko\u015B\u0107 pocisk\xF3w -{0}"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

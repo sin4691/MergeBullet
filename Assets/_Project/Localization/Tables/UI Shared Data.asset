@@ -311,6 +311,130 @@ MonoBehaviour:
     m_Key: gameover.clearbonus
     m_Metadata:
       m_Items: []
+  - m_Id: 1175432657645568
+    m_Key: augment.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365824
+    m_Key: augment.hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365825
+    m_Key: augment.hint.touch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365826
+    m_Key: augment.TwinBarrel.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365827
+    m_Key: augment.TwinBarrel.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365828
+    m_Key: augment.Overheat.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365829
+    m_Key: augment.Overheat.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365830
+    m_Key: augment.HeavyCaliber.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365831
+    m_Key: augment.HeavyCaliber.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365832
+    m_Key: augment.Ricochet.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365833
+    m_Key: augment.Ricochet.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365834
+    m_Key: augment.Overload.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365835
+    m_Key: augment.Overload.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365836
+    m_Key: augment.ChainMerge.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365837
+    m_Key: augment.ChainMerge.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365838
+    m_Key: augment.LevelFive.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365839
+    m_Key: augment.LevelFive.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365840
+    m_Key: augment.Endurance.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365841
+    m_Key: augment.Endurance.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985082138624
+    m_Key: augment.TwinBarrel.gain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081664
+    m_Key: augment.Overheat.gain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081665
+    m_Key: augment.HeavyCaliber.gain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081666
+    m_Key: augment.Ricochet.gain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081667
+    m_Key: augment.Overload.gain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081668
+    m_Key: augment.ChainMerge.gain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081669
+    m_Key: augment.LevelFive.gain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081670
+    m_Key: augment.LevelFive.cost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081671
+    m_Key: augment.Endurance.gain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081672
+    m_Key: augment.cost.damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081673
+    m_Key: augment.cost.firerate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081674
+    m_Key: augment.cost.speed
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -115,6 +115,7 @@ namespace MergeBullet.Authoring
                 });
                 AddComponent(entity, new GameState());
                 AddComponent(entity, new GameStats());
+                AddComponent(entity, new Augments());
                 AddComponent(entity, new RunRules { DurationSeconds = authoring.RunDurationSeconds });
                 // 연출 이벤트 큐: 로직 시스템이 쓰고 EffectPresenter가 읽는다
                 AddComponent(entity, new EffectQueue());
@@ -140,6 +141,8 @@ namespace MergeBullet.Authoring
                     Level2Color = LevelColor(authoring, 1),
                     Level3Color = LevelColor(authoring, 2),
                     Level4Color = LevelColor(authoring, 3),
+                    // 레벨 5 증강 전용 색: 흰색(레벨 4) 다음이라 눈에 띄는 청록
+                    Level5Color = authoring.LevelColors.Length > 4 ? LevelColor(authoring, 4) : new float4(0.35f, 0.95f, 1f, 1f),
                 });
 
                 AddComponent(entity, new BulletIdleSettings

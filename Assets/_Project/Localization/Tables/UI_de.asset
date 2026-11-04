@@ -314,6 +314,130 @@ MonoBehaviour:
     m_Localized: Abschlussbonus +{0}
     m_Metadata:
       m_Items: []
+  - m_Id: 1175432657645568
+    m_Localized: AUGMENT!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365824
+    m_Localized: "W\xE4hle ein Augment  (1 / 2 / 3)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365825
+    m_Localized: "W\xE4hle ein Augment"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365826
+    m_Localized: Doppellauf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365827
+    m_Localized: "{0} Geschosse pro Schuss \xB7 Schaden -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365828
+    m_Localized: "\xDCberhitzung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365829
+    m_Localized: "Feuerintervall -{0} \xB7 Schaden -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365830
+    m_Localized: "Gro\xDFkaliber"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365831
+    m_Localized: "Stufe-{0}-Geschosse \xB7 Feuerintervall \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365832
+    m_Localized: "Querschl\xE4ger"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365833
+    m_Localized: "Pro Abprall Schaden +{0} \xB7 Geschosstempo -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365834
+    m_Localized: "\xDCberladung"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365835
+    m_Localized: "Max-Stufen-Effekt \xD7{0} \xB7 Feuerintervall \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365836
+    m_Localized: Kettenfusion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365837
+    m_Localized: "Jede Fusion explodiert \xB7 Schaden -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365838
+    m_Localized: "Stufe F\xFCnf"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365839
+    m_Localized: "Max. Stufe {0} \xB7 Max-Stufen-Effekt \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365840
+    m_Localized: Ausdauer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365841
+    m_Localized: "Geschossdauer \xD7{0} \xB7 Schaden -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985082138624
+    m_Localized: Feuert {0} Geschosse auf einmal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081664
+    m_Localized: "Feuerrate \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081665
+    m_Localized: Feuert von Anfang an Stufe-{0}-Geschosse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081666
+    m_Localized: 'Jeder Abprall: Schaden dieses Geschosses +{0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081667
+    m_Localized: "Max-Stufen-Explosion/Blitz: Gr\xF6\xDFe und Schaden \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081668
+    m_Localized: "Jede Fusion l\xF6st eine kleine Explosion aus"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081669
+    m_Localized: "Fusion bis Stufe {0} \xB7 Endeffekt \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081670
+    m_Localized: "Stufe 4 l\xF6st nicht mehr aus \u2013 noch einmal fusionieren"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081671
+    m_Localized: "Geschosse halten {0}\xD7 l\xE4nger"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081672
+    m_Localized: Geschossschaden -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081673
+    m_Localized: Feuerrate -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081674
+    m_Localized: Geschosstempo -{0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

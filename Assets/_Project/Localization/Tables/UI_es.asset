@@ -314,6 +314,130 @@ MonoBehaviour:
     m_Localized: Bonus de victoria +{0}
     m_Metadata:
       m_Items: []
+  - m_Id: 1175432657645568
+    m_Localized: "\xA1AUMENTO!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365824
+    m_Localized: Elige un aumento  (1 / 2 / 3)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365825
+    m_Localized: Elige un aumento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365826
+    m_Localized: "Doble ca\xF1\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365827
+    m_Localized: "{0} balas por disparo \xB7 Da\xF1o -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365828
+    m_Localized: Sobrecalentamiento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365829
+    m_Localized: "Intervalo de disparo -{0} \xB7 Da\xF1o -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365830
+    m_Localized: Gran calibre
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365831
+    m_Localized: "Balas de nivel {0} \xB7 Intervalo de disparo \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365832
+    m_Localized: Rebote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365833
+    m_Localized: "Cada rebote: da\xF1o +{0} \xB7 Velocidad de bala -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365834
+    m_Localized: Sobrecarga
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365835
+    m_Localized: "Efecto de nivel m\xE1x. \xD7{0} \xB7 Intervalo de disparo \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365836
+    m_Localized: "Fusi\xF3n en cadena"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365837
+    m_Localized: "Cada fusi\xF3n explota \xB7 Da\xF1o -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365838
+    m_Localized: Nivel cinco
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365839
+    m_Localized: "Nivel m\xE1x. {0} \xB7 Efecto de nivel m\xE1x. \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365840
+    m_Localized: Resistencia
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365841
+    m_Localized: "Duraci\xF3n de bala \xD7{0} \xB7 Da\xF1o -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985082138624
+    m_Localized: Dispara {0} balas a la vez
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081664
+    m_Localized: "Cadencia \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081665
+    m_Localized: Dispara balas de nivel {0} desde el inicio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081666
+    m_Localized: "Cada rebote: da\xF1o de esa bala +{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081667
+    m_Localized: "Explosi\xF3n/rayo de nivel m\xE1x.: tama\xF1o y da\xF1o \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081668
+    m_Localized: "Cada fusi\xF3n provoca una peque\xF1a explosi\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081669
+    m_Localized: "Fusiona hasta nivel {0} \xB7 efecto final \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081670
+    m_Localized: "El nivel 4 ya no se activa: fusiona una vez m\xE1s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081671
+    m_Localized: "Las balas duran {0}\xD7 m\xE1s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081672
+    m_Localized: "Da\xF1o de bala -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081673
+    m_Localized: Cadencia -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081674
+    m_Localized: Velocidad de bala -{0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

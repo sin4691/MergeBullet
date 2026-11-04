@@ -105,17 +105,34 @@ namespace MergeBullet.Systems
                 ? math.normalizesafe(target.Position - origin, facing.Value)
                 : facing.Value;
 
-            const int level = 1;
+            // 대구경 증강이면 처음부터 높은 레벨. 최대 레벨 이상이면 바로 터져 버리므로 그 아래로 자른다
+            int level = math.clamp(weapon.StartLevel, 1, Levels.MaxLevel - 1);
             float radius = BulletLevelUtility.RadiusOf(level, Levels);
-            // 플레이어 몸 바깥에서 생성해야 바로 겹쳐 보이지 않는다
-            float2 position = origin + direction * (player.Radius + radius);
+            float4 color = BulletLevelUtility.ColorOf(level, Levels);
 
-            Entity bullet = Ecb.Instantiate(weapon.BulletPrefab);
-            Ecb.SetComponent(bullet, LocalTransform.FromPositionRotationScale(
-                new float3(position, 0f), quaternion.identity, radius * 2f));
-            Ecb.SetComponent(bullet, new Bullet { Level = level, Radius = radius });
-            Ecb.SetComponent(bullet, new BulletVelocity { Value = direction * weapon.BulletSpeed });
-            Ecb.SetComponent(bullet, new URPMaterialPropertyBaseColor { Value = BulletLevelUtility.ColorOf(level, Levels) });
+            // 쌍둥이 총구 증강이면 여러 발을 옆으로 나란히 띄우고 부채꼴로 벌려 쏜다.
+            // 같은 자리에서 나가면 서로 닿아 바로 합성돼 레벨 2 한 발처럼 보이기 때문
+            int shots = math.max(weapon.ShotsPerVolley, 1);
+            for (int i = 0; i < shots; i++)
+            {
+                float angle = (i - (shots - 1) * 0.5f) * SpreadRadians;
+                math.sincos(angle, out float sin, out float cos);
+                float2 shotDirection = new float2(direction.x * cos - direction.y * sin, direction.x * sin + direction.y * cos);
+                // 플레이어 몸 바깥에서 생성해야 바로 겹쳐 보이지 않는다. 옆 간격은 총알 지름 + 여유라 서로 닿지 않는다
+                float2 side = new float2(-direction.y, direction.x) * ((i - (shots - 1) * 0.5f) * (radius * 2f + SideGap));
+                float2 position = origin + shotDirection * (player.Radius + radius) + side;
+
+                Entity bullet = Ecb.Instantiate(weapon.BulletPrefab);
+                Ecb.SetComponent(bullet, LocalTransform.FromPositionRotationScale(
+                    new float3(position, 0f), quaternion.identity, radius * 2f));
+                Ecb.SetComponent(bullet, new Bullet { Level = level, Radius = radius });
+                Ecb.SetComponent(bullet, new BulletVelocity { Value = shotDirection * weapon.BulletSpeed });
+                Ecb.SetComponent(bullet, new URPMaterialPropertyBaseColor { Value = color });
+            }
         }
+
+        // 여러 발을 쏠 때 총알 사이 각도 (약 20도)와, 처음 나란히 놓을 때 총알 사이 빈틈
+        const float SpreadRadians = 0.35f;
+        const float SideGap = 0.15f;
     }
 }

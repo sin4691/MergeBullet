@@ -314,6 +314,130 @@ MonoBehaviour:
     m_Localized: Clear bonus +{0}
     m_Metadata:
       m_Items: []
+  - m_Id: 1175432657645568
+    m_Localized: AUGMENT!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365824
+    m_Localized: Choose an augment  (1 / 2 / 3)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365825
+    m_Localized: Tap an augment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365826
+    m_Localized: Twin Barrel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365827
+    m_Localized: "{0} bullets per shot \xB7 Damage -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365828
+    m_Localized: Overheat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365829
+    m_Localized: "Fire interval -{0} \xB7 Damage -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365830
+    m_Localized: Heavy Caliber
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365831
+    m_Localized: "Fire level {0} bullets \xB7 Fire interval \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365832
+    m_Localized: Ricochet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365833
+    m_Localized: "Each bounce: damage +{0} \xB7 Bullet speed -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365834
+    m_Localized: Overload
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365835
+    m_Localized: "Max-level effect \xD7{0} \xB7 Fire interval \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365836
+    m_Localized: Chain Merge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365837
+    m_Localized: "Every merge explodes \xB7 Damage -{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365838
+    m_Localized: Level Five
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365839
+    m_Localized: "Max level {0} \xB7 Max-level effect \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365840
+    m_Localized: Endurance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1175432716365841
+    m_Localized: "Bullet lifetime \xD7{0} \xB7 Damage -{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985082138624
+    m_Localized: Fire {0} bullets at once
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081664
+    m_Localized: "Fire rate \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081665
+    m_Localized: Fire level {0} bullets from the start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081666
+    m_Localized: Each bounce gives that bullet +{0} damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081667
+    m_Localized: "Max-level explosion/lightning: size and damage \xD7{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081668
+    m_Localized: Every merge sets off a small explosion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081669
+    m_Localized: "Merge up to level {0} \xB7 final effect \xD7{1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081670
+    m_Localized: "Level 4 no longer goes off \u2014 merge once more"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081671
+    m_Localized: "Bullets last {0}\xD7 longer before fading"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081672
+    m_Localized: Bullet damage -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081673
+    m_Localized: Fire rate -{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178985124081674
+    m_Localized: Bullet speed -{0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
