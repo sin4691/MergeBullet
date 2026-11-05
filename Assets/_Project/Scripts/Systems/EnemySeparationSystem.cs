@@ -28,6 +28,7 @@ namespace MergeBullet.Systems
             state.RequireForUpdate(_enemyQuery);
             state.RequireForUpdate<EnemySpawner>();
             state.RequireForUpdate<ArenaBounds>();
+            state.RequireForUpdate<WallBox>();
         }
 
         [BurstCompile]
@@ -57,7 +58,8 @@ namespace MergeBullet.Systems
             JobHandle separate = new SeparateEnemiesJob
             {
                 CellSize = cellSize,
-                ArenaHalfSize = SystemAPI.GetSingleton<ArenaBounds>().HalfSize,
+                Arena = SystemAPI.GetSingleton<ArenaBounds>(),
+                Walls = SystemAPI.GetSingletonBuffer<WallBox>(true).AsNativeArray(),
                 Positions = positions,
                 Radii = radii,
                 Grid = grid,
@@ -79,7 +81,8 @@ namespace MergeBullet.Systems
         const float Stiffness = 0.5f;
 
         public float CellSize;
-        public float2 ArenaHalfSize;
+        public ArenaBounds Arena;
+        [ReadOnly] public NativeArray<WallBox> Walls;
         [ReadOnly] public NativeArray<float2> Positions;
         [ReadOnly] public NativeArray<float> Radii;
         [ReadOnly] public NativeParallelMultiHashMap<int, int> Grid;
@@ -115,10 +118,11 @@ namespace MergeBullet.Systems
                 } while (Grid.TryGetNextValue(out j, ref it));
             }
 
-            if (math.all(push == float2.zero)) return;
-
-            float2 limit = ArenaHalfSize - enemy.Radius;
-            float2 position = math.clamp(self + push * Stiffness, -limit, limit);
+            // 적끼리 밀어낸 뒤 벽 밖으로도 꺼낸다 (쫓아가다 벽에 박히지 않고 벽을 따라 미끄러진다)
+            float2 limit = Arena.HalfSize - enemy.Radius;
+            float2 position = math.clamp(self + push * Stiffness, Arena.Center - limit, Arena.Center + limit);
+            WallCollision.PushOut(ref position, enemy.Radius, Walls);
+            if (math.all(position == self)) return;
             transform.Position = new float3(position, transform.Position.z);
         }
 

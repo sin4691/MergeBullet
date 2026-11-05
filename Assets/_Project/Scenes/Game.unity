@@ -337,6 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6307b5aeec8d6ee41bd6ffdc05472ca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Presentation.GameCamera
+  WallMargin: 0
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,7 +666,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Presentation.BossTelegraph
   LineMaterial: {fileID: 2100000, guid: 659a0d0c875121a4e9a69b2e49b857be, type: 2}
   Color: {r: 1, g: 0.25, b: 0.35, a: 1}
-  Width: 0.35
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

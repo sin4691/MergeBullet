@@ -28,6 +28,8 @@ namespace MergeBullet.Systems
             state.RequireForUpdate<EnemySpawner>();
             state.RequireForUpdate<EnemySpawnEntry>();
             state.RequireForUpdate<ArenaBounds>();
+            state.RequireForUpdate<WallBox>();
+            state.RequireForUpdate<RoomState>();
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         }
 
@@ -84,12 +86,15 @@ namespace MergeBullet.Systems
                 stats.MoveSpeed *= EliteSpeed;
             }
 
-            float2 limit = SystemAPI.GetSingleton<ArenaBounds>().HalfSize - stats.Radius;
+            ArenaBounds arena = SystemAPI.GetSingleton<ArenaBounds>();
+            float2 limit = arena.HalfSize - stats.Radius;
             float2 player = SystemAPI.TryGetSingleton(out PlayerPosition playerPosition) ? playerPosition.Value : float2.zero;
             bool hasView = SystemAPI.TryGetSingleton(out CameraView view);
-            EnemySpawnUtility.SpawnRing(hasView, view, limit, stats.Radius, out float2 ringCenter, out float2 ringHalf);
+            EnemySpawnUtility.SpawnRing(hasView, view, arena.Center, limit, stats.Radius, out float2 ringCenter, out float2 ringHalf);
             float2 position = EnemySpawnUtility.PickSpawnPoint(
-                ref spawner.ValueRW.Random, limit, ringCenter, ringHalf, player, spawner.ValueRO.SafeDistance);
+                ref spawner.ValueRW.Random, arena.Center, limit, ringCenter, ringHalf, player, spawner.ValueRO.SafeDistance,
+                stats.Radius, SystemAPI.GetSingletonBuffer<WallBox>(true).AsNativeArray(),
+                SystemAPI.GetSingletonBuffer<RoomState>(true).AsNativeArray());
 
             Entity enemy = EnemySpawnUtility.RecordSpawn(ecb, prefab, stats, position);
             if (!elite) return;

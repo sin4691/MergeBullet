@@ -1,5 +1,6 @@
 using MergeBullet.Components;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -15,6 +16,7 @@ namespace MergeBullet.Systems
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<ArenaBounds>();
+            state.RequireForUpdate<WallBox>();
         }
 
         [BurstCompile]
@@ -23,7 +25,8 @@ namespace MergeBullet.Systems
             new PlayerMoveJob
             {
                 DeltaTime = SystemAPI.Time.DeltaTime,
-                ArenaHalfSize = SystemAPI.GetSingleton<ArenaBounds>().HalfSize,
+                Arena = SystemAPI.GetSingleton<ArenaBounds>(),
+                Walls = SystemAPI.GetSingletonBuffer<WallBox>(true).AsNativeArray(),
             }.Schedule();
         }
     }
@@ -32,13 +35,17 @@ namespace MergeBullet.Systems
     partial struct PlayerMoveJob : IJobEntity
     {
         public float DeltaTime;
-        public float2 ArenaHalfSize;
+        public ArenaBounds Arena;
+        [ReadOnly] public NativeArray<WallBox> Walls;
 
         void Execute(ref LocalTransform transform, ref PlayerPosition playerPosition, ref FacingDirection facing,
             in Player player, in PlayerMoveInput input)
         {
-            float2 limit = ArenaHalfSize - player.Radius;
-            float2 position = math.clamp(transform.Position.xy + input.Move * player.MoveSpeed * DeltaTime, -limit, limit);
+            float2 limit = Arena.HalfSize - player.Radius;
+            float2 position = math.clamp(transform.Position.xy + input.Move * player.MoveSpeed * DeltaTime,
+                Arena.Center - limit, Arena.Center + limit);
+            // 벽 덩어리·닫힌 문은 지나가지 못한다 (밀려난다)
+            WallCollision.PushOut(ref position, player.Radius, Walls);
             transform.Position = new float3(position, transform.Position.z);
             playerPosition.Value = position;
 

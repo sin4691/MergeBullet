@@ -22,6 +22,8 @@ namespace MergeBullet.Systems
             state.RequireForUpdate<EnemySpawner>();
             state.RequireForUpdate<GameStats>();
             state.RequireForUpdate<ArenaBounds>();
+            state.RequireForUpdate<WallBox>();
+            state.RequireForUpdate<RoomState>();
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         }
 
@@ -45,12 +47,15 @@ namespace MergeBullet.Systems
             stats.MaxHealth *= (1f + bossSpawner.ValueRO.HealthGrowthPerBoss * bossIndex) * enemySpawner.ValueRO.HealthMultiplier;
             stats.MoveSpeed *= enemySpawner.ValueRO.SpeedMultiplier;
 
-            float2 limit = SystemAPI.GetSingleton<ArenaBounds>().HalfSize - stats.Radius;
+            ArenaBounds arena = SystemAPI.GetSingleton<ArenaBounds>();
+            float2 limit = arena.HalfSize - stats.Radius;
             float2 player = SystemAPI.TryGetSingleton(out PlayerPosition playerPosition) ? playerPosition.Value : float2.zero;
             bool hasView = SystemAPI.TryGetSingleton(out CameraView view);
-            EnemySpawnUtility.SpawnRing(hasView, view, limit, stats.Radius, out float2 ringCenter, out float2 ringHalf);
+            EnemySpawnUtility.SpawnRing(hasView, view, arena.Center, limit, stats.Radius, out float2 ringCenter, out float2 ringHalf);
             float2 position = EnemySpawnUtility.PickSpawnPoint(
-                ref enemySpawner.ValueRW.Random, limit, ringCenter, ringHalf, player, enemySpawner.ValueRO.SafeDistance);
+                ref enemySpawner.ValueRW.Random, arena.Center, limit, ringCenter, ringHalf, player, enemySpawner.ValueRO.SafeDistance,
+                stats.Radius, SystemAPI.GetSingletonBuffer<WallBox>(true).AsNativeArray(),
+                SystemAPI.GetSingletonBuffer<RoomState>(true).AsNativeArray());
 
             EntityCommandBuffer ecb = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);

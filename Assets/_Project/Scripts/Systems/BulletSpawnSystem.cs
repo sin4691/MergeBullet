@@ -31,7 +31,7 @@ namespace MergeBullet.Systems
             float radius = BulletLevelUtility.RadiusOf(level, levels);
             float4 color = BulletLevelUtility.ColorOf(level, levels);
             bool hasView = SystemAPI.TryGetSingleton(out CameraView view);
-            BulletArea.Get(SystemAPI.GetSingleton<ArenaBounds>().HalfSize, hasView, view, out float2 areaCenter, out float2 areaHalf);
+            BulletArea.Get(SystemAPI.GetSingleton<ArenaBounds>(), hasView, view, out float2 areaCenter, out float2 areaHalf);
             float2 spawnHalf = areaHalf - radius;
 
             // 프리팹 복제는 구조 변경이라 메인 스레드에서 한 번에 처리한다 (시작 시 1회뿐이라 비용 무시 가능)

@@ -50,7 +50,7 @@ namespace MergeBullet.Presentation
                     switch (boss.Attack)
                     {
                         case BossAttack.Dash:
-                            Draw(Line(used++), Line(used++), boss, center, radius, arena.HalfSize - radius, progress);
+                            Draw(Line(used++), Line(used++), boss, center, radius, arena, progress);
                             break;
                         case BossAttack.Summon:
                             // 부하가 나타날 원을 점점 진하게
@@ -77,11 +77,13 @@ namespace MergeBullet.Presentation
 
         // 맞으면 아픈 범위 = 보스 몸통(한 변 2 × 반지름)이 돌진하며 쓸고 가는 띠. 옅은 띠 위로 예고 시간만큼 진한 띠가 차오르고,
         // 끝까지 차면 돌진한다 → 남은 시간과 위험 범위가 한눈에 보인다
-        void Draw(LineRenderer area, LineRenderer fill, Boss boss, float2 start, float radius, float2 limit, float progress)
+        void Draw(LineRenderer area, LineRenderer fill, Boss boss, float2 start, float radius, ArenaBounds arena, float progress)
         {
             // 돌진 거리 = 속도 × 시간. 돌진은 아레나 끝에서 멈추므로 도착 위치도 아레나 안으로 자르고,
             // 도착한 몸통의 앞쪽 반(반지름)까지 띠를 늘린다
-            float2 stop = math.clamp(start + boss.DashDirection * boss.DashSpeed * boss.DashSeconds, -limit, limit);
+            float2 limit = arena.HalfSize - radius;
+            float2 stop = math.clamp(start + boss.DashDirection * boss.DashSpeed * boss.DashSeconds,
+                arena.Center - limit, arena.Center + limit);
             float2 end = stop + boss.DashDirection * radius;
 
             SetBand(area, start, end, radius, 0.18f);

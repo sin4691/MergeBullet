@@ -1,4 +1,5 @@
 using MergeBullet.Components;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -17,7 +18,7 @@ namespace MergeBullet.Systems
         /// 적이 나올 테두리(사각형). 카메라가 있으면 화면 바로 바깥, 없으면 아레나 가장자리.
         /// 큰 맵에서 아레나 가장자리에 나오면 플레이어까지 너무 멀어서, 생존 게임처럼 화면 밖 가까이에서 나오게 한다.
         /// </summary>
-        public static void SpawnRing(bool hasView, in CameraView view, float2 arenaLimit, float radius,
+        public static void SpawnRing(bool hasView, in CameraView view, float2 arenaCenter, float2 arenaLimit, float radius,
             out float2 center, out float2 halfSize)
         {
             if (hasView)
@@ -27,7 +28,7 @@ namespace MergeBullet.Systems
             }
             else
             {
-                center = float2.zero;
+                center = arenaCenter;
                 halfSize = arenaLimit;
             }
         }
@@ -55,15 +56,17 @@ namespace MergeBullet.Systems
         // 테두리(ringCenter ± ringHalf)에서 임의로 뽑되, 아레나 안이고 플레이어와 safeDistance 이상 떨어진 첫 자리를 쓴다.
         // 끝까지 못 찾으면(화면이 아레나 모서리에 붙었거나 아레나가 화면보다 작을 때) 아레나 안으로 당긴 후보 중
         // 플레이어에서 가장 먼 자리를 쓴다. 아레나가 화면보다 작으면 결국 아레나 가장자리에서 나온다 (예전 방식)
-        public static float2 PickSpawnPoint(ref Random random, float2 arenaLimit, float2 ringCenter, float2 ringHalf,
-            float2 player, float safeDistance)
+        public static float2 PickSpawnPoint(ref Random random, float2 arenaCenter, float2 arenaLimit, float2 ringCenter, float2 ringHalf,
+            float2 player, float safeDistance, float radius, NativeArray<WallBox> walls, NativeArray<RoomState> rooms)
         {
             float2 best = float2.zero;
             float bestDistanceSq = -1f;
             for (int i = 0; i < MaxSpawnTries; i++)
             {
                 float2 raw = ringCenter + RandomPointOnEdge(ref random, ringHalf);
-                float2 candidate = math.clamp(raw, -arenaLimit, arenaLimit);
+                float2 candidate = math.clamp(raw, arenaCenter - arenaLimit, arenaCenter + arenaLimit);
+                // 벽 덩어리 안이나 아직 닫힌 통로 안에는 나오지 않는다
+                if (WallCollision.Blocked(candidate, radius, walls, rooms)) continue;
                 float distanceSq = math.distancesq(candidate, player);
                 bool insideArena = math.all(raw == candidate);
                 if (insideArena && distanceSq >= safeDistance * safeDistance) return candidate;
@@ -73,6 +76,9 @@ namespace MergeBullet.Systems
                     best = candidate;
                 }
             }
+            // 모든 후보가 막혔으면 플레이어에게서 먼 쪽 바깥 경계 근처를 벽 밖으로 꺼내 쓴다
+            if (bestDistanceSq < 0f) best = math.clamp(ringCenter + RandomPointOnEdge(ref random, ringHalf), arenaCenter - arenaLimit, arenaCenter + arenaLimit);
+            WallCollision.PushOut(ref best, radius, walls);
             return best;
         }
 
