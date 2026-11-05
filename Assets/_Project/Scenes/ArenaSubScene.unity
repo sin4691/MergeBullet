@@ -447,6 +447,13 @@ GameObject:
   m_Component:
   - component: {fileID: 304486843}
   - component: {fileID: 304486842}
+  - component: {fileID: 304486844}
+  - component: {fileID: 304486845}
+  - component: {fileID: 304486846}
+  - component: {fileID: 304486847}
+  - component: {fileID: 304486848}
+  - component: {fileID: 304486849}
+  - component: {fileID: 304486850}
   m_Layer: 0
   m_Name: Arena
   m_TagString: Untagged
@@ -463,19 +470,51 @@ MonoBehaviour:
   m_GameObject: {fileID: 304486841}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f865d5b746ba0c84b98de263e4f8a654, type: 3}
+  m_Script: {fileID: 11500000, guid: 8506ecbc0a4f40fbb4d9cfc1341a6ec1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Authoring.ArenaAuthoring
+  m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Authoring.ArenaLayoutAuthoring
   ArenaSize: {x: 24, y: 13.5}
+  SidePassageWidth: 5
+  EndPassageWidth: 3.5
+  WallThickness: 0.2
+  GateWidth: 3
+  GateHealth: 150
+  WallGemPrefab: {fileID: 1943350708540551345, guid: c2887015638d4024db05a133ac292085, type: 3}
+  WallRewardGems: 12
+  WallGemValue: 2
+--- !u!114 &304486844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304486841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4b826866f484d69bfabc264c818d045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Authoring.CameraViewAuthoring
+  ViewSize: {x: 14, y: 7.875}
+  LateViewSize: {x: 21, y: 11.8125}
+  CameraFollowSharpness: 8
+  BulletsBounceOnView: 0
+--- !u!114 &304486845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304486841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 923302fbbcbb44939550d2d6d6edbed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Authoring.BulletRulesAuthoring
   BulletPrefab: {fileID: 2610298770375272057, guid: 0e84d887aa186df4e962e680b9157348, type: 3}
   BulletCount: 0
   BulletRadius: 0.12
   BulletSpeed: 5
   Seed: 12345
-  ViewSize: {x: 14, y: 7.875}
-  LateViewSize: {x: 21, y: 11.8125}
-  CameraFollowSharpness: 8
-  BulletsBounceOnView: 0
   MaxLevel: 4
   RadiusGrowthPerLevel: 0.5
   BulletBaseDamage: 1
@@ -484,6 +523,20 @@ MonoBehaviour:
   - {r: 1, g: 0.5, b: 0.1, a: 1}
   - {r: 0.75, g: 0.3, b: 1, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
+  IdleLifetime: 5
+  IdleWarningTime: 1.5
+--- !u!114 &304486846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304486841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58779279f7f54d03a4b5cf0388c20987, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Authoring.MaxLevelEffectAuthoring
   MaxLevelEffectPrefab: {fileID: 5969894263373315911, guid: ca64700ba9c1c1d4a92f65b7dc771c08, type: 3}
   EffectRadius: 1.2
   EffectDuration: 0.4
@@ -491,8 +544,18 @@ MonoBehaviour:
   LightningChainCount: 5
   LightningChainRange: 4
   LightningDamage: 4
-  IdleLifetime: 5
-  IdleWarningTime: 1.5
+--- !u!114 &304486847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304486841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de49c65bb436400c94cc3a3581e2fa44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Authoring.EnemySpawnAuthoring
   EnemyPrefab: {fileID: 9211892432071304558, guid: ff33f4f6bf4318b4089b4640fc73857c, type: 3}
   EnemyVariants:
   - Prefab: {fileID: 2622438832363275273, guid: d46576c97d912644ba3f0eb4c167d37f, type: 3}
@@ -504,37 +567,68 @@ MonoBehaviour:
   - Prefab: {fileID: 1093106689848578616, guid: ba3167fd0c1ff1a4b8731fb148568a23, type: 3}
     StartWeight: 0
     EndWeight: 0.4
-  BossPrefab: {fileID: 6302997230523232388, guid: 01936f16ffe6d734d86d797262e35458, type: 3}
-  BossInterval: 180
-  BossHealthGrowth: 0.5
   EnemySpawnInterval: 1
   MaxEnemies: 30
   EnemySafeSpawnDistance: 4
+  Seed: 12346
   EliteInterval: 45
   EliteSize: 1.7
   EliteHealth: 6
   EliteXp: 5
+  BossPrefab: {fileID: 6302997230523232388, guid: 01936f16ffe6d734d86d797262e35458, type: 3}
+  BossInterval: 180
+  BossHealthGrowth: 0.5
   DifficultyRampSeconds: 300
   LateSpawnInterval: 0.15
   LateMaxEnemies: 200
   LateHealthMultiplier: 4
   LateSpeedMultiplier: 1.5
+--- !u!114 &304486848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304486841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d059b76da304da49c8e20a6888b3151, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Authoring.ProgressionAuthoring
+  FirstLevelUpXp: 5
+  LevelUpXpGrowth: 3
+  Seed: 12347
+  RunDurationSeconds: 1800
+--- !u!114 &304486849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304486841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0fd4845a8174933bfb013c080d98302, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Authoring.BenchmarkAuthoring
   BenchmarkMode: 0
   BenchmarkBullets: 1000
   BenchmarkEnemies: 300
   BenchmarkWarmupSeconds: 8
   BenchmarkSampleSeconds: 10
-  SidePassageWidth: 5
-  EndPassageWidth: 3.5
-  WallThickness: 0.2
-  GateWidth: 3
-  GateHealth: 150
-  WallGemPrefab: {fileID: 1943350708540551345, guid: c2887015638d4024db05a133ac292085, type: 3}
-  WallRewardGems: 12
-  WallGemValue: 2
-  RunDurationSeconds: 1800
-  FirstLevelUpXp: 5
-  LevelUpXpGrowth: 3
+  Seed: 12348
+--- !u!114 &304486850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304486841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74b518249eae4825aa294e86cfb92edd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MergeBullet.Runtime::MergeBullet.Authoring.GameSessionAuthoring
 --- !u!4 &304486843
 Transform:
   m_ObjectHideFlags: 0

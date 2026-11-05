@@ -23,7 +23,7 @@ namespace MergeBullet.UI
         const float PopTime = 0.5f;
         const float Alpha = 0.55f;          // 배경이라 글자보다 흐리게
 
-        // 게임 총알 색과 같게 (ArenaAuthoring.LevelColors 기본값: 노랑 → 주황 → 보라 → 흰색)
+        // 게임 총알 색과 같게 (BulletRulesAuthoring.LevelColors 기본값: 노랑 → 주황 → 보라 → 흰색)
         static readonly Color[] LevelColors =
         {
             new Color(1f, 0.85f, 0.2f),

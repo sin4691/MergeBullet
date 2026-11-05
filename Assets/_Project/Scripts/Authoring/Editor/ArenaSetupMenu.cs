@@ -57,13 +57,19 @@ namespace MergeBullet.Editor
             Material wallMaterial = CreateMaterial("Wall", new Color(0.35f, 0.4f, 0.5f));
             GameObject bulletPrefab = CreateBulletPrefab(bulletMaterial);
 
-            // SubScene 내용 구성: Arena(authoring) + 벽 4개
+            // SubScene 내용 구성: Arena(역할별 authoring) + 벽
             Scene subScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
             var arena = new GameObject("Arena");
             SceneManager.MoveGameObjectToScene(arena, subScene);
-            var authoring = arena.AddComponent<ArenaAuthoring>();
-            authoring.BulletPrefab = bulletPrefab;
-            BuildLayout(authoring, wallMaterial, CreateMaterial("Gate", GateColor));
+            var layout = arena.AddComponent<ArenaLayoutAuthoring>();
+            arena.AddComponent<CameraViewAuthoring>();
+            arena.AddComponent<BulletRulesAuthoring>().BulletPrefab = bulletPrefab;
+            arena.AddComponent<MaxLevelEffectAuthoring>();
+            arena.AddComponent<EnemySpawnAuthoring>();
+            arena.AddComponent<ProgressionAuthoring>();
+            arena.AddComponent<BenchmarkAuthoring>();
+            arena.AddComponent<GameSessionAuthoring>();
+            BuildLayout(layout, wallMaterial, CreateMaterial("Gate", GateColor));
             EditorSceneManager.SaveScene(subScene, SubScenePath);
             EditorSceneManager.CloseScene(subScene, true);
 
@@ -72,7 +78,7 @@ namespace MergeBullet.Editor
             var subSceneGo = new GameObject("ArenaSubScene");
             var subSceneComponent = subSceneGo.AddComponent<SubScene>();
             subSceneComponent.SceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(SubScenePath);
-            FitCamera(authoring.ArenaSize);
+            FitCamera(layout.ArenaSize);
 
             EditorSceneManager.MarkSceneDirty(mainScene);
             EditorSceneManager.SaveScene(mainScene);
@@ -99,11 +105,11 @@ namespace MergeBullet.Editor
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(go, PrefabsDir + "/Explosion.prefab");
             Object.DestroyImmediate(go);
 
-            EditArenaSubScene((subScene, arena) =>
+            EditArenaSubScene<MaxLevelEffectAuthoring>((subScene, effect) =>
             {
-                Undo.RecordObject(arena, "Assign Max Level Effect");
-                arena.MaxLevelEffectPrefab = prefab;
-                EditorUtility.SetDirty(arena);
+                Undo.RecordObject(effect, "Assign Max Level Effect");
+                effect.MaxLevelEffectPrefab = prefab;
+                EditorUtility.SetDirty(effect);
             });
             Debug.Log("Max Level Effect 생성 완료. Play를 눌러 확인하세요.");
         }
@@ -120,7 +126,7 @@ namespace MergeBullet.Editor
             Material material = CreateMaterial("Player", new Color(0.3f, 0.75f, 1f));
             var bulletPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabsDir + "/Bullet.prefab");
 
-            EditArenaSubScene((subScene, arena) =>
+            EditArenaSubScene<BulletRulesAuthoring>((subScene, bullets) =>
             {
                 foreach (GameObject root in subScene.GetRootGameObjects())
                 {
@@ -137,9 +143,9 @@ namespace MergeBullet.Editor
                 Undo.RegisterCreatedObjectUndo(player, "Create Player");
 
                 // 이제 총알은 플레이어가 쏘므로 시작 시 뿌리는 총알은 끈다 (스트레스 테스트할 때만 올려서 쓴다)
-                Undo.RecordObject(arena, "Disable Initial Bullets");
-                arena.BulletCount = 0;
-                EditorUtility.SetDirty(arena);
+                Undo.RecordObject(bullets, "Disable Initial Bullets");
+                bullets.BulletCount = 0;
+                EditorUtility.SetDirty(bullets);
             });
             Debug.Log("Player 생성 완료. Play 후 WASD로 움직여 보세요.");
         }
@@ -160,11 +166,11 @@ namespace MergeBullet.Editor
             var gem = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabsDir + "/XpGem.prefab");
             GameObject prefab = CreateTierPrefab(Tiers[BasicTierIndex], gem);
 
-            EditArenaSubScene((subScene, arena) =>
+            EditArenaSubScene<EnemySpawnAuthoring>((subScene, enemies) =>
             {
-                Undo.RecordObject(arena, "Assign Enemy Prefab");
-                arena.EnemyPrefab = prefab;
-                EditorUtility.SetDirty(arena);
+                Undo.RecordObject(enemies, "Assign Enemy Prefab");
+                enemies.EnemyPrefab = prefab;
+                EditorUtility.SetDirty(enemies);
             });
             Debug.Log("Enemy 생성 완료. Play를 눌러 확인하세요.");
         }
@@ -202,15 +208,15 @@ namespace MergeBullet.Editor
             for (int i = 0; i < Tiers.Length; i++) prefabs[i] = CreateTierPrefab(Tiers[i], gem);
             UpdateBoss(prefabs[0]);
 
-            EditArenaSubScene((subScene, arena) =>
+            EditArenaSubScene<EnemySpawnAuthoring>((subScene, enemies) =>
             {
-                Undo.RecordObject(arena, "Enemy Tiers");
-                arena.EnemyPrefab = prefabs[BasicTierIndex];
+                Undo.RecordObject(enemies, "Enemy Tiers");
+                enemies.EnemyPrefab = prefabs[BasicTierIndex];
                 // 예전 Runner·Tank를 빼고 새 등급만 넣는다
-                arena.EnemyVariants.Clear();
+                enemies.EnemyVariants.Clear();
                 for (int i = 0; i < Tiers.Length; i++)
-                    if (i != BasicTierIndex) SetVariant(arena, prefabs[i], Tiers[i].StartWeight, Tiers[i].EndWeight);
-                EditorUtility.SetDirty(arena);
+                    if (i != BasicTierIndex) SetVariant(enemies, prefabs[i], Tiers[i].StartWeight, Tiers[i].EndWeight);
+                EditorUtility.SetDirty(enemies);
             });
 
             // 스폰 테이블에서 뺀 뒤에 지워야 참조가 깨지지 않는다
@@ -310,13 +316,13 @@ namespace MergeBullet.Editor
         }
 
         // 같은 프리팹이 이미 테이블에 있으면 가중치만 고친다 (메뉴를 다시 실행해도 중복되지 않게)
-        static void SetVariant(ArenaAuthoring arena, GameObject prefab, float startWeight, float endWeight)
+        static void SetVariant(EnemySpawnAuthoring enemies, GameObject prefab, float startWeight, float endWeight)
         {
-            EnemyVariant variant = arena.EnemyVariants.Find(v => v.Prefab == prefab);
+            EnemyVariant variant = enemies.EnemyVariants.Find(v => v.Prefab == prefab);
             if (variant == null)
             {
                 variant = new EnemyVariant { Prefab = prefab };
-                arena.EnemyVariants.Add(variant);
+                enemies.EnemyVariants.Add(variant);
             }
             variant.StartWeight = startWeight;
             variant.EndWeight = endWeight;
@@ -594,11 +600,11 @@ namespace MergeBullet.Editor
                 PrefabUtility.UnloadPrefabContents(contents);
             }
 
-            EditArenaSubScene((subScene, arena) =>
+            EditArenaSubScene<EnemySpawnAuthoring>((subScene, enemies) =>
             {
-                Undo.RecordObject(arena, "Assign Boss");
-                arena.BossPrefab = boss;
-                EditorUtility.SetDirty(arena);
+                Undo.RecordObject(enemies, "Assign Boss");
+                enemies.BossPrefab = boss;
+                EditorUtility.SetDirty(enemies);
             });
             Debug.Log("Boss 생성 완료. 생존 시간 Boss Interval(기본 180초)마다 나옵니다.");
         }
@@ -661,27 +667,27 @@ namespace MergeBullet.Editor
         }
 
         /// <summary>
-        /// 아레나 SubScene을 (닫혀 있으면 잠깐 열어서) 수정하고 저장한다.
+        /// 아레나 SubScene을 (닫혀 있으면 잠깐 열어서) 그 안의 T(Arena 오브젝트의 authoring 하나)를 수정하고 저장한다.
         /// 이미 열려 있으면 그대로 쓰고 닫지 않는다.
         /// </summary>
-        static void EditArenaSubScene(System.Action<Scene, ArenaAuthoring> edit)
+        static void EditArenaSubScene<T>(System.Action<Scene, T> edit) where T : Component
         {
             Scene subScene = SceneManager.GetSceneByPath(SubScenePath);
             bool wasLoaded = subScene.isLoaded;
             if (!wasLoaded) subScene = EditorSceneManager.OpenScene(SubScenePath, OpenSceneMode.Additive);
 
-            ArenaAuthoring arena = null;
+            T target = null;
             foreach (GameObject root in subScene.GetRootGameObjects())
             {
-                arena = root.GetComponentInChildren<ArenaAuthoring>();
-                if (arena != null) break;
+                target = root.GetComponentInChildren<T>();
+                if (target != null) break;
             }
 
-            if (arena == null)
-                Debug.LogError($"{SubScenePath} 에서 ArenaAuthoring을 찾지 못했습니다.");
+            if (target == null)
+                Debug.LogError($"{SubScenePath} 에서 {typeof(T).Name}을 찾지 못했습니다.");
             else
             {
-                edit(subScene, arena);
+                edit(subScene, target);
                 EditorSceneManager.SaveScene(subScene);
             }
 
@@ -706,7 +712,7 @@ namespace MergeBullet.Editor
         /// 통로는 네 조각(왼쪽·오른쪽은 모서리까지, 아래·위는 그 사이)으로 나눠 방(Room)으로 등록한다 → 문이 닫혀 있는 동안은
         /// 적이 통로에 나오지 않고, 문 번호와 같은 번호의 조각이 그 문 바로 뒤다. 번호: 0 왼쪽, 1 오른쪽, 2 아래, 3 위.
         /// </summary>
-        static void BuildLayout(ArenaAuthoring arena, Material wall, Material gate)
+        static void BuildLayout(ArenaLayoutAuthoring arena, Material wall, Material gate)
         {
             Transform parent = arena.transform;
             float halfW = arena.ArenaSize.x * 0.5f, halfH = arena.ArenaSize.y * 0.5f, t = arena.WallThickness;
@@ -829,7 +835,7 @@ namespace MergeBullet.Editor
             Material gateMaterial = CreateMaterial("Gate", GateColor);
             var gem = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabsDir + "/XpGem.prefab");
 
-            EditArenaSubScene((scene, arena) =>
+            EditArenaSubScene<ArenaLayoutAuthoring>((scene, arena) =>
             {
                 arenaSize = arena.ArenaSize;
                 arena.WallGemPrefab = gem;
