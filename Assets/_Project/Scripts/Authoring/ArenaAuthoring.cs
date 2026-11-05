@@ -96,6 +96,24 @@ namespace MergeBullet.Authoring
         [Min(0f)] public float BenchmarkWarmupSeconds = 8f;
         [Min(1f)] public float BenchmarkSampleSeconds = 10f;
 
+        [Header("Passage And Gates (바꾼 뒤 Update/Arena Walls And Floor 메뉴로 벽을 다시 만든다)")]
+        // 가운데 맵(Arena Size) 네 벽 중앙에 부서지는 문이 있고, 벽 바깥을 한 바퀴 두르는 통로가 있다.
+        // 문 하나를 부수면 통로로 나가 맵 둘레를 돌 수 있다
+        [Min(1f)] public float SidePassageWidth = 5f;   // 왼쪽·오른쪽 통로 폭
+        [Min(1f)] public float EndPassageWidth = 3.5f;  // 아래·위 통로 폭
+        [Min(0.1f)] public float WallThickness = 0.5f;
+        [Min(0.5f)] public float GateWidth = 3f;
+        // 문은 총알이 튕길 때마다 그 총알의 피해만큼 깎인다
+        [Min(1f)] public float GateHealth = 150f;
+        // 문이 부서지면 그 뒤 통로에 뿌리는 경험치 젬
+        public GameObject WallGemPrefab;
+        [Min(0)] public int WallRewardGems = 12;
+        [Min(1)] public int WallGemValue = 2;
+
+        /// <summary>바깥 경계(가운데 맵 + 안쪽 벽 + 통로 + 바깥 테두리 벽)의 반 크기.</summary>
+        public Vector2 OuterHalfSize => ArenaSize * 0.5f
+            + new Vector2(WallThickness * 2f + SidePassageWidth, WallThickness * 2f + EndPassageWidth);
+
         [Header("Run")]
         // 30분 버티면 클리어. 끝이 있어야 판마다 보상을 받고 다음 판으로 넘어간다
         [Min(0f)] public float RunDurationSeconds = 1800f;
@@ -109,7 +127,8 @@ namespace MergeBullet.Authoring
             public override void Bake(ArenaAuthoring authoring)
             {
                 Entity entity = GetEntity(TransformUsageFlags.None);
-                AddComponent(entity, new ArenaBounds { HalfSize = authoring.ArenaSize * 0.5f });
+                // 바깥 경계는 통로와 바깥 테두리 벽까지 포함한 큰 사각형. 그 안의 벽은 벽 상자(WallBlock)들이 막는다
+                AddComponent(entity, new ArenaBounds { HalfSize = authoring.OuterHalfSize });
                 AddComponent(entity, new CameraView
                 {
                     HalfSize = authoring.ViewSize * 0.5f,
@@ -121,6 +140,18 @@ namespace MergeBullet.Authoring
                 AddComponent(entity, new GameState());
                 AddComponent(entity, new GameStats());
                 AddComponent(entity, new Augments());
+                AddComponent(entity, new WallDamage { Dirty = true });
+                AddBuffer<WallBox>(entity);
+                AddBuffer<RoomState>(entity);
+                AddComponent(entity, new WallSettings
+                {
+                    GateHealth = authoring.GateHealth,
+                    GemPrefab = authoring.WallGemPrefab != null
+                        ? GetEntity(authoring.WallGemPrefab, TransformUsageFlags.Dynamic)
+                        : Entity.Null,
+                    RewardGems = authoring.WallRewardGems,
+                    GemValue = authoring.WallGemValue,
+                });
                 AddComponent(entity, new RunRules { DurationSeconds = authoring.RunDurationSeconds });
                 // 연출 이벤트 큐: 로직 시스템이 쓰고 EffectPresenter가 읽는다
                 AddComponent(entity, new EffectQueue());

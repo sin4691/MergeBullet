@@ -14,8 +14,8 @@ namespace MergeBullet.Presentation
     [RequireComponent(typeof(Camera))]
     public class GameCamera : MonoBehaviour
     {
-        // 벽(아레나 바깥에 붙은 두께 0.2)이 화면 끝에 살짝 보이게. 그 바깥은 보이지 않는다
-        [Min(0f)] public float WallMargin = 0.2f;
+        // 바깥 경계 너머로 더 보여 줄 여백. 바깥 경계가 테두리 벽이라 0이면 경계 밖 빈 공간이 안 보인다
+        [Min(0f)] public float WallMargin;
 
         Camera _camera;
         World _world;
@@ -55,7 +55,8 @@ namespace MergeBullet.Presentation
                 size = Mathf.Min(size, limit.y, limit.x / aspect);
                 Vector2 visible = new Vector2(size * aspect, size);
                 Vector2 room = Vector2.Max(limit - visible, Vector2.zero);
-                center = Vector2.Max(Vector2.Min(center, room), -room);
+                var arenaCenter = new Vector2(arena.Center.x, arena.Center.y);
+                center = Vector2.Max(Vector2.Min(center, arenaCenter + room), arenaCenter - room);
             }
 
             transform.position = new Vector3(center.x, center.y, transform.position.z);

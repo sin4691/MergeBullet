@@ -26,7 +26,7 @@
 
 | 메뉴 | 언제 | 하는 일 |
 |---|---|---|
-| Arena Walls And Floor | Arena의 Arena Size를 바꾼 뒤 (Game 씬에서) | 벽·바닥 격자를 새 크기로 다시 만들고 카메라 따라가기 연결 |
+| Arena Walls And Floor | Arena의 크기·통로·문 설정을 바꾼 뒤 (Game 씬에서) | 가운데 맵 둘레 벽, 각 벽 중앙의 부서지는 문, 벽 바깥을 두르는 통로와 바깥 테두리 벽, 바닥 격자를 다시 만들고 카메라 따라가기 연결 |
 | Enemy Tiers | 적 등급 수치(`ArenaSetupMenu.Tiers`)를 바꾼 뒤 | 삼각형·사각형·오각형·육각형 적 프리팹과 정다각형 메시를 만들고 스폰 테이블 교체, 보스는 8각형으로 |
 | Localization From CSV | `Localization/ui_strings.csv`를 고친 뒤 | 언어·문자열 표·언어별 폰트 표를 CSV에 맞추고 빠진 번역 검사 |
 

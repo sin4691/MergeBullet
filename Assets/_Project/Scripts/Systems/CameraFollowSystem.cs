@@ -31,7 +31,7 @@ namespace MergeBullet.Systems
             {
                 PlayerPositions = SystemAPI.GetComponentLookup<PlayerPosition>(true),
                 Player = SystemAPI.GetSingletonEntity<PlayerPosition>(),
-                ArenaHalfSize = SystemAPI.GetSingleton<ArenaBounds>().HalfSize,
+                Arena = SystemAPI.GetSingleton<ArenaBounds>(),
                 DeltaTime = SystemAPI.Time.DeltaTime,
                 // 난이도 진행도(0 → 1, RampSeconds 동안)는 DifficultySystem이 메인 스레드에서 쓰는 값이라 바로 읽어도 기다림이 없다
                 Progress = SystemAPI.TryGetSingleton(out EnemySpawner spawner) ? spawner.Progress : 0f,
@@ -44,7 +44,7 @@ namespace MergeBullet.Systems
     {
         [ReadOnly] public ComponentLookup<PlayerPosition> PlayerPositions;
         public Entity Player;
-        public float2 ArenaHalfSize;
+        public ArenaBounds Arena;
         public float DeltaTime;
         public float Progress;
 
@@ -65,15 +65,15 @@ namespace MergeBullet.Systems
                 view.Center = math.lerp(view.Center, target, 1f - math.exp(-view.FollowSharpness * DeltaTime));
             }
 
-            float2 limit = math.max(ArenaHalfSize - view.HalfSize, 0f);
-            view.Center = math.clamp(view.Center, -limit, limit);
+            float2 limit = math.max(Arena.HalfSize - view.HalfSize, 0f);
+            view.Center = math.clamp(view.Center, Arena.Center - limit, Arena.Center + limit);
         }
     }
 
     /// <summary>총알이 튕기는 범위. 화면 모드면 카메라 범위, 아니면 아레나 전체.</summary>
     public static class BulletArea
     {
-        public static void Get(float2 arenaHalfSize, bool hasView, in CameraView view, out float2 center, out float2 halfSize)
+        public static void Get(in ArenaBounds arena, bool hasView, in CameraView view, out float2 center, out float2 halfSize)
         {
             if (hasView && view.BulletsBounceOnView)
             {
@@ -82,8 +82,8 @@ namespace MergeBullet.Systems
             }
             else
             {
-                center = float2.zero;
-                halfSize = arenaHalfSize;
+                center = arena.Center;
+                halfSize = arena.HalfSize;
             }
         }
     }

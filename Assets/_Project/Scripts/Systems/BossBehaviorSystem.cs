@@ -26,6 +26,7 @@ namespace MergeBullet.Systems
             state.RequireForUpdate<Boss>();
             state.RequireForUpdate<Player>();
             state.RequireForUpdate<ArenaBounds>();
+            state.RequireForUpdate<WallBox>();
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         }
 
@@ -35,7 +36,8 @@ namespace MergeBullet.Systems
             new BossBehaviorJob
             {
                 DeltaTime = SystemAPI.Time.DeltaTime,
-                ArenaHalfSize = SystemAPI.GetSingleton<ArenaBounds>().HalfSize,
+                Arena = SystemAPI.GetSingleton<ArenaBounds>(),
+                Walls = SystemAPI.GetSingletonBuffer<WallBox>(true).AsNativeArray(),
                 PlayerEntity = SystemAPI.GetSingletonEntity<Player>(),
                 PlayerPositions = SystemAPI.GetComponentLookup<PlayerPosition>(true),
                 Enemies = SystemAPI.GetComponentLookup<Enemy>(true),
@@ -55,7 +57,8 @@ namespace MergeBullet.Systems
         const float WindupBlinkRate = 6f;
 
         public float DeltaTime;
-        public float2 ArenaHalfSize;
+        public ArenaBounds Arena;
+        [ReadOnly] public NativeArray<WallBox> Walls;
         public Entity PlayerEntity;
         [ReadOnly] public ComponentLookup<PlayerPosition> PlayerPositions;
         // 소환할 부하 프리팹의 능력치를 읽는다 (보스 자신의 Enemy는 아래 Execute의 in 매개변수)
@@ -113,8 +116,10 @@ namespace MergeBullet.Systems
                     return;
 
                 case BossPhase.Dash:
-                    float2 limit = ArenaHalfSize - enemy.Radius;
-                    position = math.clamp(position + boss.DashDirection * boss.DashSpeed * DeltaTime, -limit, limit);
+                    float2 limit = Arena.HalfSize - enemy.Radius;
+                    position = math.clamp(position + boss.DashDirection * boss.DashSpeed * DeltaTime,
+                        Arena.Center - limit, Arena.Center + limit);
+                    WallCollision.PushOut(ref position, enemy.Radius, Walls);
                     transform.Position = new float3(position, transform.Position.z);
                     if (boss.Timer < boss.DashSeconds) return;
 
@@ -132,11 +137,12 @@ namespace MergeBullet.Systems
 
             Enemy stats = Enemies[boss.SummonPrefab];
             float distance = bossRadius + boss.SummonDistance + stats.Radius;
-            float2 limit = ArenaHalfSize - stats.Radius;
+            float2 limit = Arena.HalfSize - stats.Radius;
             for (int i = 0; i < boss.SummonCount; i++)
             {
                 math.sincos(2f * math.PI * i / boss.SummonCount, out float sin, out float cos);
-                float2 position = math.clamp(center + new float2(cos, sin) * distance, -limit, limit);
+                float2 position = math.clamp(center + new float2(cos, sin) * distance, Arena.Center - limit, Arena.Center + limit);
+                WallCollision.PushOut(ref position, stats.Radius, Walls);
                 EnemySpawnUtility.RecordSpawn(Ecb, boss.SummonPrefab, stats, position);
             }
         }

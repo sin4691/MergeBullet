@@ -42,7 +42,7 @@ namespace MergeBullet.Systems
             float radius = BulletLevelUtility.RadiusOf(level, levels);
             float4 color = BulletLevelUtility.ColorOf(level, levels);
             bool hasView = SystemAPI.TryGetSingleton(out CameraView view);
-            BulletArea.Get(SystemAPI.GetSingleton<ArenaBounds>().HalfSize, hasView, view, out float2 areaCenter, out float2 areaHalf);
+            BulletArea.Get(SystemAPI.GetSingleton<ArenaBounds>(), hasView, view, out float2 areaCenter, out float2 areaHalf);
             float2 spawnHalf = areaHalf - radius;
 
             // 생성은 다음 프레임 시작(BeginSimulation)에 재생 → 위치 계산 전에 만들어져 원점에 한 프레임 그려지지 않는다

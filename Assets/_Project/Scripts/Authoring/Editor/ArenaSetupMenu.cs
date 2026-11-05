@@ -32,7 +32,6 @@ namespace MergeBullet.Editor
         const string LobbyLayoutPath = UiDir + "/Lobby.uxml";
         const string GameScenePath = ScenesDir + "/Game.unity";
         const string LobbyScenePath = ScenesDir + "/Lobby.unity";
-        const float WallThickness = 0.2f;
 
         [MenuItem("MergeBullet/Setup/Arena SubScene", priority = 1)]
         static void CreateArenaSubScene()
@@ -64,7 +63,7 @@ namespace MergeBullet.Editor
             SceneManager.MoveGameObjectToScene(arena, subScene);
             var authoring = arena.AddComponent<ArenaAuthoring>();
             authoring.BulletPrefab = bulletPrefab;
-            BuildWalls(arena.transform, authoring.ArenaSize, wallMaterial);
+            BuildLayout(authoring, wallMaterial, CreateMaterial("Gate", GateColor));
             EditorSceneManager.SaveScene(subScene, SubScenePath);
             EditorSceneManager.CloseScene(subScene, true);
 
@@ -698,23 +697,75 @@ namespace MergeBullet.Editor
             return prefab;
         }
 
-        static void BuildWalls(Transform parent, Vector2 arenaSize, Material material)
-        {
-            float w = arenaSize.x, h = arenaSize.y, t = WallThickness;
+        // 부서지는 문 색: 벽(회청색)과 구분되는 갈색
+        static readonly Color GateColor = new Color(0.6f, 0.45f, 0.3f);
 
-            // 벽 안쪽 면이 정확히 아레나 경계에 오도록 바깥으로 t/2 밀어 둔다
-            CreateWall(parent, "Wall_Top", new Vector2(0f, (h + t) * 0.5f), new Vector2(w + t * 2f, t), material);
-            CreateWall(parent, "Wall_Bottom", new Vector2(0f, -(h + t) * 0.5f), new Vector2(w + t * 2f, t), material);
-            CreateWall(parent, "Wall_Left", new Vector2(-(w + t) * 0.5f, 0f), new Vector2(t, h), material);
-            CreateWall(parent, "Wall_Right", new Vector2((w + t) * 0.5f, 0f), new Vector2(t, h), material);
+        /// <summary>
+        /// 맵 구성: 가운데 맵(Arena Size)을 두께 WallThickness의 벽이 두르고, 각 벽 중앙에 부서지는 문(GateWidth)이 있다.
+        /// 벽 바깥에는 한 바퀴 이어진 통로가 있고, 그 바깥 끝을 얇은 테두리 벽이 막는다 (바깥 경계 = OuterHalfSize).
+        /// 통로는 네 조각(왼쪽·오른쪽은 모서리까지, 아래·위는 그 사이)으로 나눠 방(Room)으로 등록한다 → 문이 닫혀 있는 동안은
+        /// 적이 통로에 나오지 않고, 문 번호와 같은 번호의 조각이 그 문 바로 뒤다. 번호: 0 왼쪽, 1 오른쪽, 2 아래, 3 위.
+        /// </summary>
+        static void BuildLayout(ArenaAuthoring arena, Material wall, Material gate)
+        {
+            Transform parent = arena.transform;
+            float halfW = arena.ArenaSize.x * 0.5f, halfH = arena.ArenaSize.y * 0.5f, t = arena.WallThickness;
+            float gateHalf = arena.GateWidth * 0.5f;
+            Vector2 outer = arena.OuterHalfSize;
+            float ringX = halfW + t, ringY = halfH + t;   // 안쪽 벽의 바깥 면
+            float passX = outer.x - t, passY = outer.y - t; // 통로의 바깥 끝 (테두리 벽 안쪽 면)
+
+            for (int i = 0; i < 2; i++)
+            {
+                float s = i == 0 ? -1f : 1f;
+                string sideName = i == 0 ? "Left" : "Right";
+                string endName = i == 0 ? "Bottom" : "Top";
+
+                // 안쪽 벽 (왼쪽·오른쪽), 가운데에 문
+                float wx0 = s < 0f ? -ringX : halfW, wx1 = s < 0f ? -halfW : ringX;
+                Block(parent, wall, $"Wall_{sideName}_Lower", wx0, wx1, -halfH, -gateHalf);
+                Block(parent, wall, $"Wall_{sideName}_Upper", wx0, wx1, gateHalf, halfH);
+                Block(parent, gate, $"Wall_{sideName}_Gate", wx0, wx1, -gateHalf, gateHalf, gateIndex: i);
+
+                // 안쪽 벽 (아래·위, 모서리 포함), 가운데에 문
+                float wy0 = s < 0f ? -ringY : halfH, wy1 = s < 0f ? -halfH : ringY;
+                Block(parent, wall, $"Wall_{endName}_Left", -ringX, -gateHalf, wy0, wy1);
+                Block(parent, wall, $"Wall_{endName}_Right", gateHalf, ringX, wy0, wy1);
+                Block(parent, gate, $"Wall_{endName}_Gate", -gateHalf, gateHalf, wy0, wy1, gateIndex: 2 + i);
+
+                // 바깥 테두리 벽 (통로 끝, 맵의 끝이 보이게)
+                Block(parent, wall, $"Wall_Outer{sideName}", s < 0f ? -outer.x : passX, s < 0f ? -passX : outer.x, -outer.y, outer.y);
+                Block(parent, wall, $"Wall_Outer{endName}", -passX, passX, s < 0f ? -outer.y : passY, s < 0f ? -passY : outer.y);
+
+                // 통로 조각: 왼쪽·오른쪽은 위아래 모서리까지, 아래·위는 그 사이
+                Room(parent, $"Room_{sideName}", i,
+                    new Vector2(s * (ringX + passX) * 0.5f, 0f), new Vector2(passX - ringX, passY * 2f));
+                Room(parent, $"Room_{endName}", 2 + i,
+                    new Vector2(0f, s * (ringY + passY) * 0.5f), new Vector2(ringX * 2f, passY - ringY));
+            }
         }
 
-        static void CreateWall(Transform parent, string name, Vector2 position, Vector2 size, Material material)
+        // x0~x1, y0~y1 사각형을 채우는 벽 (문이면 같은 번호의 통로 조각이 뒤에 있다)
+        static void Block(Transform parent, Material material, string name, float x0, float x1, float y0, float y1, int gateIndex = -1)
         {
-            GameObject wall = CreatePrimitiveWithoutCollider(PrimitiveType.Cube, name, material);
-            wall.transform.SetParent(parent, false);
-            wall.transform.localPosition = position;
-            wall.transform.localScale = new Vector3(size.x, size.y, 1f);
+            GameObject block = CreatePrimitiveWithoutCollider(PrimitiveType.Cube, name, material);
+            block.transform.SetParent(parent, false);
+            block.transform.localPosition = new Vector3((x0 + x1) * 0.5f, (y0 + y1) * 0.5f, 0f);
+            block.transform.localScale = new Vector3(x1 - x0, y1 - y0, 1f);
+            var authoring = block.AddComponent<WallBlockAuthoring>();
+            authoring.IsGate = gateIndex >= 0;
+            authoring.GateIndex = gateIndex;
+            authoring.RoomIndex = gateIndex;
+        }
+
+        static void Room(Transform parent, string name, int index, Vector2 center, Vector2 size)
+        {
+            var room = new GameObject(name);
+            room.transform.SetParent(parent, false);
+            room.transform.localPosition = center;
+            var authoring = room.AddComponent<RoomAuthoring>();
+            authoring.Index = index;
+            authoring.Size = size;
         }
 
         // Unity Physics를 쓰지 않으므로 기본 Collider는 제거한다 (충돌은 시스템에서 직접 계산)
@@ -775,23 +826,36 @@ namespace MergeBullet.Editor
             Material floorMaterial = CreateFloorMaterial();
             Vector2 arenaSize = Vector2.zero;
 
+            Material gateMaterial = CreateMaterial("Gate", GateColor);
+            var gem = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabsDir + "/XpGem.prefab");
+
             EditArenaSubScene((scene, arena) =>
             {
                 arenaSize = arena.ArenaSize;
+                arena.WallGemPrefab = gem;
+                EditorUtility.SetDirty(arena);
 
-                // 벽·바닥을 새 크기로 다시 만든다 (다시 실행해도 겹치지 않게 기존 것은 지운다)
+                // 벽·문·방·바닥을 다시 만든다 (다시 실행해도 겹치지 않게 기존 것은 지운다)
                 for (int i = arena.transform.childCount - 1; i >= 0; i--)
                 {
                     GameObject child = arena.transform.GetChild(i).gameObject;
-                    if (child.name.StartsWith("Wall_") || child.name == "Floor") Object.DestroyImmediate(child);
+                    if (child.name.StartsWith("Wall_") || child.name.StartsWith("Room_") || child.name == "Floor")
+                        Object.DestroyImmediate(child);
                 }
-                BuildWalls(arena.transform, arenaSize, wallMaterial);
-                CreateFloor(arena.transform, arenaSize, floorMaterial);
+                BuildLayout(arena, wallMaterial, gateMaterial);
+                // 바닥은 통로까지 포함한 바깥 경계 전체에 깐다
+                CreateFloor(arena.transform, arena.OuterHalfSize * 2f, floorMaterial);
             });
 
-            // 카메라는 ECS의 CameraView를 따라간다
+            // 카메라는 ECS의 CameraView를 따라간다. 바깥 경계가 테두리 벽이라 그 너머는 보이지 않게(여백 0)
             Camera cam = Camera.main;
-            if (cam != null && cam.GetComponent<GameCamera>() == null) Undo.AddComponent<GameCamera>(cam.gameObject);
+            if (cam != null)
+            {
+                GameCamera follow = cam.GetComponent<GameCamera>();
+                if (follow == null) follow = Undo.AddComponent<GameCamera>(cam.gameObject);
+                follow.WallMargin = 0f;
+                EditorUtility.SetDirty(follow);
+            }
 
             EditorSceneManager.MarkSceneDirty(gameScene);
             EditorSceneManager.SaveScene(gameScene);

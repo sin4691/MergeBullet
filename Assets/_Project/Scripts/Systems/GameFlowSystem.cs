@@ -93,6 +93,10 @@ namespace MergeBullet.Systems
             foreach (RefRW<BossSpawner> bossSpawner in SystemAPI.Query<RefRW<BossSpawner>>())
                 bossSpawner.ValueRW.Spawned = 0;
 
+            // 부서진 문을 되돌리고 방을 닫는다 (WallSystem이 다음 프레임 처음에 처리)
+            if (SystemAPI.HasSingleton<WallDamage>())
+                SystemAPI.SetSingleton(new WallDamage { Dirty = true });
+
             // 플레이어가 원점으로 순간 이동하므로 카메라도 부드럽게 따라가지 않고 바로 맞춘다
             foreach (RefRW<CameraView> view in SystemAPI.Query<RefRW<CameraView>>())
                 view.ValueRW.Snapped = false;
